@@ -2,6 +2,11 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-13 — B2 design: story strategy locked
+
+- Research (TPRS, exposure frequency, bizarreness/humor, story grammar) → `docs/planning/RESEARCH_story_design.md`.
+- Locked: fixed duo cast + consistent world; fixed episode template (setting→problem→attempts→resolution); LLM assigns words to scenes freely, session presents in story order (PRD §5 amended); memorably-quirky visual humor with plain language; NO forced repetition (each word genuinely used ≥1×); dialogue as escape hatch for abstract/meta words; deck example sentences fed as sense anchors.
+
 ## 2026-07-13 — B1: Word source ✅
 
 - Supabase provisioned (project `anki-video`, keys in `.env`; RLS on, no policies — only the secret key reads for now).

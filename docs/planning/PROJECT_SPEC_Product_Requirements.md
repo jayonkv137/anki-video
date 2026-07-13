@@ -36,7 +36,7 @@ Every day, for that day's 10 new words:
 **Daily session, screen by screen (in-app recall — locked):**
 
 1. User opens the app → today's session is ready (pre-generated overnight).
-2. **Word card:** German word shown alone. User attempts recall (active retrieval).
+2. **Word card:** German word shown alone. User attempts recall (active retrieval). *(Amended 2026-07-13: words are presented in STORY order, not deck order — the LLM assigns each word its scene; see RESEARCH_story_design.md §4.)*
 3. User taps **reveal** → meaning/translation shown → user **self-grades** (knew it / didn't).
 4. **Only then** the word's story-scene video plays (~6–8 s). → next word.
 5. After all 10 words: the **combined story video** plays as the finale/reward.

@@ -30,11 +30,11 @@
 5. **Tone: visually comic, linguistically plain.** Humor in situations (the bizarre-funny memory hook), never in puns/wordplay.
 6. **Dialogue as the universal solvent** for abstract/meta words.
 
-## 4. Open design decisions (Jayon's)
+## 4. Design decisions — LOCKED (Jayon, 2026-07-13)
 
-- Recurring cast: yes/no, and who are they? (defining the cast is a B3-adjacent creative act)
-- Scene order = story order (LLM decides) vs deck order?
-- Humor dial: how quirky?
-- Repetition target: 2–3× per scene confirmed?
+1. **Recurring cast: fixed duo** (protagonist + sidekick, consistent setting). WHO they are = creative step at the start of B3.
+2. **Scene order: LLM orders freely** — each word owns one scene, the story decides which. The session app presents words in STORY order (PRD §5 amended).
+3. **Humor: memorably quirky** — comic, slightly absurd, visual (Shaun-the-Sheep energy); language stays plain.
+4. **Repetition: NOT forced** — story quality first. Hard requirement remains: each word genuinely used in its scene (≥1 meaningful occurrence). Forced 2–3× repetition rejected; available as v1 tuning lever if retention underperforms.
 
 *Sources inline above.*
