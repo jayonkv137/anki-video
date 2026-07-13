@@ -7,8 +7,8 @@
 
 ## B0 — Engine heartbeat
 
-Get the machine room running: Docker on the Mac, n8n container with persistent volume, one trivial scheduled workflow (cron → fetch something → notify).
-- **Win:** a cron-triggered n8n workflow runs successfully on schedule, and survives a container restart.
+Get the machine room running: Docker on the Mac, n8n container with persistent volume, one trivial **webhook-triggered** workflow (webhook call → fetch something → notify) — webhook because the real pipeline is event-driven (see B7).
+- **Win:** calling the webhook URL runs the workflow successfully, and the setup survives a container restart.
 - **Learn:** what Docker is (images/containers/volumes), n8n anatomy (nodes, triggers, executions).
 - **Provision:** Docker Desktop. Cost: €0.
 
@@ -54,11 +54,12 @@ React + Vite PWA: today's session from Supabase → word card → recall → rev
 - **Learn:** React state for a flow, Supabase JS client, HTML5 video, PWA install.
 - **Provision:** Vercel (free) at deploy time.
 
-## B7 — Daily automation (= MVP done)
+## B7 — Session-driven automation (= MVP done)
 
-The full chain on a nightly cron: fetch words → story → scenes → assembly → session row; failure notification to Jayon; "tomorrow is ready" guaranteed.
-- **Win:** two consecutive mornings, untouched: open the app, that day's session is there. **This is the MVP definition of done.**
-- **Learn:** error workflows in n8n, idempotency (safe re-runs), monitoring an autonomous system.
+**Event-driven, per Jayon's design (2026-07-13):** finishing a session is the trigger. App writes "session complete" → Supabase → n8n webhook fires → next session generated (fetch words → story → scenes → assembly → session row). Failure notification to Jayon. Optional safety net: a periodic reconciliation check ("next session should exist but doesn't → generate") as self-healing fallback — the only legitimate scheduled job.
+This mirrors Anki's real causality (today's outcomes precede tomorrow's queue) and is v1-proof: when grade-dependent review words arrive via AnkiConnect, the trigger is unchanged.
+- **Win:** finish a session on two consecutive days, untouched: each next morning the new session is simply there. **This is the MVP definition of done.**
+- **Learn:** webhooks & event-driven vs time-driven architecture, error workflows in n8n, idempotency (safe re-runs), monitoring an autonomous system.
 - **Provision:** nothing new (Mac-awake constraint accepted; upgrade trigger documented).
 
 ---

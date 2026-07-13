@@ -62,8 +62,9 @@ Mapped to the pipeline: **words in → story → audio → video → assembly �
 ## Technical architecture (MVP)
 
 ```
-                          NIGHTLY (n8n, Docker on Mac)
-  Supabase ──"next 10 unseen words"──▶ n8n Cron workflow
+           ON SESSION COMPLETION — event-driven (n8n, Docker on Mac)
+  App writes "session complete" ─▶ n8n Webhook workflow
+  Supabase ──"next 10 unseen words"──▶ (same workflow)
                                           │
                                           ▼
                              Claude Sonnet 5 (Anthropic API)
@@ -89,7 +90,7 @@ Mapped to the pipeline: **words in → story → audio → video → assembly �
     → scene video → … → story finale
 ```
 
-Key properties: the **word-source abstraction** is the Supabase words table + "next 10 unseen" query — AnkiConnect replaces that query at v1 without touching the pipeline. Pipeline and app never talk to each other directly; Supabase is the single meeting point. Everything n8n does is exportable JSON, version-controlled in the repo.
+Key properties: **event-driven trigger** (Jayon's design, 2026-07-13) — completing a session fires generation of the next one, mirroring Anki's causality (today's outcomes precede tomorrow's queue); an optional periodic reconciliation check ("next session missing → generate") is the self-healing fallback, not the engine. The **word-source abstraction** is the Supabase words table + "next 10 unseen" query — AnkiConnect replaces that query at v1 without touching the pipeline or the trigger. Pipeline and app never talk to each other directly; Supabase is the single meeting point. Everything n8n does is exportable JSON, version-controlled in the repo.
 
 **Estimated daily run cost (MVP, verify at provisioning):** LLM ~$0.01–0.05 · TTS ~$0.01 (if used) · video ~$2.30–3 (model-dependent) · assembly ~$0.05–0.10 → **≈ $2.50–3.20/day** while actively used.
 
