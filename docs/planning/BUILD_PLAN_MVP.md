@@ -1,6 +1,6 @@
 # MVP Build Plan — ordered sub-goals
 
-**Status:** DRAFT — locked when Jayon confirms · **Created:** 2026-07-13
+**Status:** LOCKED (confirmed by Jayon, 2026-07-13)
 **Rule:** one phase at a time; a phase is done when its **win condition** is demonstrated, not when code exists. Each phase names its **learning objective** (Jayon must be able to explain the concept afterward) and its **just-in-time provisioning**. Design-heavy phases start with their own mini design step (research → try → decide), per the plan-as-we-go method.
 
 ---

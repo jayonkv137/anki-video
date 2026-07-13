@@ -15,11 +15,12 @@
   - [x] 5. Plugins — just-in-time: Jayon installs via `/plugins` in an interactive `claude` session in this repo when Build starts (Anthropic feature-dev; frontend plugin when app work begins)
   - [x] 6. MCPs — just-in-time: Supabase MCP when Supabase is provisioned; n8n MCP when the instance runs; Playwright MCP when the frontend exists
   - [x] 7. Slash commands: `/update-docs` (living-docs refresh), `/handoff` (self-contained Antigravity prompt generator) in `.claude/commands/`
-- [ ] Build — MVP phases (to be broken down next: sub-goals with win conditions + learning objectives)
+- [ ] **Build — plan LOCKED** (`planning/BUILD_PLAN_MVP.md`): B0 heartbeat → B1 words → B2 story → B3 video design ⭐ → B4 scenes → B5 assembly → B6 app → B7 daily automation
+  - [ ] B0 — Engine heartbeat (NEXT)
 
 ## Where we left off
 
-2026-07-13: Setup phase COMPLETE (just-in-time items tracked above). Next session: break the Build phase into ordered sub-goals — each with a win condition and a learning objective — starting from the pipeline core.
+2026-07-13: Plan + Setup phases fully complete; build plan locked. **Next: B0 — install Docker Desktop, run n8n container with persistent volume, first cron workflow.** Work happens in fresh Claude Code sessions opened inside this repo (CLAUDE.md carries the working agreement).
 
 ## Learning log (concepts Jayon has covered / needs next)
 
