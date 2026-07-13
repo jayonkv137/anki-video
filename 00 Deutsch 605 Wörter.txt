@@ -1,0 +1,608 @@
+#separator:tab
+#html:false
+#tags column:3
+1   Nomen   der Schauspieler    rFilm   rRegisseur   eRolle   rTheater   eBühne   eKamera         Der Schauspieler spielt eine wichtige Rolle im Film.	1   actor        The actor plays an important role in the movie.	Nomen
+2   Nomen   das Adjektiv    sWort   eGrammatik   eBeschreibung   rSatz   eSprache   eForm         Ein Adjektiv beschreibt ein Nomen genauer.	2   adjective        An adjective describes a noun more precisely.	Nomen
+3   Nomen   der Erwachsene    rMensch   rElternteil   rArzt   eFrau   rMann   ePerson         Ein Erwachsener braucht keinen Kinderausweis.	3   adult        An adult doesn’t need a child’s ID.	Nomen
+4   Nomen   der Nachmittag    rAbend   rMorgen   rTag   ePause   rKaffee   eSchule         Am Nachmittag trinken wir oft Kaffee.	4   afternoon        In the afternoon we often drink coffee.	Nomen
+5   Nomen   die Luft    sGas   eAtmosphäre   rHimmel   rWind   eWolke   rAtem         Die Luft ist heute sehr frisch.	5   air        The air is very fresh today.	Nomen
+6   Nomen   der Flughafen    sFlugzeug   rPilot   eReise   rTower   eLandebahn   eSicherheitskontrolle         Wir fahren früh zum Flughafen.	6   airport        We go to the airport early.	Nomen
+7   Adjektiv   am Leben    rTod   eExistenz   rMensch   eGesundheit   eNatur   rAlltag         Der verletzte Vogel ist noch am Leben.	7   alive        The injured bird is still alive.	Adjektiv
+8   Nomen   das Tier    rVogel   rHund   eKatze   sPferd   eEnte   eSchlange         Im Zoo gibt es viele Tiere.	8   animal        There are many animals in the zoo.	Nomen
+9   Nomen   die Wohnung    eKüche   eTür   eLampe   rSchrank   rTisch   sBett         Meine Wohnung hat drei Zimmer.	9   apartment        My apartment has three rooms.	Nomen
+10   Nomen   der Apfel    rBaum   eFrucht   eBirne   eBanane   rSaft   eSchale         Ich esse jeden Tag einen Apfel.	10   apple        I eat an apple every day.	Nomen
+11   Nomen   der April    rMonat   rFrühling   eBlume   eWolke   rRegen   rOstern         Im April beginnt der Frühling richtig.	11   April        Spring really begins in April.	Nomen
+12   Nomen   der Arm    rKörper   rEllbogen   eHand   rFinger   rMuskel   rSchmerz         Sie hat sich den Arm verletzt.	12   arm        She hurt her arm.	Nomen
+13   Nomen   die Armee    rSoldat   rKrieg   rPanzer   rGeneral   eUniform   eWaffe         Die Armee schützt das Land.	13   army        The army protects the country.	Nomen
+14   Nomen   die Kunst    eMalerei   eMusik   eSkulptur   rTanz   eAusstellung   rKünstler         Ich interessiere mich für moderne Kunst.	14   art        I’m interested in modern art.	Nomen
+15   Nomen   der Künstler    rMaler   rSchauspieler   rDichter   rMusiker   eGalerie   eLeinwand         Der Künstler malt schöne Bilder.	15   artista        The artist paints beautiful pictures.	Nomen
+16   Nomen   der Angriff    rKrieg   rFeind   rSoldat   rSchlag   eWaffe   eVerteidigung         Der Angriff kam unerwartet.	16   attack (noun)        The attack came unexpectedly.	Nomen
+17   Nomen   der August    rMonat   rSommer   rFerien   rUrlaub   eHitze   eReise         Im August haben viele Leute Urlaub.	17   August        Many people go on vacation in August.	Nomen
+18   Nomen   der Autor    sBuch   eGeschichte   rSchriftsteller   eZeitung   rRoman   eFeder         Der Autor schreibt ein neues Buch.	18   author (noun)        The author is writing a new book.	Nomen
+19   Nomen   das Baby    eWindel   rKinderwagen   eMilch   rName   eMutter   rVater         Das Baby schläft in seinem Bett.	19   baby        The baby is sleeping in its bed.	Nomen
+20   Nomen   der Rücken    rSchmerz   rArzt   eWirbelsäule   eMassage   rNacken   eHaltung         Ich habe Rückenschmerzen.	20   back (body)        I have back pain.	Nomen
+21   Adverb   zurück    rWeg   eRichtung   rAnfang   rSchritt   eAntwort   rOrt         Ich komme morgen zurück.	21   back (direction)        I’ll come back tomorrow.	Adverb
+22   Adjektiv   schlecht    eLaune   eNoten   rFehler   rZustand   eIdee   rGeschmack         Das Wetter ist heute schlecht.	22   bad        The weather is bad today.	Adjektiv
+23   Nomen   die Tasche    eHandtasche   rRucksack   eJacke   eMode   rBeutel   eGeldbörse         Ich habe meine Tasche vergessen.	23   bag (noun)        I forgot my bag.	Nomen
+24   Nomen   der Ball    rFußball   eSpiel   rSport   eMannschaft   rTor   rPlatz         Die Kinder spielen mit dem Ball.	24   ball        The children are playing with the ball.	Nomen
+25   Nomen   die Banane    eSchale   rAffe   eFrucht   eKüche   rSaft   eSüße         Ich esse eine Banane zum Frühstück.	25   banana        I eat a banana for breakfast.	Nomen
+26   Nomen   die Band    eMusik   rSänger   rSong   rGitarrist   eTour   eBühne         Die Band spielt heute Abend.	26   band (music)        The band is playing tonight.	Nomen
+27   Nomen   die Bank    rKredit   rKunde   rZins   eFiliale   eKarte   rTresor         Ich muss noch zur Bank gehen.	27   bank        I still need to go to the bank.	Nomen
+28   Nomen   die Bar    eMusik   rKellner   rGast   eTheke   sGetränk   eFlasche         Wir treffen uns in der Bar.	28   bar (location)        We’re meeting in the bar.	Nomen
+29   Nomen   das Badezimmer    eDusche   eBadewanne   sKlo   eSeife   rSpiegel   eLampe         Das Badezimmer ist im ersten Stock.	29   bathroom        The bathroom is on the first floor.	Nomen
+30   Nomen   der Strand    sMeer   rSand   rSonnenschirm   eWelle   rUrlaub   eMuschel         Wir liegen am Strand und entspannen.	30   beach        We lie on the beach and relax.	Nomen
+31   Nomen   der Bart    rMann   rKamm   rSchnurrbart   eRasur   eForm   rStil         Er hat einen langen Bart.	31   beard        He has a long beard.	Nomen
+32   Verb   schlagen    rKampf   rBoxer   eHand   rStock   eBewegung   eNiederlage         Der Junge schlägt den Ball.	32   beat (verb)        The boy hits the ball.	Verb
+33   Adjektiv   schön    eBlume   eStimme   eMusik   rTag   eFarbe   eGestalt         Das ist ein schönes Bild.	33   beautiful        That is a beautiful picture.	Adjektiv
+34   Nomen   das Bett    eDecke   eMatratze   eSchlaf   rTraum   eKissen   eNacht         Ich liege im Bett und lese.	34   bed        I lie in bed and read.	Nomen
+35   Nomen   das Schlafzimmer    sBett   eLampe   rSchrank   eDecke   eTür   eFenster         Das Schlafzimmer ist sehr ruhig.	35   bedroom        The bedroom is very quiet.	Nomen
+36   Nomen   das Rindfleisch    eKuh   rMetzger   rHamburger   ePfanne   rBraten   eSuppe         Zum Abendessen gibt es Rindfleisch.	36   beef        We’re having beef for dinner.	Nomen
+37   Nomen   das Bier    eFlasche   eBar   rDurst   rKellner   eMarke   rKrug         Er trinkt gern Bier.	37   beer        He likes drinking beer.	Nomen
+38   Verb   biegen    rWeg   eStraße   eKurve   eBewegung   rWinkel   eAbzweigung         Bitte den Draht vorsichtig biegen.	38   bend (verb)        Please bend the wire carefully.	Verb
+39   Nomen   das Getränk    sBier   rWein   eMilch   rSaft   eFlasche   rDurst         Wasser ist ein gesundes Getränk.	39   beverage        Water is a healthy beverage.	Nomen
+40   Nomen   das Fahrrad    rLenker   rReifen   rSattel   eKette   rHelm   eStraße         Ich fahre jeden Tag mit dem Fahrrad.	40   bicycle        I ride my bicycle every day.	Nomen
+41   Adjektiv   groß    rTurm   rBerg   rHund   eStadt   rRaum   eMenge         Das Haus ist sehr groß.	41   big/large        The house is very big.	Adjektiv
+42   Nomen   die Rechnung                            Die Rechnung bitte!	42   bill (noun)        The bill	Nomen
+43   Nomen   eine Milliarde    eZahl   eWirtschaft   eSumme   rBetrag   rReichtum   rStaat         Das Unternehmen ist eine Milliarde wert.	43   billion        The company is worth a billion.	Nomen
+44   Nomen   der Vogel    rSchnabel   rFlügel   eFeder   rKäfig   rAdler   eTaube         Der Vogel singt im Baum.	44   bird        The bird is singing in the tree.	Nomen
+45   Adjektiv   schwarz    eFarbe   rStift   eKohle   rAnzug   rAbend   eNacht         Die Katze ist schwarz.	45   black        The cat is black.	Adjektiv
+46   Adjektiv   blind    rHund   eBrille   rStock   ePerson   eHilfe   eStimme         Er ist seit Geburt blind.	46   blind (adjective)        He has been blind since birth.	Adjektiv
+47   Nomen   das Blut    rKörper   rArzt   eAder   rUnfall   rKrankheit   eWunde         Der Arzt nimmt Blut ab.	47   blood        The doctor takes blood.	Nomen
+48   Adjektiv   blau    eFarbe   rHimmel   eJeans   sMeer   rStift   eBlume         Der Himmel ist heute blau.	48   blue        The sky is blue today.	Adjektiv
+49   Nomen   das Boot    sWasser   rHafen   rMotor   eFähre   rKapitän   eSegel         Wir fahren mit dem Boot auf dem See.	49   boat        We go on the lake with the boat.	Nomen
+50   Nomen   der Körper    rKopf   rArm   rFuß   eHand   rRücken   eGesundheit         Der Körper braucht Ruhe.	50   body        The body needs rest.	Nomen
+51   Nomen   der Knochen    rKörper   rBruch   eHand   rHund   rSchädel   rArzt         Der Hund kaut auf einem Knochen.	51   bone        The dog is chewing on a bone.	Nomen
+52   Nomen   das Buch    eSeite   rAutor   eBibliothek   rRoman   rTitel   eGeschichte         Ich lese ein spannendes Buch.	52   book        I’m reading an exciting book.	Nomen
+53   Nomen   die Flasche    sBier   rWein   eMilch   rSaft   eKunststoff   eGlas         Die Flasche ist leer.	53   bottle        The bottle is empty.	Nomen
+54   Nomen   der Boden    rFuß   eHolz   eFliese   rTeppich   rStaub   eErde         Die Tasche steht auf dem Boden.	54   bottom        The bag is on the bottom (floor).	Nomen
+55   Nomen   die Box    rKarton   rRaum   eKiste   eSendung   rBrief   ePost         Die Box ist voll mit Spielzeug.	55   box (noun)        The box is full of toys.	Nomen
+56   Nomen   der Junge    eSchule   rBall   rBruder   rVater   eFreund   eKind         Der Junge spielt im Garten.	56   boy        The boy is playing in the garden.	Nomen
+57   Nomen   das Gehirn    rKörper   rArzt   eNerv   rSchädel   rGedanke   eIdee         Das Gehirn steuert den Körper.	57   brain        The brain controls the body.	Nomen
+58   Nomen   das Brot    eScheibe   rBäcker   rTeig   eButter   rKäse   eMesser         Zum Frühstück esse ich Brot.	58   bread        I eat bread for breakfast.	Nomen
+59   Verb   brechen    rKnochen   eHand   rSturz   rUnfall   eWelle   eRegel         Ich möchte das Glas nicht brechen.	59   break (verb)        I don’t want to break the glass.	Verb
+60   Nomen   das Frühstück    rKaffee   eMilch   sBrot   eMarmelade   rTisch   eButter         Das Frühstück ist um acht Uhr.	60   breakfast        Breakfast is at eight o’clock.	Nomen
+61   Nomen   die Brücke    rFluss   eStraße   rVerkehr   eStadt   eVerbindung   rBogen         Die Brücke führt über den Fluss.	61   bridge (noun)        The bridge leads over the river.	Nomen
+62   Nomen   der Bruder    eSchwester   rVater   eMutter   rOnkel   rFamilie   rCousin         Mein Bruder ist jünger als ich.	62   brother        My brother is younger than me.	Nomen
+63   Adjektiv   braun    eFarbe   rStuhl   rHolz   eSchokolade   eErde   rBär         Mein Hund ist braun.	63   Brown        My dog is brown.	Adjektiv
+64   Verb   bauen    sHaus   rArbeiter   eStraße   eMauer   rPlan   rTurm         Wir bauen ein Haus.	64   build (verb)        We are building a house.	Verb
+65   Nomen   das Gebäude    sHaus   rBau   eKirche   eSchule   rTurm   eWohnung         Das Gebäude ist sehr alt.	65   building        The building is very old.	Nomen
+66   Verb   brennen    rBrand   rFeuer   rSchmerz   eKerze   eGlut   eAsche         Das Feuer brennt hell.	66   burn (verb)        The fire burns brightly.	Verb
+67   Nomen   der Bus    rFahrer   eHaltestelle   eSchule   rVerkehr   eLinie   eStraße         Ich nehme den Bus zur Schule.	67   bus        I take the bus to school.	Nomen
+68   Verb   kaufen    sGeld   rLaden   eKarte   eWare   eRechnung   rPreis         Ich kaufe heute ein neues Handy.	68   buy (verb)        I’m buying a new phone today.	Verb
+69   Nomen   der Kuchen    rBäcker   eSahne   rOfen   rTeller   eKirsche   eSchokolade         Der Kuchen schmeckt lecker.	69   cake        The cake tastes delicious.	Nomen
+70   Verb   rufen    eStimme   rName   rHilfe   rLehrer   eAntwort   rTon         Ich rufe dich später an.	70   call (verb)        I’ll call you later.	Verb
+71   Nomen   die Kamera    rFilm   rFotograf   rBlitz   eLinse   eAufnahme   rReporter         Die Kamera ist sehr teuer.	71   camera        The camera is very expensive.	Nomen
+72   Nomen   das Lager    eArmee   eArbeit   eZelt   rSoldat   rPlatz   eHütte         Wir schlafen im Lager.	72   camp (noun)        We sleep in the camp.	Nomen
+73   Nomen   das Auto    rMotor   rFahrer   eGarage   rWeg   rUnfall   eReise         Mein Auto ist rot.	73   car        My car is red.	Nomen
+74   Nomen   die Karte    rPlan   rWeg   rSpiel   eBank   rPreis   eStraße         Ich bezahle mit Karte.	74   card        I pay with card.	Nomen
+75   Verb   tragen    eTasche   rKoffer   eLast   rArbeiter   eJacke   eSchuld         Ich trage die Tasche.	75   carry (verb)        I carry the bag.	Verb
+76   Nomen   die Katze    rHund   rMaus   ePfote   eKralle   rTiger   eSofa         Die Katze schläft.	76   cat        The cat is sleeping.	Nomen
+77   Verb   fangen    rFisch   rHund   eMaus   rJäger   eBeute   rNetz         Ich fange den Ball.	77   catch (verb)        I catch the ball.	Verb
+78   Nomen   die Decke    rStuhl   eLampe   rBoden   eWärme   eWolke   eMauer         Die Decke ist hoch.	78   ceiling        The ceiling is high.	Nomen
+79   Nomen   das Handy    rAnruf   eNachricht   rVertrag   eNummer   eKamera   eApp         Ich habe mein Handy vergessen.	79   cell phone        I forgot my cell phone.	Nomen
+80   Nomen   der Zentimeter    eLänge   eLinie   rLineal   rMaß   eBreite   rMillimeter         Das Lineal hat 30 Zentimeter.	80   centimeter        The ruler has 30 centimeters.	Nomen
+81   Nomen   der Stuhl    rTisch   rHolz   eLehne   eBank   rSitz   eSchule         Der Stuhl ist bequem.	81   chair (noun)        The chair is comfortable.	Nomen
+82   Adjektiv   billig    rPreis   rLaden   eWare   eQualität   rMarkt   eKauf         Das T-Shirt war sehr billig.	82   cheap        The T-shirt was very cheap.	Adjektiv
+83   Nomen   der Käse    rBrot   ePizza   eMilch   eScheibe   rGeschmack   eButter         Ich mag Käse auf dem Brot.	83   cheese        I like cheese on bread.	Nomen
+84   Nomen   das Huhn    eFeder   rHahn   rBauer   eKüche   ePfanne   eSuppe         Das Huhn läuft im Garten.	84   chicken        The chicken runs in the garden.	Nomen
+85   Nomen   das Kind / die Kirche    eSchule   rSpiel   eFamilie   rVater   eMutter   eLehrer         Das Kind geht in die Kirche.	85   child church        The child goes to church.	Nomen
+86   Nomen   der Kreis    eForm   rMittelpunkt   rWinkel   eLinie   eFigur   rZirkel         Wir sitzen im Kreis.	86   circle (noun)        We sit in a circle.	Nomen
+87   Nomen   die Stadt    eMetropole   eAltstadt   rMarkt   eStraße   rBahnhof   eKirche         Berlin ist eine große Stadt.	87   city        Berlin is a big city.	Nomen
+88   Nomen   der Ton    eMusik   rKlang   rLaut   eStimme   rSchall   rRhythmus         Die Vase ist aus Ton.	88   clay        The vase is made of clay.	Nomen
+89   Adjektiv   sauber    eSeife   rBoden   eOrdnung   eHygiene   rGlanz   rGeruch         Das Zimmer ist sauber.	89   clean (adjective)        The room is clean.	Adjektiv
+90   Verb   putzen    eSeife   eHand   rBoden   eBürste   rLappen   eZahn         Ich putze das Fenster.	90   clean (verb)        I clean the window.	Verb
+91   Nomen   die Uhr    rWecker   eZeit   eMinute   rZeiger   eArmbanduhr   eSekunde         Die Uhr zeigt zehn Uhr.	91   clock        The clock shows ten o’clock.	Nomen
+92   Verb   schließen    eTür   rSchlüssel   rMund   eHand   rKoffer   eKette         Ich schließe die Tür.	92   close (verb)        I close the door.	Verb
+93   Nomen   die Kleidung    eJacke   eHose   eBluse   rMantel   eMode   rAnzug         Die Kleidung ist modern.	93   clothing        The clothing is modern.	Nomen
+94   Nomen   der Club    eMusik   eDisko   eNacht   rTanz   eMitglied   rGast         Wir gehen heute in den Club.	94   club (the location)        We’re going to the club today.	Nomen
+95   Nomen   der Mantel    eJacke   rKnopf   eTasche   eMode   rWinter   eSchal         Mein Mantel ist warm.	95   coat (noun)        My coat is warm.	Nomen
+96   Nomen   der Kaffee    eTasse   rLöffel   eMilch   rZucker   eMarke   ePause         Ich trinke morgens Kaffee.	96   coffee        I drink coffee in the morning.	Nomen
+97   Adjektiv   kalt    rWinter   rWind   eLuft   rTag   eHand   eNacht         Heute ist es sehr kalt.	97   cold        It is very cold today.	Adjektiv
+98   Nomen   die Farbe    eMischung   rStift   eBlume   eKleidung   eWand   rKünstler         Meine Lieblingsfarbe ist blau.	98   color (noun)        My favorite color is blue.	Nomen
+99   Nomen   der Computer    eMaus   eTastatur   rBildschirm   rMonitor   eSoftware   eDatei         Der Computer ist neu.	99   computer        The computer is new.	Nomen
+100   Nomen   der Konsonant    eSprache   rBuchstabe   rTon   eSilbe   rLaut   eZunge         ‚T‘ ist ein Konsonant.	100   consonant        T' is a consonant.	Nomen
+101   Nomen   der Vertrag    rKunde   rPreis   eUnterschrift   rAnwalt   eKlausel   rStreit         Ich unterschreibe den Vertrag heute.	101   contract (noun)        I’m signing the contract today.	Nomen
+102   Verb   kochen    ePfanne   rTopf   eKüche   rHerd   eRezept   rGeruch         Ich koche gern Pasta.	102   cook (verb)        I like to cook pasta.	Verb
+103   Adjektiv   cool    rStil   rTrend   eMode   eMusik   rLook   eIdee         Dein T-Shirt sieht cool aus!	103   cool (adjective)        Your T-shirt looks cool!	Adjektiv
+104   Nomen   das Kupfer    sMetall   rDraht   eMünze   rStrom   rCent   eLeitung         Die Leitung besteht aus Kupfer.	104   copper        The wire is made of copper.	Nomen
+105   Nomen   der Mais    ePflanze   eErnte   rAcker   eSuppe   rBauer   eTortilla         Mais wächst auf dem Feld.	105   corn        Corn grows in the field.	Nomen
+106   Nomen   die Ecke    rRaum   eStraße   rWinkel   eKante   rPlatz   eBank         Das Geschäft ist an der Ecke.	106   corner (noun)        The store is on the corner.	Nomen
+107   Verb   zählen    eZahl   eReihe   rFinger   eListe   rRechner   rPunkt         Kannst du bis zehn zählen?	107   count (verb)        Can you count to ten?	Verb
+108   Nomen   das Land                            Spain)	108   country (United States        Spanien ist ein schönes Land.	Nomen
+109   Nomen   das Gericht    rRichter   rAnwalt   eKlage   eStrafe   rProzess   ePolizei         Das Gericht hat entschieden.	109   court        The court has decided.	Nomen
+110   Nomen   die Kuh    rStall   rBauer   eMilch   rOchse   rKopf   eWeide         Die Kuh steht auf der Weide.	110   cow        The cow is in the pasture.	Nomen
+111   Nomen   die Menge    eGruppe   rHaufen   rStoff   eAnzahl   rMarkt   eArbeit         Eine große Menge wartet draußen.	111   crowd (noun)        A large crowd is waiting outside.	Nomen
+112   Verb   weinen    eTräne   rKummer   eStimme   rTrauer   rSchmerz   eNacht         Das Kind weint leise.	112   cry (verb)        The child is crying quietly.	Verb
+113   Nomen   die Tasse    rKaffee   rTee   eUntertasse   eMilch   rLöffel   eGlas         Ich trinke Tee aus einer Tasse.	113   cup        I drink tea from a cup.	Nomen
+114   Adjektiv   gebogen    eForm   rKreis   rWeg   rBogen   rPfeil   eLinie         Die Straße ist leicht gebogen.	114   curved        The road is slightly curved.	Adjektiv
+115   Verb   schneiden    rMesser   eSchere   rKoch   eHand   eWunde   rArzt         Ich schneide das Papier.	115   cut (verb)        I cut the paper.	Verb
+116   Verb   tanzen    eMusik   rClub   eBewegung   eFreude   rKörper   rRhythmus         Wir tanzen gern zusammen.	116   dance (verb)        We like to dance together.	Verb
+117   Adjektiv   dunkel    eNacht   rRaum   eLampe   rSchatten   eFarbe   rMond         Es ist schon dunkel draußen.	117   dark        It’s already dark outside.	Adjektiv
+118   Nomen   das Datum    rTag   rMonat   rKalender   eZahl   rTermin   eUhr         Welches Datum ist heute?	118   date (May 7)        What’s the date today?	Nomen
+119   Nomen   die Tochter    rVater   eMutter   rSohn   eSchule   rOnkel   eFamilie         Meine Tochter geht zur Schule.	119   daughter        My daughter goes to school.	Nomen
+120   Nomen   der Tag    rMorgen   rAbend   eNacht   rKalender   rSonnenschein   eZeit         Heute ist ein schöner Tag.	120   day        Today is a beautiful day.	Nomen
+121   Adjektiv   tot    rKörper   rTod   eRuhe   eBeerdigung   rKrieg   eSeele         Der Fisch ist tot.	121   dead        The fish is dead.	Adjektiv
+122   Adjektiv   taub    rMensch   eBehinderung   eStille   rHund   rTon   eWahrnehmung         Er ist auf einem Ohr taub.	122   deaf        He is deaf in one ear.	Adjektiv
+123   Nomen   der Tod    rKrieg   rMensch   eSeele   eRuhe   rFriedhof   eTrauer         Der Tod des Königs war traurig.	123   death        The king’s death was sad.	Nomen
+124   Nomen   der Dezember    rWinter   rMonat   rSchnee   eKälte   rWeihnachten   eKerze         Im Dezember ist es kalt.	124   December        It’s cold in December.	Nomen
+125   Adjektiv   tief    rSee   eWald   rBerg   eGrube   eErde   rTon         Das Wasser ist sehr tief.	125   Deep        The water is very deep.	Adjektiv
+126   Nomen   der Diamant    sJuwel   rRing   rGlanz   eKrone   eHochzeit   eMine         Der Ring hat einen Diamanten.	126   diamond        The ring has a diamond.	Nomen
+127   Verb   sterben    rTod   eKrankheit   rKrieg   eRuhe   eSeele   rKörper         Viele Blumen sterben im Winter.	127   die (verb)        Many flowers die in winter.	Verb
+128   Verb   graben    eErde   rBagger   eHand   rSchaufel   rBauer   eGrube         Wir graben ein Loch.	128   dig (verb)        We are digging a hole.	Verb
+129   Nomen   das Abendessen    sBrot   rKäse   rTisch   eSuppe   rWein   eFamilie         Das Abendessen ist fertig.	129   dinner        Dinner is ready.	Nomen
+130   Nomen   die Richtung    rWeg   rPfeil   eStraße   rKompass   eSeite   rBlick         In welche Richtung fährst du?	130   direction        Which direction are you going?	Nomen
+131   Adjektiv   schmutzig    rFleck   eWäsche   rMüll   eStraße   rStaub   eHand         Deine Hände sind schmutzig.	131   dirty        Your hands are dirty.	Adjektiv
+132   Nomen   die Krankheit    rArzt   rHusten   eGrippe   ePest   rVirus   eWunde         Die Krankheit ist heilbar.	132   disease        The disease is curable.	Nomen
+133   Nomen   der Arzt    rPatient   ePraxis   rKittel   eTablette   rKrankenhaus   eOperation         Der Arzt untersucht den Patienten.	133   doctor        The doctor examines the patient.	Nomen
+134   Nomen   der Hund    rKörper   rKnochen   ePfote   eKatze   rBiss   rSchwanz         Der Hund bellt laut.	134   dog        The dog is barking loudly.	Nomen
+135   Nomen   der Dollar    rPreis   eBank   rSchein   eMünze   rMarkt   eRechnung         Ein Dollar ist wenig Geld.	135   dollar        One dollar is not much money.	Nomen
+136   Nomen   die Tür    rSchlüssel   rRaum   eKlinke   rWand   eWohnung   eSchloss         Die Tür ist offen.	136   door        The door is open.	Nomen
+137   Nomen   der Punkt    eLinie   eForm   rFleck   rStrich   eAufgabe   rKreis         Setze einen Punkt am Ende.	137   dot        Put a dot at the end.	Nomen
+138   Adverb   nach unten    rWeg   rFall   eBewegung   rBoden   rSchritt   eRichtung         Wir gehen die Treppe nach unten.	138   down        We go down the stairs.	Adverb
+139   Verb   zeichnen    rStift   rMaler   eLinie   rBlock   eForm   rZettel         Ich zeichne ein Bild.	139   draw (verb)        I draw a picture.	Verb
+140   Nomen   der Traum    rSchlaf   eNacht   eFantasie   rWunsch   eGeschichte   eVision         Ich hatte einen schönen Traum.	140   dream (noun)        I had a nice dream.	Nomen
+141   Nomen   das Kleid    eMode   rStoff   eFarbe   eDame   rAnlass   eSchneider         Das Kleid ist rot.	141   dress (noun)        The dress is red.	Nomen
+142   Verb   trinken    rDurst   rBecher   eMilch   sBier   rWein   eWasser         Ich trinke Wasser.	142   drink (verb)        I drink water.	Verb
+143   Verb   fahren    sAuto   rBus   rZug   eReise   rWeg   eStraße         Ich fahre das Auto.	143   drive (verb)        I drive the car.	Verb
+144   Nomen   das Medikament    rArzt   ePille   eKrankheit   rPatient   eApotheke   rBeipackzettel         Dieses Medikament hilft gut.	144   drug (noun)        This drug helps well.	Nomen
+145   Adjektiv   trocken    eWüste   rSommer   rWind   rSand   eLuft   eHaut         Der Boden ist trocken.	145   dry        The ground is dry.	Adjektiv
+146   Nomen   der Staub    rBoden   rMüll   eAsche   rDreck   eLuft   eSchicht         Überall liegt Staub.	146   dust (noun)        There is dust everywhere.	Nomen
+147   Nomen   das Ohr    rKörper   rTon   rKlang   eMuschel   eWahrnehmung   rSchmerz         Ich höre mit dem Ohr.	147   ear        I hear with the ear.	Nomen
+148   Nomen   die Erde    rPlanet   rStaub   eNatur   eKugel   rBoden   eWelt         Die Erde ist unser Planet.	148   Earth        Earth is our planet.	Nomen
+149   Nomen   der Osten    rKompass   eSonne   rMorgen   rWind   eRichtung   eGrenze         Die Sonne geht im Osten auf.	149   east        The sun rises in the east.	Nomen
+150   Verb   essen    sBrot   rTisch   rKoch   eHand   rApfel   eMahlzeit         Ich esse ein Sandwich.	150   eat (verb)        I eat a sandwich.	Verb
+151   Nomen   der Rand    eKante   rBoden   eLinie   eSeite   rBlick   eGrenze         Das Buch liegt am Rand des Tisches.	151   Edge        The book is on the edge of the table.	Nomen
+152   Nomen   das Ei    eSchale   eHenne   rKüken   rKuchen   ePfanne   eOmelett         Zum Frühstück esse ich ein Ei.	152   egg        I eat an egg for breakfast.	Nomen
+153   Zahlwort   acht    eZahl   eReihe   eGruppe   rWürfel   eForm   rMonat         Ich habe acht Äpfel.	153   eight        I have eight apples.	Zahlwort
+154   Zahlwort   achtzehn    eZahl   rJugend   eFeier   rFührerschein   rMonat   eSchule         Sie ist achtzehn Jahre alt.	154   eighteen        She is eighteen years old.	Zahlwort
+155   Zahlwort   achtzig    eZahl   eReihe   eRente   rJahr   rSenior   eGeburtstag         Mein Opa ist achtzig Jahre alt.	155   eighty        My grandpa is eighty years old.	Zahlwort
+156   Nomen   die Wahl    rStaat   ePartei   rKandidat   eStimme   rBürger   eRegierung         Die Wahl ist nächsten Monat.	156   election        The election is next month.	Nomen
+157   Nomen   die Elektronik    sGerät   rComputer   rMotor   eSchaltung   eTechnik   eLampe         Elektronik ist in jedem Gerät.	157   electronics        Electronics is in every device.	Nomen
+158   Zahlwort   elf    eZahl   eMannschaft   rFußball   eSpieler   rTor   eMinute         Ich sehe elf Vögel.	158   eleven        I see eleven birds.	Zahlwort
+159   Nomen   die Energie    rStrom   eKraft   eHitze   eBewegung   rArbeit   eQuelle         Kinder haben viel Energie.	159   energy        Children have a lot of energy.	Nomen
+160   Nomen   der Motor    rAntrieb   rStrom   eMaschine   rLärm   eTechnik   rDiesel         Der Motor ist kaputt.	160   engine        The engine is broken.	Nomen
+161   Nomen   der Abend    eNacht   eStunde   rHimmel   eRuhe   eLampe   rMond         Ich lese am Abend ein Buch.	161   evening        I read a book in the evening.	Nomen
+162   Nomen   die Übung    rLehrer   eAufgabe   rSport   eWiederholung   eStunde   rTest         Diese Übung ist einfach.	162   exercise (noun)        This exercise is easy.	Nomen
+163   Adjektiv   teuer    rPreis   eWare   eRechnung   rKauf   eMarkt   rLuxus         Das Auto ist sehr teuer.	163   expensive        The car is very expensive.	Adjektiv
+164   Verb   explodieren    rKnall   rKrieg   rSchaden   eBombe   rFeuer   eWolke         Die Rakete explodiert am Himmel.	164   explode (verb)        The rocket explodes in the sky.	Verb
+165   Nomen   das Auge    rBlick   eLinse   rKörper   eSehkraft   eBrille   rArzt         Ich sehe mit dem Auge.	165   eye (noun)        I see with the eye.	Nomen
+166   Nomen   das Gesicht    rMund   eNase   rKörper   eWange   eStirn   rBart         Sie hat ein schönes Gesicht.	166   face (noun)        She has a beautiful face.	Nomen
+167   Nomen   der Herbst    rWind   eBlatt   eRegen   rMonat   eErnte   rBaum         Der Herbst beginnt im September.	167   fall (season)        Fall begins in September.	Nomen
+168   Verb   fallen    rSturz   eWeg   rBoden   eBewegung   rBaum   eRegel         Die Blätter fallen vom Baum.	168   fall (verb)        The leaves fall from the tree.	Verb
+169   Nomen   die Familie    rVater   eMutter   eSchwester   rBruder   eKind   rOnkel         Meine Familie ist groß.	169   family        My family is big.	Nomen
+170   Adjektiv   berühmt    rName   ePerson   rFilm   rSchauspieler   eGeschichte   eStadt         Er ist ein berühmter Sänger.	170   famous        He is a famous singer.	Adjektiv
+171   Nomen   der Ventilator    rMotor   eLampe   rKörper   rStrom   eLuft   rLärm         Der Ventilator kühlt den Raum.	171   fan (electric)        The fan cools the room.	Nomen
+172   Nomen   der Fan    rName   eIdol   rSport   eMenge   eMusik   rSpiel         Er ist ein großer Fußballfan.	172   fan (sport)        He is a big football fan.	Nomen
+173   Nomen   die Farm    rBauer   eArbeit   eTiere   rMais   rAcker   eErnte         Wir leben auf einer Farm.	173   farm (noun)        We live on a farm.	Nomen
+174   Adjektiv   schnell    rWeg   rLauf   eBewegung   rZug   sAuto   eAntwort         Das Auto ist sehr schnell.	174   fast        The car is very fast.	Adjektiv
+175   Nomen   der Vater    eMutter   eFamilie   rSohn   eTochter   rBruder   rOnkel         Mein Vater arbeitet viel.	175   father        My father works a lot.	Nomen
+176   Nomen   der Februar    rMonat   rWinter   eKälte   rSchnee   eLiebe   eReise         Im Februar ist es oft kalt.	176   February        February is often cold.	Nomen
+177   Verb   füttern    eHand   eKatze   rHund   eMaus   rBauer   eKind         Ich füttere die Katze.	177   feed (verb)        I feed the cat.	Verb
+178   Adjektiv   weiblich    eFrau   ePerson   rName   eForm   rStimme   eEigenschaft         Sie ist eine weibliche Person.	178   female        She is a female person.	Adjektiv
+179   Zahlwort   fünfzehn    eZahl   eJugend   eSchule   rMonat   rFreund   eFeier         Ich bin fünfzehn Jahre alt.	179   fifteen        I am fifteen years old.	Zahlwort
+180   Zahlwort   fünfte    eZahl   eReihe   rPlatz   eStufe   rRang   eKlasse         Heute ist der fünfte Mai.	180   fifth (5th)        Today is the fifth of May.	Zahlwort
+181   Zahlwort   fünfzig    eZahl   eReihe   rJahr   eGeburtstag   eRente   rMenge         Mein Vater ist fünfzig Jahre alt.	181   fifty        My father is fifty years old.	Zahlwort
+182   Verb   kämpfen    rKrieg   rSoldat   rBoxer   rFeind   eSchlacht   rStreit         Die Ritter kämpfen mutig.	182   fight (verb)        The knights fight bravely.	Verb
+183   Verb   finden    rWeg   eOrt   rSchlüssel   eAntwort   eLösung   rName         Ich finde meinen Schlüssel nicht.	183   find (verb)        I can't find my key.	Verb
+184   Nomen   der Finger    rHand   rNagel   rKörper   rRing   eBewegung   eWunde         Ich habe mir den Finger geschnitten.	184   finger        I cut my finger.	Nomen
+185   Nomen   das Feuer    eFlamme   rBrand   eAsche   rFunke   eKerze   eHitze         Das Feuer brennt stark.	185   fire (noun)        The fire burns strongly.	Nomen
+186   Zahlwort   erste    eReihe   rPlatz   eKlasse   rRang   eStufe   ePosition         Sie kam als Erste ins Ziel.	186   first (1st)        She was the first to finish.	Zahlwort
+187   Nomen   der Fisch    rTeich   rSee   rKörper   rFang   eGräte   eFlosse         Ich esse gern Fisch.	187   fish (noun)        I like eating fish.	Nomen
+188   Zahlwort   fünf    eZahl   rWürfel   eReihe   eGruppe   eFinger   rMonat         Ich habe fünf Bücher.	188   five        I have five books.	Zahlwort
+189   Adjektiv   flach    rBoden   eForm   eEbene   rSee   rTisch   eKüste         Der Boden ist flach.	189   flat (adjective)        The ground is flat.	Adjektiv
+190   Nomen   der Boden    rFuß   eHolz   eFliese   rTeppich   rStaub   eErde         Der Boden ist sauber.	190   floor        The floor is clean.	Nomen
+191   Nomen   die Blume    eRose   eTulpe   rStiel   eWiese   rDuft   eVase         Die Blume ist bunt.	191   flower        The flower is colorful.	Nomen
+192   Verb   fliegen    rVogel   sFlugzeug   rPilot   rHimmel   eReise   eWolke         Die Vögel fliegen hoch.	192   fly (verb)        The birds fly high.	Verb
+193   Verb   folgen    rWeg   rName   eRegel   rBefehl   eSpur   eReihe         Ich folge dem Auto.	193   follow (verb)        I follow the car.	Verb
+194   Nomen   das Essen    sBrot   eSuppe   rTeller   eKüche   rReis   eMahlzeit         Das Essen ist lecker.	194   food        The food is tasty.	Nomen
+195   Nomen   der Fuß    rSchuh   eZehe   rKörper   rKnochen   eSohle   rSchmerz         Ich habe mir den Fuß verletzt.	195   foot (body part)        I hurt my foot.	Nomen
+196   Nomen   das Fußmaß    rMeter   rZentimeter   rLineal   eLänge   rMaß   eRechnung         Ein Fuß ist etwa 30 Zentimeter.	196   foot (measurement)        One foot is about 30 centimeters.	Nomen
+197   Nomen   der Wald    rBaum   rBoden   eNatur   rWeg   eLichtung   rVogel         Wir wandern durch den Wald.	197   forest        We hike through the forest.	Nomen
+198   Nomen   die Gabel    rTisch   rZinken   eHand   eKüche   rLöffel   eMesser         Ich esse mit einer Gabel.	198   fork        I eat with a fork.	Nomen
+199   Zahlwort   vierzig    eZahl   rJahr   rGeburtstag   rSenior   eReihe   eRechnung         Mein Vater ist vierzig Jahre alt.	199   forty        My father is forty years old.	Zahlwort
+200   Zahlwort   vier    eZahl   eGruppe   rWürfel   eReihe   rMonat   eForm         Ich sehe vier Hunde.	200   four        I see four dogs.	Zahlwort
+201   Zahlwort   vierzehn    eZahl   rJugend   eSchule   rFreund   eGruppe   rMonat         Er ist vierzehn Jahre alt.	201   fourteen        He is fourteen years old.	Zahlwort
+202   Zahlwort   vierte    eReihe   rPlatz   eStufe   rRang   eKlasse   rTeil         Ich wohne im vierten Stock.	202   fourth (4th)        I live on the fourth floor.	Zahlwort
+203   Nomen   der Freitag    rTag   rKalender   rArbeit   eWoche   rAbend   eSchule         Am Freitag habe ich frei.	203   Friday        I have free time on Friday.	Nomen
+204   Nomen   der Freund    eFreundin   rName   rMensch   eBeziehung   eLiebe   rKamerad         Mein Freund heißt Paul.	204   friend        My friend is named Paul.	Nomen
+205   Nomen   die Vorderseite    eSeite   rRand   eKante   rBlick   eFront   rTeil         Die Tür ist an der Vorderseite.	205   front        The door is at the front.	Nomen
+206   Nomen   das Spiel    rBall   eKarte   rSport   rWürfel   eRegel   rPreis         Das Spiel macht Spaß.	206   game        The game is fun.	Nomen
+207   Nomen   der Garten    rBaum   eBlume   rZaun   eBank   rWeg   eWiese         Im Garten wachsen Blumen.	207   garden        Flowers grow in the garden.	Nomen
+208   Nomen   das Benzin    rMotor   eTank   rPreis   eZapfsäule   rVerbrauch   eFlamme         Ich tanke Benzin.	208   gasolina        I fill up with gasoline.	Nomen
+209   Nomen   das Geschenk    eSchleife   rAnlass   eÜberraschung   rFreund   eLiebe   eTasche         Danke für das Geschenk!	209   gift        Thanks for the gift!	Nomen
+210   Nomen   das Mädchen    eTochter   rVater   eSchwester   eFreundin   rName   eSchule         Das Mädchen spielt im Park.	210   girl        The girl is playing in the park.	Nomen
+211   Nomen   das Glas    eTasse   eFlasche   rBecher   rRand   eScheibe   rTrinkglas         Ich trinke Wasser aus dem Glas.	211   glass        I drink water from the glass.	Nomen
+212   Verb   gehen    rWeg   eStraße   eBewegung   rFuß   rSchritt   eRichtung         Ich gehe nach Hause.	212   go (verb)        I go home.	Verb
+213   Nomen   Gott    eKirche   rGlaube   rHimmel   eReligion   rPapst   eBibel         Viele Menschen glauben an Gott.	213   God        Many people believe in God.	Nomen
+214   Nomen   das Gold    sMetall   rRing   eKette   rPreis   rGlanz   eMünze         Der Ring ist aus Gold.	214   gold        The ring is made of gold.	Nomen
+215   Adjektiv   gut    eIdee   rMensch   eTat   eWahl   rWert   eQualität         Das Essen schmeckt gut.	215   good        The food tastes good.	Adjektiv
+216   Nomen   der Großvater    eFamilie   rVater   eMutter   rOpa   rEnkel   eKind         Mein Großvater liest gern.	216   grandfather        My grandfather likes to read.	Nomen
+217   Nomen   die Großmutter    eFamilie   rMutter   eOma   rTochter   eKüche   eGeschichte         Meine Großmutter kocht oft.	217   grandmother        My grandmother often cooks.	Nomen
+218   Nomen   das Gras    rBoden   rRasen   rHalm   eWiese   rPark   eNatur         Die Kühe fressen Gras.	218   Grass        The cows eat grass.	Nomen
+219   Adjektiv   grau    eFarbe   rHimmel   eWolke   rStein   eMaus   rStaub         Der Himmel ist heute grau.	219   gray        The sky is gray today.	Adjektiv
+220   Adjektiv   grün    eFarbe   eWiese   rBaum   rWald   eNatur   ePflanze         Die Blätter sind grün.	220   green        The leaves are green.	Adjektiv
+221   Nomen   der Boden    rFuß   eHolz   eFliese   rTeppich   rStaub   eErde         Der Boden ist nass.	221   ground        The ground is wet.	Nomen
+222   Verb   wachsen    rBaum   eKind   rKörper   ePflanze   rBart   eArbeit         Die Pflanzen wachsen schnell.	222   grow (verb)        The plants grow fast.	Verb
+223   Nomen   die Waffe    rKrieg   rSoldat   rAngriff   ePistole   rPanzer   eGewehr         Die Polizei trägt eine Waffe.	223   gun        The police carry a gun.	Nomen
+224   Nomen   das Haar    rKamm   rFriseur   rBart   eFarbe   eLocke   eFrisur         Dein Haar ist schön.	224   hair        Your hair is beautiful.	Nomen
+225   Nomen   die Hälfte    eZahl   rTeil   eSeite   rBruch   eStunde   rStück         Ich esse die Hälfte.	225   half        I eat half.	Nomen
+226   Nomen   die Hand    rFinger   rDaumen   rArm   rKörper   eGeste   eBerührung         Ich wasche meine Hände.	226   hand        I wash my hands.	Nomen
+227   Verb   hängen    rMantel   eLampe   rBild   rBaum   eJacke   eLeine         Das Bild hängt an der Wand.	227   hang (verb)        The picture hangs on the wall.	Verb
+228   Adjektiv   glücklich    eFreude   rTag   eLiebe   rErfolg   eHochzeit   rGewinn         Ich bin heute sehr glücklich.	228   happy        I’m very happy today.	Adjektiv
+229   Adjektiv   hart    rStein   rBoden   eArbeit   eWand   eNuss   rKnochen         Der Boden ist hart.	229   hard        The ground is hard.	Adjektiv
+230   Nomen   der Hut    rKopf   rRand   rSchatten   eMode   rStil   eForm         Der Mann trägt einen Hut.	230   hat        The man is wearing a hat.	Nomen
+231   Pronomen   er    rName   rMensch   rKörper   ePerson   rSohn   rVater         Er liest ein Buch.	231   he        He is reading a book.	Pronomen
+232   Nomen   der Kopf    rMund   eNase   eHaar   rHals   eGesicht   rSchmerz         Ich habe Kopfschmerzen.	232   head        I have a headache.	Nomen
+233   Adjektiv   gesund    eErnährung   rSport   eLuft   eMedizin   rKörper   rArzt         Obst ist gesund.	233   healthy        Fruit is healthy.	Adjektiv
+234   Verb   hören    rTon   rKlang   eStimme   eMusik   rOhr   eGeräusch         Ich höre Musik.	234   hear (a sound)        I hear music.	Verb
+235   Nomen   das Herz    rKörper   rArzt   eLiebe   rSchmerz   ePumpe   eGefühl         Mein Herz schlägt schnell.	235   heart        My heart is beating fast.	Nomen
+236   Nomen   die Hitze    rSommer   rSonne   eLuft   rFeuer   eWüste   rTag         Die Hitze ist stark heute.	236   heat (noun)        The heat is strong today.	Nomen
+237   Nomen   der Himmel    rMond   eSonne   rWolke   rAdler   rStern   eBlau         Er glaubt an den Himmel.	237   heaven        He believes in heaven.	Nomen
+238   Adjektiv   schwer    rKörper   rStein   rArbeit   rLast   eAufgabe   rBerg         Die Tasche ist schwer.	238   heavy        The bag is heavy.	Adjektiv
+239   Nomen   die Hölle    eFeuer   rSatan   eStrafe   rSchmerz   eSeele   rOrt         Er hat Angst vor der Hölle.	239   hell        He is afraid of hell.	Nomen
+240   Adjektiv   hoch    rTurm   rBerg   eFahne   rHimmel   rBaum   eMauer         Der Berg ist hoch.	240   high        The mountain is high.	Adjektiv
+241   Nomen   der Hügel    rBerg   rWald   eLandschaft   rWeg   eWiese   eHöhe         Wir laufen den Hügel hinauf.	241   Hill        We walk up the hill.	Nomen
+242   Nomen   das Loch    rBoden   rKreis   rWeg   eGrube   rTunnel   eWand         Ein Loch ist im Boden.	242   hole        There is a hole in the ground.	Nomen
+243   Nomen   das Pferd    rReiter   eKoppel   eMähne   rHuf   eKutsche   eSattel         Das Pferd galoppiert.	243   horse        The horse is galloping.	Nomen
+244   Nomen   das Krankenhaus    rArzt   rPatient   eKrankheit   rNotarzt   eOperation   rFlur         Er liegt im Krankenhaus.	244   hospital        He is in the hospital.	Nomen
+245   Adjektiv   heiß    rSommer   rTee   eHitze   rOfen   eSonne   eLuft         Der Kaffee ist heiß.	245   hot        The coffee is hot.	Adjektiv
+246   Nomen   das Hotel    rGast   rZimmer   eRezeption   eReise   rPreis   eBett         Wir schlafen im Hotel.	246   hotel        We sleep in the hotel.	Nomen
+247   Nomen   die Stunde    eMinute   eZeit   rTag   eUhr   ePause   rKurs         Eine Stunde hat sechzig Minuten.	247   hour        An hour has sixty minutes.	Nomen
+248   Nomen   das Haus    rBau   eWand   rTurm   eTreppe   eWohnung   eTür         Mein Haus ist groß.	248   house        My house is big.	Nomen
+249   Nomen   der Mensch    rKörper   rKopf   ePerson   eSeele   rName   rArzt         Der Mensch ist neugierig.	249   human        The human is curious.	Nomen
+250   Zahlwort   hundert    eZahl   rRechnung   eGruppe   rProzent   eMenge   rJahr         Einhundert Jahre sind ein Jahrhundert.	250   hundred        One hundred years is a century.	Zahlwort
+251   Nomen   der Ehemann    eFrau   eFamilie   rRing   eLiebe   rOnkel   eSohn         Mein Ehemann kocht gern.	251   husband        My husband likes to cook.	Nomen
+252   Pronomen   ich    rName   ePerson   eSeele   rKörper   eSprache   eStimme         Ich gehe nach Hause.	252   I        I am going home.	Pronomen
+253   Nomen   das Eis    rSommer   rWinter   eKälte   eKugel   rStiel   eSüßigkeit         Das Eis schmilzt schnell.	253   ice        The ice melts quickly.	Nomen
+254   Nomen   das Bild    rRahmen   rMaler   eLeinwand   eKunst   eFotografie   rAusstellung         Das Bild hängt an der Wand.	254   image        The image hangs on the wall.	Nomen
+255   Nomen   der Zoll                            Ein Zoll sind 2	255   inch        54 Zentimeter.	Nomen
+256   Nomen   die Verletzung    rKörper   eWunde   rArzt   rUnfall   eOperation   rBlut         Die Verletzung ist ernst.	256   injury        The injury is serious.	Nomen
+257   Adverb   drinnen    rRaum   eWand   rTisch   eLampe   rBoden   eDecke         Die Katze ist drinnen.	257   inside        The cat is inside.	Adverb
+258   Nomen   das Musikinstrument    rKlang   rTon   rGeige   rPiano   eFlöte   eGitarre         Die Gitarre ist ein Musikinstrument.	258   instrument (musical)        The guitar is a musical instrument.	Nomen
+259   Nomen   die Insel    rStrand   rSand   rHafen   eWelle   rUrlaub   eMeer         Wir machen Urlaub auf der Insel.	259   island        We’re vacationing on the island.	Nomen
+260   Pronomen   es    rName   rKörper   eDing   eSeele   rOrt   eProblem         Es regnet heute.	260   it        It’s raining today.	Pronomen
+261   Nomen   der Januar    rWinter   rMonat   rSchnee   eKälte   eNeujahr   rTag         Im Januar ist es kalt.	261   January        It’s cold in January.	Nomen
+262   Nomen   der Beruf    rArzt   rLehrer   rHandwerker   eStelle   eArbeit   rManager         Mein Beruf ist Lehrer.	262   job        My job is teacher.	Nomen
+263   Nomen   der Saft    eFlasche   rApfel   eOrange   rBecher   eBanane   rTrunk         Ich trinke Orangensaft.	263   juice        I drink orange juice.	Nomen
+264   Nomen   der Juli    rSommer   rMonat   rFerien   eHitze   rUrlaub   eReise         Im Juli haben viele Leute Urlaub.	264   July        Many people have vacation in July.	Nomen
+265   Verb   springen    rWeg   rSprung   rFrosch   eBewegung   rSport   eLauf         Ich springe über das Seil.	265   jump (verb)        I jump over the rope.	Verb
+266   Nomen   der Juni    rSommer   rMonat   eBlume   rFerien   rTag   eHitze         Im Juni ist das Wetter schön.	266   June        The weather is nice in June.	Nomen
+267   Nomen   der Schlüssel    sSchloss   rBart   rCode   eTür   eWohnung   rKoffer         Ich finde meinen Schlüssel nicht.	267   key        I can't find my key.	Nomen
+268   Verb   töten    rTod   rMörder   eWaffe   eTat   rKrieg   rFeind         Er will das Tier nicht töten.	268   kill (verb)        He doesn’t want to kill the animal.	Verb
+269   Nomen   das Kilogramm    eMenge   eZahl   rMeter   eRechnung   rGewicht   eWaage         Ein Kilogramm ist 1000 Gramm.	269   kilogram        A kilogram is 1000 grams.	Nomen
+270   Nomen   der König    eKrone   rThron   rPalast   eMacht   eKrieg   rRitter         Der König lebt im Schloss.	270   King        The king lives in the castle.	Nomen
+271   Verb   küssen    rMund   rLippen   eLiebe   eFreundin   rKörper   eUmarmung         Sie küssen sich auf die Wange.	271   Kiss (verb)        They kiss on the cheek.	Verb
+272   Nomen   die Küche    rTopf   ePfanne   rHerd   rTisch   eLampe   eKöchin         Ich bin in der Küche.	272   kitchen        I am in the kitchen.	Nomen
+273   Nomen   das Knie    rBein   rSchmerz   rKörper   eWunde   rArzt   eBewegung         Er hat Schmerzen im Knie.	273   knee        He has pain in the knee.	Nomen
+274   Nomen   das Messer    rStahl   eKüche   eSchneide   rGriff   rTeller   eGabel         Das Messer ist scharf.	274   knife        The knife is sharp.	Nomen
+275   Nomen   der See    rFisch   rBerg   eNatur   rStrand   eWelle   rHimmel         Wir schwimmen im See.	275   lake        We swim in the lake.	Nomen
+276   Nomen   die Lampe    rSchalter   eBirne   rSchatten   eDecke   rLicht   eLampe         Die Lampe steht auf dem Tisch.	276   lamp        The lamp is on the table.	Nomen
+277   Nomen   der Laptop    rComputer   eTastatur   rBildschirm   rMonitor   eSoftware   eDatei         Mein Laptop ist neu.	277   laptop        My laptop is new.	Nomen
+278   Verb   lachen    eFreude   eStimme   rWitz   rScherz   eFreund   eKind         Wir lachen über den Witz.	278   laugh (verb)        We laugh at the joke.	Verb
+279   Nomen   der Anwalt    rRichter   rMandant   eKlage   rProzess   eKanzlei   eRecht         Der Anwalt hilft mir.	279   lawyer        The lawyer helps me.	Nomen
+280   Nomen   das Blatt    rBaum   eSeite   rStiel   ePapier   eBlume   rZweig         Das Blatt fällt vom Baum.	280   leaf        The leaf falls from the tree.	Nomen
+281   Verb   lernen    rLehrer   eSchule   eSprache   rTest   eÜbung   rKurs         Ich lerne Deutsch.	281   learn (verb)        I am learning German.	Verb
+282   Adverb   links    eSeite   eRichtung   rArm   rWeg   eHand   rOrt         Die Post ist links.	282   left (direction)        The post office is on the left.	Adverb
+283   Nomen   das Bein    rKnochen   rFuß   rSchmerz   rOberschenkel   eBewegung   eHaut         Mein Bein tut weh.	283   leg        My leg hurts.	Nomen
+284   Nomen   die Zitrone    eSchale   eFrucht   rSaft   eSäure   eKüche   rKuchen         Die Zitrone ist sauer.	284   lemon        The lemon is sour.	Nomen
+285   Nomen   der Brief    ePost   rUmschlag   rAbsender   eMarke   rText   eAdresse         Ich schreibe einen Brief.	285   letter        I write a letter.	Nomen
+286   Nomen   die Bibliothek    sBuch   rAutor   eSeite   eLampe   rKatalog   eUniversität         Ich lese in der Bibliothek.	286   library        I read in the library.	Nomen
+287   Verb   sich hinlegen    sBett   rKörper   eDecke   ePause   rSchlaf   eRuhe         Ich lege mich ins Bett.	287   lie down (verb)        I lie down in bed.	Verb
+288   Verb   heben    rArm   rKörper   eHand   rKran   eLast   rKraft         Ich hebe die Tasche.	288   lift (verb)        I lift the bag.	Verb
+289   Adjektiv   hell    eLampe   rTag   eFarbe   rRaum   rSchein   eSonne         Das Zimmer ist hell.	289   light (/dark)        The room is light.	Adjektiv
+290   Adjektiv   leicht    rWind   eKörper   rStoff   rWert   eAufgabe   eTasche         Der Karton ist leicht.	290   light (/heavy)        The box is light.	Adjektiv
+291   Nomen   das Licht    rStrahl   rSchein   rMond   eSonne   eLampe   rTag         Das Licht ist an.	291   light (noun)        The light is on.	Nomen
+292   Nomen   die Lippe    rMund   rKuss   eFarbe   rStift   rKörper   eBewegung         Ihre Lippen sind rot.	292   lip        Her lips are red.	Nomen
+293   Verb   zuhören    rTon   rName   eMusik   rLehrer   eStimme   rGeräusch         Ich höre Musik zu.	293   listen (music) (verb)        I listen to music.	Verb
+294   Nomen   der Ort    rPlatz   eStadt   rName   eStraße   eKirche   rTurm         Das ist ein schöner Ort.	294   location        That is a beautiful location.	Nomen
+295   Nomen   das Schloss    rKönig   rTurm   eMauer   rPalast   eTreppe   eTür         Das Schloss ist kaputt.	295   lock (noun)        The lock is broken.	Nomen
+296   Verb   sich sehnen    eLiebe   ePerson   eHeimat   rWunsch   rName   eSeele         Ich sehne mich nach Ruhe.	296   long (verb)        I long for peace.	Verb
+297   Adjektiv   locker    rStil   rKnopf   eKleidung   eBewegung   rSitz   eForm         Die Schraube ist locker.	297   loose        The screw is loose.	Adjektiv
+298   Verb   verlieren    rName   eArbeit   rKampf   eSchlacht   eZeit   rWert         Ich verliere mein Handy.	298   lose (verb)        I lose my phone.	Verb
+299   Adjektiv   laut    rTon   rKlang   rSchrei   rSchall   eStimme   eMusik         Die Musik ist zu laut.	299   loud        The music is too loud.	Adjektiv
+300   Verb   lieben    eLiebe   eFreude   rMensch   rName   eBeziehung   rKörper         Ich liebe meine Familie.	300   love (verb)        I love my family.	Verb
+301   Adjektiv   niedrig    rTurm   rBoden   rStuhl   eZahl   rRand   eEbene         Die Temperatur ist niedrig.	301   low        The temperature is low.	Adjektiv
+302   Nomen   das Mittagessen    rTisch   ePause   rKaffee   eSuppe   rSalat   eKantine         Das Mittagessen ist um zwölf Uhr.	302   lunch        Lunch is at twelve o’clock.	Nomen
+303   Nomen   die Zeitschrift    rArtikel   rAutor   rTitel   eSeite   eMode   eLeser         Ich lese eine Zeitschrift.	303   magazine        I’m reading a magazine.	Nomen
+304   Adjektiv   männlich    rMann   rVater   eEigenschaft   ePerson   rName   rKörper         Der männliche Vogel singt lauter.	304   male        The male bird sings louder.	Adjektiv
+305   Nomen   der Mann    eFrau   eFamilie   rVater   rArzt   ePerson   rFreund         Der Mann liest die Zeitung.	305   man        The man reads the newspaper.	Nomen
+306   Nomen   der Manager    rChef   rArbeit   eFirma   rAnzug   eAbteilung   eBüro         Der Manager plant das Projekt.	306   manager        The manager plans the project.	Nomen
+307   Nomen   die Karte    rPlan   rWeg   rSpiel   eBank   rPreis   eStraße         Ich schaue auf die Karte.	307   map        I look at the map.	Nomen
+308   Nomen   der März    rMonat   rFrühling   eBlume   rTag   rKalender   eReise         Im März beginnt der Frühling.	308   March        Spring begins in March.	Nomen
+309   Nomen   der Markt    rPreis   eWare   rKunde   rHändler   eStraße   rVerkäufer         Wir kaufen Obst auf dem Markt.	309   market        We buy fruit at the market.	Nomen
+310   Nomen   die Ehe    rMann   eFrau   eLiebe   rRing   eKirche   eFamilie         Die Ehe dauert seit 10 Jahren.	310   marriage        The marriage has lasted 10 years.	Nomen
+311   Verb   heiraten    rMann   eFrau   eKirche   eLiebe   rName   eFamilie         Sie heiraten im Juni.	311   marry (verb)        They’re getting married in June.	Verb
+312   Nomen   das Material    rStoff   eForm   eHolz   rStein   eMetall   ePlastik         Dieses Material ist sehr stark.	312   material        This material is very strong.	Nomen
+313   Nomen   der Mai    rMonat   rFrühling   eBlume   eHitze   rKalender   eReise         Im Mai blühen die Blumen.	313   May        Flowers bloom in May.	Nomen
+314   Adjektiv   gemein    rName   rMensch   eTat   eHandlung   ePerson   rBlick         Er war heute sehr gemein.	314   mean (/nice)        He was very mean today.	Adjektiv
+315   Nomen   die Medizin    rArzt   eTablette   eKrankheit   rPatient   rStoff   eApotheke         Ich nehme meine Medizin.	315   medicine        I take my medicine.	Nomen
+316   Verb   schmelzen    rStoff   rKörper   eHitze   rOfen   eKerze   rEis         Der Schnee beginnt zu schmelzen.	316   melt (verb)        The snow starts to melt.	Verb
+317   Nomen   das Metall    rStahl   rKupfer   rEisen   rMotor   eIndustrie   eMaschine         Das Rohr ist aus Metall.	317   metal        The pipe is made of metal.	Nomen
+318   Nomen   der Meter    eZahl   eLänge   rWert   rStock   eRechnung   rMaßstab         Ein Meter hat 100 Zentimeter.	318   meter        One meter has 100 centimeters.	Nomen
+319   Nomen   die Milch    rBecher   rKuh   eFlasche   rKäse   eButter   eTasse         Ich trinke jeden Morgen Milch.	319   milk        I drink milk every morning.	Nomen
+320   Nomen   eine Million    eZahl   rRechnung   eMenge   rPreis   eReichtum   rStaat         Die Stadt hat eine Million Einwohner.	320   million        The city has one million inhabitants.	Nomen
+321   Nomen   die Minute    eZeit   rStunde   rKalender   rTag   eSekunde   eUhr         Warte bitte eine Minute.	321   minute        Please wait a minute.	Nomen
+322   Verb   mischen    rStoff   rKörper   eFarbe   eGetränk   rArbeit   eMusik         Ich mische Zucker in den Tee.	322   mix/stir (verb)        I mix sugar into the tea.	Verb
+323   Nomen   der Montag    rTag   rKalender   rArbeit   eWoche   rMorgen   eSchule         Am Montag beginnt die Woche.	323   Monday        The week starts on Monday.	Nomen
+324   Nomen   das Geld    rPreis   rMarkt   eBank   eKarte   rWert   eSumme         Ich habe kein Geld.	324   money        I have no money.	Nomen
+325   Nomen   der Monat    rKalender   rTag   rJahr   eWoche   rZahl   eRechnung         Ein Jahr hat zwölf Monate.	325   month        A year has twelve months.	Nomen
+326   Nomen   der Mond    rHimmel   eNacht   rPlanet   eStern   eSonne   eRaum         Der Mond scheint hell.	326   moon        The moon is shining brightly.	Nomen
+327   Nomen   der Morgen    rTag   eStunde   eFrische   rWecker   eArbeit   rHimmel         Guten Morgen!	327   morning        Good morning!	Nomen
+328   Nomen   die Mutter    rVater   rSohn   eTochter   rKind   eFamilie   eLiebe         Meine Mutter heißt Anna.	328   mother        My mother is named Anna.	Nomen
+329   Nomen   der Berg    rGipfel   rStein   eNatur   rWald   rWanderer   eHöhe         Wir wandern auf den Berg.	329   mountain        We hike up the mountain.	Nomen
+330   Nomen   die Maus    rKäse   rLoch   rComputer   ePfote   rFell   eFalle         Die Maus frisst Käse.	330   mouse        The mouse eats cheese.	Nomen
+331   Nomen   der Mund    eZähne   rZunge   eLippen   rKiefer   rAtem   rKuss         Öffne den Mund bitte.	331   mouth        Please open your mouth.	Nomen
+332   Nomen   der Film    rSchauspieler   rRegisseur   eKamera   eRolle   rDreh   rTitel         Wir schauen einen Film.	332   movie        We are watching a movie.	Nomen
+333   Nomen   der Mord    rTod   rKrieg   rMörder   eTat   ePolizei   eWaffe         Der Mord wurde untersucht.	333   murder (noun)        The murder was investigated.	Nomen
+334   Nomen   die Musik    rTon   eStimme   eMelodie   rRhythmus   rSänger   eGitarre         Ich höre gern Musik.	334   music        I like listening to music.	Nomen
+335   Adjektiv   eng    rRaum   eGasse   rKörper   eKleidung   rStuhl   eStraße         Die Straße ist sehr eng.	335   narrow        The street is very narrow.	Adjektiv
+336   Nomen   die Natur    rBaum   ePflanze   rWald   eWiese   eUmwelt   rMensch         Ich liebe die Natur.	336   nature        I love nature.	Nomen
+337   Nomen   der Hals    rKopf   rSchmerz   rKörper   eStimme   rMuskel   rSchal         Ich habe Halsschmerzen.	337   neck        I have a sore throat.	Nomen
+338   Nomen   die Nadel    rHand   rStich   rFinger   eSpritze   eForm   rFaden         Die Nadel ist spitz.	338   needle        The needle is sharp.	Nomen
+339   Nomen   der Nachbar    eWohnung   eStraße   eTür   rMann   eFrau   ePerson         Mein Nachbar ist nett.	339   neighbor        My neighbor is nice.	Nomen
+340   Nomen   das Netzwerk    rComputer   rKabel   eVerbindung   rServer   eTechnik   eGruppe         Das WLAN-Netzwerk ist langsam.	340   network        The Wi-Fi network is slow.	Nomen
+341   Adjektiv   neu    eIdee   eMode   rStil   eArbeit   rWeg   eForm         Mein Handy ist neu.	341   new        My phone is new.	Adjektiv
+342   Nomen   die Zeitung    rArtikel   rAutor   eLeser   rTitel   eSeite   eMeinung         Ich lese die Zeitung.	342   newspaper        I read the newspaper.	Nomen
+343   Adjektiv   nett    ePerson   rName   eFrau   rMensch   eGeste   eFreundschaft         Die Frau ist sehr nett.	343   nice        The woman is very nice.	Adjektiv
+344   Nomen   die Nacht    rMond   eStern   rSchlaf   eStille   rHimmel   eRuhe         Die Nacht ist ruhig.	344   night        The night is quiet.	Nomen
+345   Zahlwort   neun    eZahl   eReihe   rMonat   eGruppe   rWürfel   eForm         Ich habe neun Bücher.	345   nine        I have nine books.	Zahlwort
+346   Zahlwort   neunzehn    eZahl   rJugend   eSchule   rMonat   eFeier   rFreund         Er ist neunzehn Jahre alt.	346   nineteen        He is nineteen years old.	Zahlwort
+347   Zahlwort   neunzig    eZahl   rSenior   eReihe   rJahr   eGeburtstag   eRechnung         Neunzig Menschen waren da.	347   ninety        Ninety people were there.	Zahlwort
+348   Adverb   nein    thank   you.                     Nein	348   no        danke.	Adverb
+349   Nomen   der Norden    rKompass   rWinter   rWind   eRichtung   eGrenze   eKüste         Hamburg liegt im Norden.	349   north        Hamburg is in the north.	Nomen
+350   Nomen   die Nase    rGesicht   rKörper   eForm   rMund   rGeruch   eAtmung         Ich habe eine rote Nase.	350   nose        I have a red nose.	Nomen
+351   Nomen   die Notiz    rZettel   rBlock   rText   eSeite   eKarte   rName         Ich schreibe eine Notiz.	351   note (on paper)        I write a note.	Nomen
+352   Nomen   der November    rMonat   rHerbst   eKälte   rTag   eReise   eWolke         Im November wird es kalt.	352   November        It gets cold in November.	Nomen
+353   Adjektiv   nuklear    rStrom   rKrieg   eGefahr   eAtombombe   rAtom   eReaktor         Ein nuklearer Reaktor ist gefährlich.	353   nuclear        A nuclear reactor is dangerous.	Adjektiv
+354   Nomen   die Nummer    rZettel   rCode   eZahl   eListe   rPlatz   rName         Wie ist deine Nummer?	354   number        What is your number?	Nomen
+355   Nomen   der Ozean    rFisch   rWal   eWelle   rSturm   eSchiff   eKüste         Der Ozean ist tief.	355   ocean        The ocean is deep.	Nomen
+356   Nomen   der Oktober    rMonat   rHerbst   eBlatt   rTag   eReise   rFest         Der Oktober ist bunt.	356   October        October is colorful.	Nomen
+357   Nomen   das Büro    rArbeit   rChef   rTisch   eLampe   eFirma   eKaffee         Ich arbeite im Büro.	357   office        I work in the office.	Nomen
+358   Nomen   das Öl    rMotor   eFlasche   eEnergie   rPreis   ePfanne   eKerze         Das Öl ist heiß.	358   oil        The oil is hot.	Nomen
+359   Adjektiv   alt    rMensch   eUhr   eZeit   rTurm   eStadt   eGeschichte         Mein Auto ist alt.	359   old (/new)        My car is old.	Adjektiv
+360   Adjektiv   alt    rMensch   eHaus   rTurm   eStadt   eZeit   eErfahrung         Mein Großvater ist alt.	360   old (/young)        My grandfather is old.	Adjektiv
+361   Zahlwort   eins    eZahl   rMonat   eReihe   rTag   eMinute   eSekunde         Ich habe nur eins.	361   one        I have only one.	Zahlwort
+362   Verb   öffnen    eTür   rFenster   rKoffer   rSchlüssel   eHand   rTor         Ich öffne das Fenster.	362   open (verb)        I open the window.	Verb
+363   Adjektiv   orange    eFarbe   eBlume   rStift   eFrucht   eMode   rKleid         Der Ball ist orange.	363   orange (color)        The ball is orange.	Adjektiv
+364   Nomen   die Orange    eSchale   eFrucht   rSaft   eSüße   rKuchen   eMarmelade         Ich esse eine Orange.	364   Orange (food)        I eat an orange.	Nomen
+365   Adverb   draußen    rGarten   rWald   eStraße   rWeg   rHof   eBank         Die Kinder spielen draußen.	365   outside        The children play outside.	Adverb
+366   Nomen   die Seite    rRand   rText   rTitel   eNummer   rBlock   eKarte         Ich lese die erste Seite.	366   page        I read the first page.	Nomen
+367   Nomen   der Schmerz    rKörper   eWunde   rTod   rKrankheit   eSeele   rKopf         Ich habe Bauchschmerzen.	367   pain        I have stomach pain.	Nomen
+368   Verb   malen    rStift   rMaler   eLeinwand   eFarbe   eKunst   rBild         Ich male ein Bild.	368   Paint        I paint a picture.	Verb
+369   Nomen   die Hose    eMode   rStoff   eTasche   rKnopf   rReißverschluss   eKleidung         Ich kaufe eine neue Hose.	369   pants        I buy new pants.	Nomen
+370   Nomen   das Papier    rBlock   rZettel   eSeite   rStift   eNotiz   rBrief         Ich brauche Papier zum Schreiben.	370   paper        I need paper to write.	Nomen
+371   Nomen   die Eltern    rVater   eMutter   rOnkel   eTante   rFamilie   eGroßeltern         Meine Eltern wohnen hier.	371   parent        My parents live here.	Nomen
+372   Nomen   der Park    rBaum   eWeg   eBlume   rTeich   rSpielplatz   eBank         Wir gehen in den Park.	372   park (location)        We go to the park.	Nomen
+373   Verb   bestehen    rTest   ePrüfung   rKurs   eArbeit   rName   eStoff         Ich habe die Prüfung bestanden.	373   pass (verb)        I passed the exam.	Verb
+374   Nomen   der Patient    rArzt   rKörper   eKrankheit   eOperation   rName   rTermin         Der Patient wartet beim Arzt.	374   patient (noun)        The patient waits at the doctor’s.	Nomen
+375   Nomen   das Muster    rStoff   eForm   rPlan   eLinie   ePapier   eZeichnung         Das Kleid hat ein schönes Muster.	375   pattern        The dress has a nice pattern.	Nomen
+376   Verb   bezahlen    sGeld   rPreis   eRechnung   rKunde   eSumme   rMarkt         Ich bezahle die Rechnung.	376   pay (verb)        I pay the bill.	Verb
+377   Nomen   der Frieden    rStaat   eVertrag   eRuhe   rKrieg   eHoffnung   eGemeinschaft         Wir wollen Frieden.	377   peace        We want peace.	Nomen
+378   Nomen   der Stift    rBlock   rBleistift   eFarbe   rDeckel   eSpitze   rPapier         Ich schreibe mit einem Stift.	378   pen        I write with a pen.	Nomen
+379   Nomen   der Bleistift    rStift   rRadiergummi   eFarbe   rBlock   eZeichnung   rPapier         Der Bleistift ist spitz.	379   pencil        The pencil is sharp.	Nomen
+380   Nomen   die Person    rName   rMensch   eFrau   rMann   eFigur   eSeele         Er ist eine nette Person.	380   person        He is a nice person.	Nomen
+381   Nomen   der Mensch    rKörper   rKopf   ePerson   eSeele   rName   rArzt         Der Mensch braucht Wasser.	381   person        The person needs water.	Nomen
+382   Nomen   das Foto    rFotograf   rFilm   eKamera   rBlitz   eBild   rRahmen         Ich mache ein Foto.	382   photograph        I take a photograph.	Nomen
+383   Verb   fotografieren    eKamera   rFotograf   rBlitz   eLinse   eAufnahme   rFilm         Ich fotografiere die Landschaft.	383   photograph        I photograph the landscape.	Verb
+384   Nomen   das Stück    rTeil   eScheibe   rAkt   eSzene   rBrocken   ePortion         Ich nehme ein Stück Kuchen.	384   piece        I take a piece of cake.	Nomen
+385   Nomen   der Teil    sGanze   eHälfte   rAbschnitt   rBereich   eKomponente   eSeite         Ein Teil fehlt.	385   piece        A piece is missing.	Nomen
+386   Nomen   das Schwein    rBauer   rStall   eSau   rEber   eBorste   eSchnauze         Das Schwein liegt im Stall.	386   pig        The pig lies in the pen.	Nomen
+387   Adjektiv   rosa    eFarbe   rStift   eBlume   rKleid   eRose   eWolke         Ihre Jacke ist rosa.	387   pink        Her jacket is pink.	Adjektiv
+388   Nomen   das Flugzeug    rPilot   rFlügel   eTurbine   rStart   eLandung   rFlughafen         Das Flugzeug fliegt hoch.	388   plane        The plane flies high.	Nomen
+389   Nomen   die Pflanze    rStiel   rTopf   eBlüte   rSamen   eWurzel   eBlatt         Diese Pflanze braucht Wasser.	389   plant (noun)        This plant needs water.	Nomen
+390   Nomen   der Kunststoff    sPlastik   rBecher   eTüte   rAbfall   eFlasche   rWerkstoff         Die Flasche ist aus Kunststoff.	390   plastic        The bottle is made of plastic.	Nomen
+391   Nomen   der Teller    rTisch   eKüche   eSchale   rLöffel   rRand   eMitte         Der Teller ist leer.	391   plate        The plate is empty.	Nomen
+392   Verb   spielen    sSpiel   rBall   eMusik   rZug   eRolle   rSpaß         Die Kinder spielen im Garten.	392   play (verb)        The children play in the garden.	Verb
+393   Nomen   der Spieler    rTrainer   eMannschaft   rVerein   rStürmer   ePosition   eLiga         Der Spieler schießt ein Tor.	393   player        The player scores a goal.	Nomen
+394   Nomen   die Tasche    eHandtasche   rRiemen   rBeutel   eGeldbörse   rReißverschluss   eInnenseite         Ich habe Geld in der Tasche.	394   pocket        I have money in the pocket.	Nomen
+395   Nomen   das Gift    eGefahr   eDosis   rArzt   rSchädel   rTod   eSubstanz         Gift ist gefährlich.	395   poison (noun)        Poison is dangerous.	Nomen
+396   Nomen   die Polizei    rBeamter   rStreifenwagen   eWache   rEinsatz   eUniform   rKommissar         Die Polizei kommt schnell.	396   police        The police come quickly.	Nomen
+397   Nomen   der Pool    rRand   eLeiter   sWasser   rGarten   eFliese   ePumpe         Wir schwimmen im Pool.	397   pool        We swim in the pool.	Nomen
+398   Adjektiv   arm    rMensch   eNot   rHunger   eArmut   rBettler   eHilfe         Die Familie ist arm.	398   poor        The family is poor.	Adjektiv
+399   Nomen   das Schweinefleisch    rMetzger   ePfanne   rBraten   eKüche   eScheibe   rSpeck         Ich esse kein Schweinefleisch.	399   pork        I don’t eat pork.	Nomen
+400   Nomen   das Pfund    rGewicht   eZahl   eMenge   eWährung   rPreis   rKurs         Ein Pfund sind etwa 500 Gramm.	400   pound (weight)        A pound is about 500 grams.	Nomen
+401   Verb   beten    rGott   eKirche   rPriester   eReligion   rGlaube   eBibel         Wir beten vor dem Essen.	401   pray (verb)        We pray before eating.	Verb
+402   Nomen   der Präsident    rStaat   ePartei   rMinister   rChef   eRegierung   rPolitiker         Der Präsident hält eine Rede.	402   president        The president gives a speech.	Nomen
+403   Nomen   der Preis    sGeld   rMarkt   eRechnung   rWert   eSumme   rLohn         Der Preis ist zu hoch.	403   price        The price is too high.	Nomen
+404   Nomen   der Priester    eKirche   rGott   eReligion   rPredigt   eMesse   rGlaube         Der Priester spricht zur Gemeinde.	404   priest        The priest speaks to the congregation.	Nomen
+405   Nomen   das Gefängnis    rWärter   rHäftling   rRichter   eZelle   rProzess   eMauer         Er sitzt im Gefängnis.	405   prison        He is in prison.	Nomen
+406   Nomen   das Programm    rComputer   eSoftware   rPlan   eListe   rSender   eProjekt         Das Programm läuft gut.	406   program (computer)        The program runs well.	Nomen
+407   Verb   ziehen    rWagen   rHund   eKraft   eBewegung   rStrick   rPferd         Ich ziehe die Tür auf.	407   pull (verb)        I pull the door open.	Verb
+408   Verb   drücken    rKnopf   rHand   rFinger   rArm   eKraft   eTür         Bitte die Taste drücken.	408   push (verb)        Please press the button.	Verb
+409   Nomen   die Königin    rKönig   eKrone   rThron   rPalast   eMacht   rPrinz         Die Königin trägt eine Krone.	409   queen        The queen wears a crown.	Nomen
+410   Adjektiv   leise    eStimme   rTon   eMusik   rSchritt   rKlang   eAntwort         Bitte sei leise.	410   quiet        Please be quiet.	Adjektiv
+411   Nomen   die Rasse    rHund   rMensch   eGruppe   rPferd   eArt   eFamilie         Menschen jeder Rasse sind willkommen.	411   race (ethnicity)        People of every race are welcome.	Nomen
+412   Nomen   das Rennen    rSport   rLauf   eStrecke   rWettkampf   rPreis   eMenge         Das Rennen beginnt jetzt.	412   race (sport)        The race starts now.	Nomen
+413   Nomen   das Radio    rSender   eMusik   rKlang   eAntenne   rReporter   eNachricht         Ich höre Musik im Radio.	413   radio        I listen to music on the radio.	Nomen
+414   Nomen   der Regen    rSommer   eWolke   rSturm   rSchirm   eTropfen   rHimmel         Der Regen ist stark.	414   rain (noun)        The rain is heavy.	Nomen
+415   Adjektiv   rot    eFarbe   rApfel   rWein   eRose   rFeuer   eBlut         Der Apfel ist rot.	415   red        The apple is red.	Adjektiv
+416   Nomen   die Religion    eKirche   rGott   rPriester   eGlaube   rBibel   eGemeinschaft         Religion ist ein wichtiger Teil des Lebens.	416   religión        Religion is an important part of life.	Nomen
+417   Nomen   der Reporter    eZeitung   rArtikel   rFernseher   eKamera   rJournalist   eStimme         Der Reporter stellt Fragen.	417   reporter        The reporter asks questions.	Nomen
+418   Nomen   das Restaurant    rKellner   eSpeise   rTisch   rKoch   eKarte   rGast         Wir essen im Restaurant.	418   restaurant        We eat at the restaurant.	Nomen
+419   Nomen   der Reis    rTopf   rKorn   eSchüssel   rBauer   ePfanne   eKüche         Ich esse gern Reis.	419   rice        I like eating rice.	Nomen
+420   Adjektiv   reich    rMensch   rStaat   eFamilie   eBank   rPreis   rLuxus         Der Mann ist sehr reich.	420   rich        The man is very rich.	Adjektiv
+421   Adverb   rechts    eSeite   eRichtung   rArm   rWeg   eHand   rOrt         Biege rechts ab.	421   right (direction)        Turn right.	Adverb
+422   Nomen   der Ring    rFinger   eHochzeit   rGold   eKreis   rDiamant   rSchmuck         Ich trage einen goldenen Ring.	422   ring        I wear a golden ring.	Nomen
+423   Nomen   der Fluss    rFisch   rBach   rSee   eWelle   rStrom   eBrücke         Der Fluss ist breit.	423   river        The river is wide.	Nomen
+424   Nomen   das Dach    rHaus   rZiegel   eDecke   rHolz   rSchnee   eWand         Das Dach ist rot gedeckt.	424   roof        The roof is covered in red.	Nomen
+425   Nomen   das Zimmer    rTisch   rStuhl   eLampe   eTür   rSchrank   eBett         Mein Zimmer ist groß.	425   room (in a house)        My room is big.	Nomen
+426   Nomen   die Wurzel    rBaum   rBoden   eNatur   rPflanze   eMathematik   rStamm         Die Wurzel ist tief im Boden.	426   root        The root is deep in the ground.	Nomen
+427   Verb   rennen    rSport   rWettkampf   eBewegung   rLauf   rKörper   eGeschwindigkeit         Ich renne jeden Morgen.	427   run (verb)        I run every morning.	Verb
+428   Adjektiv   traurig    eTräne   rKummer   rMensch   eStimme   rTod   eSeele         Ich bin heute traurig.	428   sad        I am sad today.	Adjektiv
+429   Nomen   das Salz    rKörper   eSuppe   rStein   ePfanne   rKorn   eWasser         Ich brauche Salz für die Suppe.	429   salt        I need salt for the soup.	Nomen
+430   Nomen   der Sand    rStrand   rWüste   rKorn   eWelle   rBoden   eKüste         Der Sand ist warm.	430   sand        The sand is warm.	Nomen
+431   Nomen   der Samstag    rTag   rKalender   eWoche   rFeier   ePause   rArbeit         Am Samstag habe ich frei.	431   Saturday        I have free time on Saturday.	Nomen
+432   Nomen   die Schule    rLehrer   rSchüler   eKlasse   rTest   eTafel   eÜbung         Die Schule beginnt um acht Uhr.	432   school        School starts at 8 o’clock.	Nomen
+433   Nomen   die Wissenschaft    rForscher   eUniversität   rTest   eTheorie   eTechnik   rBeweis         Ich interessiere mich für Wissenschaft.	433   science        I am interested in science.	Nomen
+434   Nomen   der Bildschirm    rComputer   rMonitor   eLampe   rText   eFarbe   rTastatur         Der Bildschirm ist groß.	434   screen        The screen is big.	Nomen
+435   Nomen   das Meer    rFisch   rWelle   rStrand   rHafen   eKüste   rSand         Wir fahren ans Meer.	435   sea        We are going to the sea.	Nomen
+436   Nomen   die Jahreszeit    rWinter   rSommer   rFrühling   rHerbst   eZeit   rKalender         Der Herbst ist meine Lieblingsjahreszeit.	436   season        Fall is my favorite season.	Nomen
+437   Zahlwort   zweite    eReihe   rPlatz   eKlasse   rRang   eStufe   ePosition         Du bist die Zweite.	437   second (2nd)        You are the second.	Zahlwort
+438   Nomen   die Sekunde    eMinute   rStunde   rTag   rZeit   eZahl   eUhr         Eine Minute hat sechzig Sekunden.	438   second (time)        A minute has sixty seconds.	Nomen
+439   Nomen   der Sekretär    rChef   eFirma   rSchreibtisch   eKanzlei   eBüro   eArbeit         Der Sekretär schreibt viele E-Mails.	439   secretary        The secretary writes many emails.	Nomen
+440   Verb   sehen    rAuge   rKörper   eBrille   rBlick   ePerson   rFilm         Ich sehe einen Vogel.	440   see (a bird)        I see a bird.	Verb
+441   Nomen   der Samen    rBaum   ePflanze   rBoden   eKorn   rKern   eFrucht         Ich pflanze einen Samen.	441   seed        I plant a seed.	Nomen
+442   Verb   verkaufen    sGeld   rMarkt   eWare   eBank   rPreis   rLaden         Ich verkaufe mein Fahrrad.	442   sell (verb)        I am selling my bike.	Verb
+443   Nomen   der September    rMonat   rHerbst   eSchule   rTag   eReise   rKalender         Im September beginnt die Schule.	443   September        School starts in September.	Nomen
+444   Zahlwort   sieben    eZahl   eReihe   rMonat   eGruppe   rWürfel   eForm         Ich habe sieben Stifte.	444   seven        I have seven pens.	Zahlwort
+445   Zahlwort   siebzehn    eZahl   rJugend   eSchule   rMonat   eFeier   rFreund         Sie ist siebzehn Jahre alt.	445   seventeen        She is seventeen years old.	Zahlwort
+446   Zahlwort   siebzig    eZahl   rSenior   eReihe   rJahr   eGeburtstag   eRechnung         Mein Opa ist siebzig Jahre alt.	446   seventy        My grandpa is seventy years old.	Zahlwort
+447   Nomen   das Geschlecht    rMann   eFrau   rName   eFamilie   rKörper   eEigenschaft         Welches Geschlecht hast du?	447   sex (gender)        What is your gender?	Nomen
+448   Nomen   der Sex    rKörper   eLiebe   rMensch   eFreundin   eBeziehung   rTrieb         Sex ist ein Teil des Lebens.	448   sex (the act)        Sex is a part of life.	Nomen
+449   Verb   schütteln    rKörper   rArm   rHand   eBewegung   rKopf   eAntwort         Ich schüttle die Flasche.	449   shake (verb)        I shake the bottle.	Verb
+450   Adjektiv   flach    rBoden   eForm   eEbene   rSee   rTisch   eKüste         Das Wasser ist flach.	450   shallow        The water is shallow.	Adjektiv
+451   Pronomen   sie    rName   rMensch   ePerson   eFrau   rKörper   eFamilie         Sie geht zur Arbeit.	451   she        She goes to work.	Pronomen
+452   Nomen   das Schiff    rKapitän   rMotor   eFähre   eKüste   rHafen   eSegel         Das Schiff ist groß.	452   ship        The ship is big.	Nomen
+453   Nomen   das Hemd    eKleidung   rKnopf   rStoff   rKörper   eFarbe   eMode         Er trägt ein weißes Hemd.	453   shirt        He is wearing a white shirt.	Nomen
+454   Nomen   die Schuhe    rFuß   eLeder   eSohle   eMode   rStiefel   rSchuhmacher         Ich kaufe neue Schuhe.	454   shoes        I buy new shoes.	Nomen
+455   Verb   schießen    rSoldat   eWaffe   rKrieg   rSchuss   rBall   eJäger         Der Polizist schießt.	455   shoot (a gun)        The police officer shoots.	Verb
+456   Adjektiv   kurz    rTag   rRock   eZeit   rFilm   eAntwort   rStunde         Der Film war kurz.	456   short (long)        The movie was short.	Adjektiv
+457   Adjektiv   klein    rKind   rStuhl   rRaum   eZahl   eBlume   rKörper         Das Kind ist klein.	457   short (vs. tall)        The child is short.	Adjektiv
+458   Nomen   die Schulter    rArm   rKörper   rKnochen   eLast   eHand   rSchmerz         Ich habe Schmerzen in der Schulter.	458   shoulder        I have pain in my shoulder.	Nomen
+459   Adjektiv   krank    rArzt   eMedizin   eKrankheit   rKörper   rPatient   eGrippe         Ich bin krank und bleibe zu Hause.	459   sick        I am sick and staying home.	Adjektiv
+460   Nomen   die Seite    rRand   rText   rTitel   eNummer   rBlock   eKarte         Die rechte Seite tut weh.	460   side        The right side hurts.	Nomen
+461   Nomen   das Schild    rStraße   rName   rWeg   eTafel   rVerkehr   eWarnung         Das Schild zeigt den Weg.	461   sign (noun)        The sign shows the way.	Nomen
+462   Verb   unterschreiben    rName   eUnterschrift   rVertrag   eStift   rDokument   rPapier         Bitte hier unterschreiben.	462   sign (verb)        Please sign here.	Verb
+463   Nomen   das Silber    sMetall   rRing   eKette   rPreis   rGlanz   eMünze         Der Löffel ist aus Silber.	463   silver        The spoon is made of silver.	Nomen
+464   Verb   singen    rSänger   rKlang   eStimme   rChor   eMusik   rTon         Ich singe ein Lied.	464   sing (verb)        I sing a song.	Verb
+465   Nomen   die Schwester    rBruder   rVater   eMutter   rFamilie   rOnkel   eTante         Meine Schwester heißt Lena.	465   sister        My sister’s name is Lena.	Nomen
+466   Verb   sitzen    rStuhl   rBank   eKlasse   rSitz   ePerson   rArbeit         Ich sitze auf dem Stuhl.	466   sit (verb)        I sit on the chair.	Verb
+467   Zahlwort   sechs    eZahl   eReihe   rMonat   eGruppe   rWürfel   eForm         Ich sehe sechs Kinder.	467   six        I see six children.	Zahlwort
+468   Zahlwort   sechzehn    eZahl   rJugend   eSchule   rMonat   eFreund   eFeier         Er ist sechzehn Jahre alt.	468   sixteen        He is sixteen years old.	Zahlwort
+469   Zahlwort   sechzig    eZahl   rSenior   eReihe   rJahr   eGeburtstag   eRechnung         Meine Mutter ist sechzig Jahre alt.	469   sixty        My mother is sixty years old.	Zahlwort
+470   Nomen   die Haut    rKörper   rArzt   rSchmerz   rArm   eFarbe   eWunde         Meine Haut ist trocken.	470   skin        My skin is dry.	Nomen
+471   Nomen   der Rock    eKleidung   eMode   rKnopf   rStoff   eFarbe   eTasche         Der Rock ist blau.	471   skirt        The skirt is blue.	Nomen
+472   Nomen   der Himmel    rMond   eSonne   rWolke   rAdler   rStern   eBlau         Der Himmel ist blau.	472   sky        The sky is blue.	Nomen
+473   Verb   schlafen    sBett   rTraum   eDecke   eNacht   rKörper   eRuhe         Ich schlafe acht Stunden.	473   sleep (verb)        I sleep eight hours.	Verb
+474   Adjektiv   langsam    rWeg   eSchritt   eBewegung   rVerkehr   eZeit   rTag         Der Zug ist langsam.	474   slow        The train is slow.	Adjektiv
+475   Adjektiv   klein    rKind   rStuhl   rRaum   eZahl   eBlume   rKörper         Das Auto ist klein.	475   small/Little        The car is small.	Adjektiv
+476   Verb   riechen    rHund   eNase   rGeruch   eBlume   eKüche   rKörper         Ich rieche Blumen.	476   smell (verb)        I smell flowers.	Verb
+477   Verb   lächeln    eFreude   rMund   rName   eLiebe   rGesicht   eStimme         Sie lächelt freundlich.	477   smile (verb)        She smiles kindly.	Verb
+478   Nomen   der Schnee    rWinter   rBerg   eKälte   rHimmel   eFlöckchen   rTag         Der Schnee fällt leise.	478   snow (noun)        The snow is falling softly.	Nomen
+479   Nomen   die Seife    eHaut   rHand   eSeife   rWasser   rDuft   eSchaum         Ich wasche mich mit Seife.	479   soap        I wash with soap.	Nomen
+480   Adjektiv   weich    rStoff   rKörper   rSessel   eHaut   eFeder   eDecke         Das Bett ist weich.	480   soft        The bed is soft.	Adjektiv
+481   Nomen   die Erde    rPlanet   rStaub   eNatur   eKugel   rBoden   eWelt         Die Pflanze wächst in der Erde.	481   soil/earth        The plant grows in the soil.	Nomen
+482   Nomen   der Soldat    rKrieg   rWaffe   rBefehl   eUniform   rFeind   eArmee         Der Soldat marschiert.	482   soldier        The soldier marches.	Nomen
+483   Nomen   der Sohn    rVater   eMutter   rBruder   eFamilie   rKind   eOnkel         Mein Sohn spielt Fußball.	483   son        My son plays soccer.	Nomen
+484   Nomen   das Lied    rSänger   rText   rKlang   rTon   eStimme   eMelodie         Das Lied ist schön.	484   song        The song is beautiful.	Nomen
+485   Nomen   der Klang    rTon   eMusik   rLaut   eStimme   rSchall   rRhythmus         Der Klang ist laut.	485   sound        The sound is loud.	Nomen
+486   Nomen   die Suppe    rLöffel   rTeller   eKüche   eSuppe   ePfanne   eBrühe         Die Suppe ist heiß.	486   soup        The soup is hot.	Nomen
+487   Nomen   der Süden    rKompass   rSommer   eHitze   eReise   eRichtung   eKüste         Italien liegt im Süden.	487   south        Italy is in the south.	Nomen
+488   Nomen   das Weltall    rPlanet   rStern   rMond   eGalaxie   rRaum   eSonne         Das Weltall ist riesig.	488   space (outer space)        Space is huge.	Nomen
+489   Verb   sprechen    eStimme   eSprache   rMund   rName   eAntwort   rTon         Ich spreche Deutsch.	489   speak/say (verb)        I speak German.	Verb
+490   Nomen   der Löffel    rTisch   rStahl   eKüche   rSuppenteller   eGabel   eHand         Ich esse mit einem Löffel.	490   spoon        I eat with a spoon.	Nomen
+491   Nomen   der Sport    rTrainer   eSpiel   rBall   eLeistung   rLauf   eDisziplin         Sport ist gesund.	491   sport        Sport is healthy.	Nomen
+492   Nomen   der Frühling    rMonat   eBlume   eNatur   rWald   rRegen   eSonne         Im Frühling blühen die Blumen.	492   spring (season)        Flowers bloom in spring.	Nomen
+493   Nomen   das Quadrat    eForm   eLinie   rWinkel   rZirkel   eFigur   rFläche         Das Quadrat hat vier Ecken.	493   square        The square has four corners.	Nomen
+494   Nomen   der Fleck    rStoff   eFarbe   eKleidung   rBoden   eStaub   rPunkt         Der Fleck geht nicht raus.	494   stain        The stain won’t come out.	Nomen
+495   Verb   stehen    rMensch   rKörper   eTür   rArbeit   rPlatz   eFigur         Ich stehe an der Tür.	495   stand (verb)        I stand at the door.	Verb
+496   Nomen   der Stern    rHimmel   eNacht   rMond   eGalaxie   rPlanet   eSonne         Ein Stern leuchtet am Himmel.	496   star        A star shines in the sky.	Nomen
+497   Nomen   der Stein    rBoden   eForm   rBerg   rFels   eWand   eMauer         Der Stein ist schwer.	497   stone        The stone is heavy.	Nomen
+498   Verb   stoppen    rVerkehr   eArbeit   rMotor   eHand   rBefehl   eStraße         Ich stoppe das Auto.	498   stop (verb)        I stop the car.	Verb
+499   Nomen   das Geschäft    rLaden   eWare   rPreis   rMarkt   eKunde   rStraße         Ich kaufe Brot im Geschäft.	499   store/shop        I buy bread at the store.	Nomen
+500   Adverb   geradeaus    rWeg   eRichtung   rBlick   rStraße   eSeite   rSchritt         Geh einfach geradeaus weiter.	500   straight        Just go straight ahead.	Adverb
+501   Nomen   die Straße    rWeg   rVerkehr   rPlatz   rBus   eStadt   eKreuzung         Die Straße ist gesperrt.	501   Street/road        The road is closed.	Nomen
+502   Adjektiv   stark    rKörper   rWind   eKraft   rMensch   rBaum   eArbeit         Er ist sehr stark.	502   strong        He is very strong.	Adjektiv
+503   Nomen   der Student    rLehrer   eUniversität   rKurs   eArbeit   ePrüfung   rFreund         Der Student lernt für die Prüfung.	503   student        The student is studying for the exam.	Nomen
+504   Nomen   der Zucker    eSüße   eKüche   rKörper   eTee   rKaffee   eBacken         Ich nehme Zucker in den Kaffee.	504   sugar        I take sugar in my coffee.	Nomen
+505   Nomen   der Anzug    eKleidung   rKnopf   rStoff   eKrawatte   rMantel   eMode         Er trägt einen schwarzen Anzug.	505   suit (noun)        He is wearing a black suit.	Nomen
+506   Nomen   der Sommer    rMonat   rUrlaub   rSonnenschein   eHitze   rFerien   eWald         Im Sommer ist es warm.	506   summer        It is warm in summer.	Nomen
+507   Nomen   die Sonne    rSommer   rTag   rHimmel   eHitze   eStrahl   rSchein         Die Sonne scheint hell.	507   sun        The sun is shining brightly.	Nomen
+508   Nomen   der Sonntag    rTag   rWoche   rKirche   eRuhe   rMorgen   ePause         Am Sonntag ruhe ich mich aus.	508   Sunday        I rest on Sunday.	Nomen
+509   Nomen   der Schweiß    rKörper   eHitze   eArbeit   rSport   rDurst   eFleck         Nach dem Sport habe ich Schweiß.	509   sweat (noun)        I have sweat after exercise.	Nomen
+510   Verb   schwimmen    sWasser   rSport   eBewegung   rSee   rFluss   eMeer         Ich schwimme gern im Meer.	510   swim (verb)        I like to swim in the sea.	Verb
+511   Nomen   das T-Shirt    eKleidung   rStoff   rKnopf   eFarbe   rStil   eMode         Ich trage ein blaues T-Shirt.	511   T-shirt        I am wearing a blue T-shirt.	Nomen
+512   Nomen   der Tisch    rStuhl   eTeller   eKüche   rSchrank   eLampe   rRand         Das Essen steht auf dem Tisch.	512   table        The food is on the table.	Nomen
+513   Adjektiv   groß    rTurm   rBerg   rHund   eStadt   rRaum   eMenge         Der Turm ist sehr groß.	513   tall        The tower is very tall.	Adjektiv
+514   Verb   schmecken    rKörper   rMund   eZunge   rGeruch   rName   eProbe         Die Suppe schmeckt gut.	514   taste (verb)        The soup tastes good.	Verb
+515   Nomen   der Tee    rBecher   eTasse   eMilch   rZucker   eBlatt   rGeschmack         Ich trinke Tee am Morgen.	515   tea        I drink tea in the morning.	Nomen
+516   Verb   unterrichten    rLehrer   eKlasse   rSchule   eÜbung   rKurs   rTest         Ich unterrichte Deutsch.	516   teach (verb)        I teach German.	Verb
+517   Nomen   der Lehrer    eSchule   eKlasse   rTafel   rName   rSchüler   eÜbung         Der Lehrer erklärt die Aufgabe.	517   teacher        The teacher explains the task.	Nomen
+518   Nomen   das Team    rTrainer   eSport   rSpiel   rVerein   eGruppe   eArbeit         Unser Team gewinnt das Spiel.	518   team        Our team wins the game.	Nomen
+519   Nomen   die Träne    rAugenblick   rKummer   eStimme   rSchmerz   eSeele   rTrauer         Sie hat eine Träne im Auge.	519   tear (drop)        She has a tear in her eye.	Nomen
+520   Nomen   die Technologie    rComputer   eIndustrie   eTechnik   eMaschine   eSoftware   rStrom         Neue Technologie ist wichtig.	520   technology        New technology is important.	Nomen
+521   Nomen   das Telefon    rAnruf   eNummer   rHandy   eKlingel   rApp   rVertrag         Das Telefon klingelt.	521   telephone        The telephone is ringing.	Nomen
+522   Nomen   der Fernseher    rSender   rFilm   rBildschirm   eKanal   eTechnik   rStrom         Der Fernseher ist laut.	522   televisión        The television is loud.	Nomen
+523   Nomen   die Temperatur    rGrad   eHitze   rKörper   eWetter   rSommer   eMessung         Die Temperatur steigt heute.	523   temperature        The temperature is rising today.	Nomen
+524   Zahlwort   zehn    eZahl   eReihe   rMonat   eGruppe   rWürfel   eForm         Ich habe zehn Finger.	524   ten        I have ten fingers.	Zahlwort
+525   Nomen   das Theater    rSchauspieler   rRegisseur   eBühne   eRolle   rFilm   eDrama         Wir gehen ins Theater.	525   theater        We are going to the theater.	Nomen
+526   Pronomen   sie    rName   rMensch   ePerson   eFrau   rKörper   eFamilie         Sie spielen im Park.	526   they        They are playing in the park.	Pronomen
+527   Adjektiv   dick    rKörper   eForm   rMensch   rStoff   eTier   rBauch         Das Buch ist dick.	527   thick        The book is thick.	Adjektiv
+528   Adjektiv   dünn    rKörper   eForm   rStoff   rMensch   eLinie   rHaar         Der Stift ist dünn.	528   thin        The pen is thin.	Adjektiv
+529   Verb   denken    rKopf   rName   eIdee   eAntwort   rMensch   eArbeit         Ich denke über das Problem nach.	529   think (verb)        I’m thinking about the problem.	Verb
+530   Zahlwort   dritte    eReihe   rPlatz   eKlasse   rRang   eStufe   ePosition         Er ist der Dritte in der Reihe.	530   third (3rd)        He is the third in line.	Zahlwort
+531   Zahlwort   dreizehn    eZahl   eJugend   eSchule   rMonat   eFeier   rFreund         Ich bin dreizehn Jahre alt.	531   thirteen        I am thirteen years old.	Zahlwort
+532   Zahlwort   dreißig    eZahl   rSenior   eReihe   rJahr   eGeburtstag   eRechnung         Er ist dreißig Jahre alt.	532   thirty        He is thirty years old.	Zahlwort
+533   Zahlwort   tausend    eZahl   eSumme   rPreis   rBetrag   eMenge   rRechnung         Es gibt tausend Möglichkeiten.	533   thousand        There are a thousand possibilities.	Zahlwort
+534   Zahlwort   drei    eZahl   eGruppe   rMonat   eReihe   rWürfel   eForm         Ich habe drei Schwestern.	534   three        I have three sisters.	Zahlwort
+535   Verb   werfen    rBall   eHand   rWurf   rSpiel   rName   eBewegung         Ich werfe den Ball.	535   throw (verb)        I throw the ball.	Verb
+536   Nomen   der Donnerstag    rTag   rKalender   rArbeit   eWoche   rAbend   eSchule         Am Donnerstag habe ich Sport.	536   Thursday        I have sports on Thursday.	Nomen
+537   Nomen   die Fahrkarte    rZug   rBus   eStraße   rReise   rPreis   eKontrolle         Ich kaufe eine Fahrkarte.	537   ticket (train)        I buy a train ticket.	Nomen
+538   Adjektiv   eng    rRaum   eGasse   rKörper   eKleidung   rStuhl   eStraße         Diese Hose ist zu eng.	538   tight        These pants are too tight.	Adjektiv
+539   Nomen   die Zeit    rTag   rStunde   eMinute   rKalender   eSekunde   rUhr         Ich habe keine Zeit.	539   time (noun)        I have no time.	Nomen
+540   Nomen   die Zehe    rFuß   eHaut   rNagel   rSchmerz   eBewegung   rKnochen         Ich habe mir die Zehe gestoßen.	540   toe        I stubbed my toe.	Nomen
+541   Nomen   die Zunge    rMund   rKörper   eSprache   rGeschmack   eBewegung   rSchmerz         Die Zunge ist rosa.	541   tongue        The tongue is pink.	Nomen
+542   Nomen   das Werkzeug    rHammer   rNagel   rBohrer   rSchraubenzieher   eSäge   eZange         Ich brauche ein Werkzeug.	542   tool        I need a tool.	Nomen
+543   Nomen   der Zahn    rMund   rKiefer   eZunge   rSchmerz   rKörper   eWurzel         Mein Zahn tut weh.	543   tooth        My tooth hurts.	Nomen
+544   Nomen   die Spitze    rStift   rTurm   rBerg   eNadel   rPfeil   eForm         Er steht an der Spitze.	544   top        He is at the top.	Nomen
+545   Verb   berühren    rKörper   eHand   rArm   eFinger   eHaut   rKontakt         Bitte nichts berühren.	545   touch (verb)        Please don’t touch anything.	Verb
+546   Nomen   die Stadt    eMetropole   eAltstadt   rMarkt   eStraße   rBahnhof   eKirche         Die Stadt ist schön.	546   town        The town is beautiful.	Nomen
+547   Nomen   der Zug    rSchaffner   rBahnhof   eFahrkarte   rWaggon   eReise   rGleis         Der Zug kommt pünktlich.	547   train (noun)        The train is on time.	Nomen
+548   Nomen   der Bahnhof    rZug   rBus   eStraße   rReise   eFahrkarte   eKontrolle         Der Bahnhof ist groß.	548   train station        The train station is big.	Nomen
+549   Nomen   der Verkehr    rBus   rZug   rStraße   eKreuzung   eStadt   eAuto         Der Verkehr ist stark.	549   transportation        The traffic is heavy.	Nomen
+550   Nomen   der Reifen    rMotor   rWagen   rGummi   rFelge   eStraße   rLuft         Der Reifen ist platt.	550   tre (of a car)        The tire is flat.	Nomen
+551   Nomen   der Baum    rWald   rAst   eKrone   rStamm   eWurzel   eEiche         Der Baum ist alt.	551   tree        The tree is old.	Nomen
+552   Nomen   der Lastwagen    rMotor   rFahrer   eStraße   rTransport   eLadung   rWert         Der Lastwagen ist laut.	552   truck        The truck is loud.	Nomen
+553   Nomen   der Dienstag    rTag   rKalender   rArbeit   eWoche   rAbend   eSchule         Am Dienstag habe ich einen Termin.	553   Tuesday        I have an appointment on Tuesday.	Nomen
+554   Verb   abbiegen    rWeg   eStraße   eRichtung   rVerkehr   eKreuzung   rSchritt         Bitte links abbiegen.	554   turn (verb)        Please turn left.	Verb
+555   Zahlwort   zwölf    eZahl   eReihe   rMonat   eGruppe   rWürfel   eForm         Ich habe zwölf Bücher.	555   twelve        I have twelve books.	Zahlwort
+556   Zahlwort   zwanzig    eZahl   rReihe   rJahr   eGeburtstag   eRechnung   rMenge         Zwanzig Minuten später...	556   twenty        Twenty minutes later...	Zahlwort
+557   Zahlwort   einundzwanzig    eZahl   rJugend   eSchule   rMonat   eFeier   rFreund         Ich bin einundzwanzig Jahre alt.	557   twenty-one (etc.)        I am twenty-one years old.	Zahlwort
+558   Zahlwort   zwei    eZahl   eGruppe   rMonat   eReihe   rWürfel   eForm         Ich habe zwei Katzen.	558   two        I have two cats.	Zahlwort
+559   Adjektiv   hässlich    eFarbe   rForm   eKleidung   rMensch   rGesicht   eTier         Das Bild ist hässlich.	559   ugly        The picture is ugly.	Adjektiv
+560   Nomen   die Universität    rStudent   rLehrer   eKlasse   rTest   eKurs   rBuch         Ich studiere an der Universität.	560   university        I study at the university.	Nomen
+561   Adverb   oben    rTurm   rBerg   rKopf   rHimmel   eDecke   rRand         Die Lampe ist oben.	561   up        The lamp is up.	Adverb
+562   Nomen   das Tal    rBerg   rWeg   eEbene   eLandschaft   rFluss   eWiese         Das Tal ist tief.	562   valley        The valley is deep.	Nomen
+563   Nomen   das Verb    sWort   eSprache   rSatz   eForm   eGrammatik   rBuchstabe         ‚gehen‘ ist ein Verb.	563   verb        ‘Go’ is a verb.	Nomen
+564   Nomen   das Opfer    rTod   rMord   eTat   rKrieg   rMensch   eSeele         Das Opfer war unschuldig.	564   victim        The victim was innocent.	Nomen
+565   Nomen   die Stimme    rKlang   rTon   eMusik   rPerson   rSänger   eAntwort         Deine Stimme ist schön.	565   voice (noun)        Your voice is beautiful.	Nomen
+566   Nomen   der Vokal    eSprache   rBuchstabe   rTon   eSilbe   rLaut   eZunge         A ist ein Vokal.	566   vowel        A is a vowel.	Nomen
+567   Nomen   der Kellner    eKellnerin   eSpeise   rTisch   rGast   eKarte   rArbeit         Der Kellner bringt das Essen.	567   waiter        The waiter brings the food.	Nomen
+568   Verb   aufwachen    rWecker   rMorgen   rTag   eLampe   ePause   rKörper         Ich wache um sieben Uhr auf.	568   wake up (verb)        I wake up at seven o’clock.	Verb
+569   Verb   gehen    rWeg   eStraße   eBewegung   rFuß   rSchritt   eRichtung         Ich gehe zur Schule.	569   walk (verb)        I walk to school.	Verb
+570   Nomen   die Wand    rRaum   rTurm   rStein   eLampe   rBild   eMauer         Ein Bild hängt an der Wand.	570   Wall        A picture hangs on the wall.	Nomen
+571   Nomen   der Krieg    rSoldat   rPanzer   rTod   eWaffe   eSchlacht   rFeind         Der Krieg dauerte viele Jahre.	571   war        The war lasted many years.	Nomen
+572   Adjektiv   warm    rSommer   rWind   eLuft   eSonne   rTag   eHitze         Es ist heute warm draußen.	572   warm (adjective)        It is warm outside today.	Adjektiv
+573   Verb   waschen    eSeife   rHand   eSeife   rWasser   rKörper   eBad         Ich wasche meine Hände.	573   wash (verb)        I wash my hands.	Verb
+574   Verb   fernsehen    rFilm   rSender   rReporter   rSchauspieler   eSerie   eKamera         Ich sehe abends fern.	574   watch (TV) (verb)        I watch TV in the evening.	Verb
+575   Nomen   das Wasser    rFluss   rSee   rTropfen   rRegen   eQuelle   rBach         Ich trinke Wasser.	575   wáter (noun)        I drink water.	Nomen
+576   Nomen   die Welle    rFluss   rSee   rSand   eBewegung   rMeer   eKüste         Die Welle ist hoch.	576   wave (ocean)        The wave is high.	Nomen
+577   Pronomen   wir    rName   rMensch   ePerson   eFamilie   eGruppe   rFreund         Wir gehen ins Kino.	577   we        We are going to the cinema.	Pronomen
+578   Adjektiv   schwach    rMensch   rKörper   rArm   rKrankheit   rWind   eHand         Er ist noch schwach.	578   weak        He is still weak.	Adjektiv
+579   Verb   tragen    eTasche   rKoffer   eLast   rArbeiter   eJacke   eSchuld         Ich trage eine Jacke.	579   wear (verb)        I am wearing a jacket.	Verb
+580   Nomen   die Hochzeit    rMann   eFrau   eLiebe   rRing   eKirche   eFeier         Die Hochzeit ist morgen.	580   wedding        The wedding is tomorrow.	Nomen
+581   Nomen   der Mittwoch    rTag   rKalender   rArbeit   eWoche   rAbend   eSchule         Am Mittwoch habe ich Zeit.	581   Wednesday        I have time on Wednesday.	Nomen
+582   Nomen   die Woche    rMontag   rDienstag   rMittwoch   rDonnerstag   rFreitag   rSamstag         Die Woche hat sieben Tage.	582   week        The week has seven days.	Nomen
+583   Nomen   das Gewicht    rWaage   rKörper   rLast   rKraft   eMasse   eZahl         Das Gewicht ist zu hoch.	583   weight        The weight is too high.	Nomen
+584   Nomen   der Westen    rKompass   rWind   eRichtung   rSturm   eKüste   rAbend         Die Sonne geht im Westen unter.	584   west        The sun sets in the west.	Nomen
+585   Adjektiv   nass    rRegen   rSchweiß   eDusche   rBoden   eHaut   eKleidung         Meine Kleidung ist nass.	585   wet (adj.)        My clothes are wet.	Adjektiv
+586   Adjektiv   weiß    eFarbe   rSchnee   eWolke   rKreide   rZucker   eMilch         Der Schnee ist weiß.	586   White        The snow is white.	Adjektiv
+587   Adjektiv   breit    rWeg   rFluss   eStraße   rSchulter   eEbene   rRand         Die Straße ist breit.	587   wide        The street is wide.	Adjektiv
+588   Nomen   die Ehefrau    rMann   eFamilie   eLiebe   rRing   eMutter   rHaushalt         Meine Ehefrau ist Ärztin.	588   wife        My wife is a doctor.	Nomen
+589   Verb   gewinnen    rPreis   rSieg   rPokal   eWette   rSpiel   eEhre         Wir gewinnen das Spiel.	589   win (verb)        We win the game.	Verb
+590   Nomen   der Wind    rSturm   rHimmel   eBrise   rBaum   eLuft   rKraft         Der Wind ist stark.	590   wind (noun)        The wind is strong.	Nomen
+591   Nomen   das Fenster    rRahmen   eScheibe   eVorhang   rGriff   eLampe   rBlick         Ich öffne das Fenster.	591   window        I open the window.	Nomen
+592   Nomen   der Wein    rKeller   rGeschmack   eTraube   eFlasche   rKorken   eMarke         Ich trinke ein Glas Wein.	592   wine        I drink a glass of wine.	Nomen
+593   Nomen   der Flügel    rVogel   rFlug   eFeder   rPianist   eMusik   rKlang         Der Vogel hat große Flügel.	593   wing        The bird has big wings.	Nomen
+594   Nomen   der Winter    rSchnee   rWind   eKälte   rMonat   eNacht   rMantel         Im Winter schneit es oft.	594   Winter        It often snows in winter.	Nomen
+595   Nomen   die Frau    rMann   ePerson   eMutter   rName   eTochter   eDame         Die Frau liest ein Buch.	595   woman        The woman is reading a book.	Nomen
+596   Nomen   das Holz    rBaum   rWald   ePlanke   rTisch   rOfen   eSpäne         Der Tisch ist aus Holz.	596   Wood        The table is made of wood.	Nomen
+597   Verb   arbeiten    eFirma   rChef   rLohn   eAufgabe   rBeruf   rSchweiß         Ich arbeite im Büro.	597   work (verb)        I work in the office.	Verb
+598   Nomen   die Welt    rPlanet   rMensch   eErde   rKrieg   eKarte   eNatur         Die Welt ist groß.	598   world        The world is big.	Nomen
+599   Verb   schreiben    rStift   rText   eSeite   rBrief   eHand   rAutor         Ich schreibe einen Brief.	599   write (verb)        I write a letter.	Verb
+600   Nomen   der Garten    rBaum   eBlume   rZaun   eBank   rWeg   eWiese         Im Garten stehen viele Blumen.	600   yard        There are many flowers in the yard.	Nomen
+601   Nomen   das Jahr    rMonat   rTag   rKalender   eZeit   rWinter   rSommer         Ein Jahr hat zwölf Monate.	601   year        A year has twelve months.	Nomen
+602   Adjektiv   gelb    eFarbe   rStift   eBlume   rKäse   eBanane   rSonne         Die Sonne ist gelb.	602   yellow        The sun is yellow.	Adjektiv
+603   Adverb   ja    I’ll   come   along.                  Ja	603   yes        ich komme mit.	Adverb
+604   Pronomen   du / ihr / Sie    rName   rMensch   ePerson   rLehrer   eFrage   eAntwort         Du bist nett.	604   you (singular/plural)        You are nice.	Pronomen
+605   Zahlwort   null    eZahl   eReihe   rWert   rPunkt   eMinute   eSekunde         Null ist eine gerade Zahl.	605   zero        Zero is an even number.	Zahlwort
