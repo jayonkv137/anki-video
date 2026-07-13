@@ -11,15 +11,15 @@
   - [x] 1. GitHub repo
   - [x] 2. CLAUDE.md (researched best practices, tailored)
   - [x] 3. Automated docs (this file + architecture.md + changelog.md)
-  - [ ] 4. `.env` — just-in-time (template exists)
-  - [ ] 5. Plugins (Anthropic frontend, feature-dev)
-  - [ ] 6. MCPs (evaluate: Supabase, n8n, Playwright)
-  - [ ] 7. Slash commands (doc-update automation)
-- [ ] Build — MVP phases (to be broken down after Setup)
+  - [x] 4. `.env` — just-in-time (template exists; keys added as services are provisioned)
+  - [x] 5. Plugins — just-in-time: Jayon installs via `/plugins` in an interactive `claude` session in this repo when Build starts (Anthropic feature-dev; frontend plugin when app work begins)
+  - [x] 6. MCPs — just-in-time: Supabase MCP when Supabase is provisioned; n8n MCP when the instance runs; Playwright MCP when the frontend exists
+  - [x] 7. Slash commands: `/update-docs` (living-docs refresh), `/handoff` (self-contained Antigravity prompt generator) in `.claude/commands/`
+- [ ] Build — MVP phases (to be broken down next: sub-goals with win conditions + learning objectives)
 
 ## Where we left off
 
-2026-07-13: Setup steps 1–3 done. Next: plugins → MCPs → slash commands, then break the Build phase into sub-goals with win conditions + learning objectives.
+2026-07-13: Setup phase COMPLETE (just-in-time items tracked above). Next session: break the Build phase into ordered sub-goals — each with a win condition and a learning objective — starting from the pipeline core.
 
 ## Learning log (concepts Jayon has covered / needs next)
 
