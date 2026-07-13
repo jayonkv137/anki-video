@@ -20,7 +20,7 @@
 
 ## Where we left off
 
-2026-07-13: Plan + Setup phases fully complete; build plan locked. **Next: B0 — install Docker Desktop, run n8n container with persistent volume, first cron workflow.** Work happens in fresh Claude Code sessions opened inside this repo (CLAUDE.md carries the working agreement).
+2026-07-13: Plan + Setup phases fully complete; build plan locked. **Next: B0 — install Docker Desktop, run n8n container with persistent volume, first webhook-triggered workflow.** (Docker justified & confirmed over npx/cloud 2026-07-13; cloud-vs-tunnel reachability decision deferred to B6/B7.) Work happens in fresh Claude Code sessions opened inside this repo (CLAUDE.md carries the working agreement).
 
 ## Learning log (concepts Jayon has covered / needs next)
 
