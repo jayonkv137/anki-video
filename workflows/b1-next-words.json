@@ -12,7 +12,10 @@
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [0, 0],
+      "position": [
+        0,
+        0
+      ],
       "webhookId": "b1111111-1111-1111-1111-111111111111"
     },
     {
@@ -23,10 +26,22 @@
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
-            { "name": "select", "value": "position,german,english,sentence_de,sentence_en,word_type" },
-            { "name": "introduced_on", "value": "is.null" },
-            { "name": "order", "value": "position.asc" },
-            { "name": "limit", "value": "10" }
+            {
+              "name": "select",
+              "value": "position,german,english,sentence_de,sentence_en,word_type"
+            },
+            {
+              "name": "introduced_on",
+              "value": "is.null"
+            },
+            {
+              "name": "order",
+              "value": "position.asc"
+            },
+            {
+              "name": "limit",
+              "value": "10"
+            }
           ]
         },
         "options": {}
@@ -35,7 +50,16 @@
       "name": "Fetch next 10",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [220, 0]
+      "position": [
+        220,
+        0
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "65F2y2DyjRt0nDzO",
+          "name": "Supabase anki-video"
+        }
+      }
     },
     {
       "parameters": {
@@ -54,7 +78,12 @@
         },
         "sendHeaders": true,
         "headerParameters": {
-          "parameters": [{ "name": "Prefer", "value": "return=representation" }]
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
         },
         "sendBody": true,
         "specifyBody": "json",
@@ -65,8 +94,17 @@
       "name": "Mark introduced",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [440, 0],
-      "executeOnce": true
+      "position": [
+        440,
+        0
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "65F2y2DyjRt0nDzO",
+          "name": "Supabase anki-video"
+        }
+      }
     },
     {
       "parameters": {
@@ -78,21 +116,50 @@
       "name": "Respond",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [660, 0]
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
     "Webhook": {
-      "main": [[{ "node": "Fetch next 10", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Fetch next 10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Fetch next 10": {
-      "main": [[{ "node": "Mark introduced", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Mark introduced",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Mark introduced": {
-      "main": [[{ "node": "Respond", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
-  "settings": { "executionOrder": "v1" },
+  "settings": {
+    "executionOrder": "v1"
+  },
   "id": "b1nextwords0001"
 }

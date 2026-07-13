@@ -10,7 +10,7 @@
 
 ## Current state
 
-B0 (engine heartbeat) complete — n8n runs in Docker with persistent storage and serves a webhook-triggered workflow. Data layer (B1) not started.
+B0 + B1 complete — n8n (Docker, persistent) serves webhook workflows; Supabase holds the 605-word deck with `introduced_on` tracking; `B1 Next Words` workflow fetches-and-stamps the next 10 unseen words.
 
 ## Components
 
@@ -20,3 +20,8 @@ B0 (engine heartbeat) complete — n8n runs in Docker with persistent storage an
 - **Workflows as code:** exported to `workflows/*.json` in the repo (the repo, not the running instance, is the source of truth). Import: `docker cp` → `docker exec n8n n8n import:workflow --input=...`.
 - **First workflow:** `workflows/b0-heartbeat.json` — Webhook → HTTP Request → Respond. Production webhook (active workflow) at `http://localhost:5678/webhook/heartbeat`.
 - **Restart recipe (upgrade-safe):** `docker rm` the container, `docker run` a new one on the same `n8n_data` volume — workflows persist.
+
+### Word source (B1)
+- **Supabase** project `anki-video`: `words` table (605 rows, deck order in `position`, `introduced_on` null until served). RLS enabled, no policies — secret key only until the app needs a read policy (B6).
+- **Import:** `scripts/import_words.py` — parse (split on 2+ spaces) → validate (refuses on problems) → idempotent upsert (`on_conflict=position`). Python venv at `.venv/` (requests, python-dotenv).
+- **Workflow `B1 Next Words`** (`workflows/b1-next-words.json`): GET `/webhook/next-words` → HTTP GET PostgREST (`introduced_on=is.null&order=position.asc&limit=10`) → HTTP PATCH stamp (`executeOnce`, `position=in.(…)` built via cross-node expression) → respond with the 10 words. Supabase credential stored in n8n (`supabaseApi`), referenced by id in the JSON so imports auto-attach.
