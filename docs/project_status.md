@@ -25,4 +25,7 @@
 ## Learning log (concepts Jayon has covered / needs next)
 
 - Covered so far: project spec method (PSB), chain tool-decisions with evidence, git repo + gh CLI auth basics.
-- Up next: Docker basics, n8n core concepts (nodes, cron triggers, credentials, loops, error workflows), prompt engineering for structured JSON, validate→retry pattern.
+- Up next (B0): Docker basics + n8n foundations.
+  - n8n resources (chosen 2026-07-13): official n8n Beginner course playlist (YouTube) + official Level 1 text course (docs.n8n.io/courses/level-one/) done hands-on inside our own instance; single-video alternative: "Master n8n in 2 Hours (2026)". Skip AI-agent content for now.
+  - Must-understand checklist: nodes & executions · triggers (Webhook) · credentials · expressions {{ }} · HTTP Request node · Split In Batches loops · error workflows.
+- Later: prompt engineering for structured JSON, validate→retry pattern (B2).
