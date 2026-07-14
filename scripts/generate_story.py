@@ -79,6 +79,8 @@ def word_stem(german: str) -> str:
     for a in ARTICLES:
         if w.startswith(a):
             return w[len(a):]
+    if (w.endswith("eln") or w.endswith("ern")) and len(w) > 4:
+        return w[:-1]  # schütteln -> schüttel, matches schüttelt
     if w.endswith("en") and len(w) > 4:
         return w[:-2]  # arbeiten -> arbeit, matches arbeitet/arbeite
     return w
@@ -122,14 +124,15 @@ def generate(client: Anthropic, words: list[dict], feedback: str | None = None) 
         user += f"\n\nIMPORTANT — your previous attempt failed validation:\n{feedback}\nFix these issues."
     resp = client.messages.create(
         model="claude-sonnet-5",
-        max_tokens=4096,
+        max_tokens=8192,
         system=SYSTEM_PROMPT,
         output_config={"format": {"type": "json_schema", "schema": STORY_SCHEMA}},
         messages=[{"role": "user", "content": user}],
     )
     usage = resp.usage
     print(f"[tokens: {usage.input_tokens} in / {usage.output_tokens} out]")
-    return json.loads(resp.content[0].text)
+    text = next(b.text for b in resp.content if b.type == "text")
+    return json.loads(text)
 
 
 def main() -> None:
