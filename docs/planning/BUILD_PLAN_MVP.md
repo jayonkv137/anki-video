@@ -1,67 +1,62 @@
-# MVP Build Plan — ordered sub-goals
+# Build Plan — V2 (Instagram content pipeline)
 
-**Status:** LOCKED (confirmed by Jayon, 2026-07-13)
-**Rule:** one phase at a time; a phase is done when its **win condition** is demonstrated, not when code exists. Each phase names its **learning objective** (Jayon must be able to explain the concept afterward) and its **just-in-time provisioning**. Design-heavy phases start with their own mini design step (research → try → decide), per the plan-as-we-go method.
+**Status:** V2 DRAFT (re-cut 2026-07-14 after the pivot; V1 in git history). B0–B2 completed under V1 and carry over unchanged.
+**Rules:** one phase at a time; done = win condition demonstrated; every phase begins with its RESEARCH step; each phase names Jayon's learning objective and just-in-time provisioning.
 
 ---
 
-## B0 — Engine heartbeat
+## ✅ Done (V1 phases, fully reusable)
 
-Get the machine room running: Docker on the Mac, n8n container with persistent volume, one trivial **webhook-triggered** workflow (webhook call → fetch something → notify) — webhook because the real pipeline is event-driven (see B7).
-- **Win:** calling the webhook URL runs the workflow successfully, and the setup survives a container restart.
-- **Learn:** what Docker is (images/containers/volumes), n8n anatomy (nodes, triggers, executions).
-- **Provision:** Docker Desktop. Cost: €0.
+- **B0 — n8n engine** (Docker, persistent volume, webhook workflows)
+- **B1 — Word source** (Supabase, 605 words, next-10-unseen workflow)
+- **B2 — Story stage** (Claude Sonnet 5, structured output + semantic validate→retry; 3 stories passed; prompt gets a V2 revision in C1/C2)
 
-## B1 — Word source
+## C1 — Character & Art Bible ⭐ (Jayon's creative step)
 
-Supabase project; `words` table; import the 625-deck export (word, translation, order); the "next 10 unseen words" query; n8n reads it.
-- **Win:** the n8n workflow fetches exactly the right 10 words, and the next run fetches the *following* 10.
-- **Learn:** relational basics (tables, rows, keys), what Supabase is, n8n credentials.
-- **Provision:** Supabase (free tier). Cost: €0.
+Jayon defines the four stereotypical-German characters (names, trait sheets, speech quirks, relationships, visual descriptions) + the art style (look, palette, rendering feel). Research step: character-design-for-AI-consistency practices; style-reference techniques of AI animation creators. Output: `docs/planning/CHARACTER_ART_BIBLE.md` + canonical reference images (generated with Jayon in the loop until he says "that's them").
+- **Win:** reference images of all 4 characters + 1 style board Jayon signs off; regenerating a character from the bible text + refs produces a recognizably identical character twice in a row.
+- **Learn:** image-model prompting, reference/seed techniques, what makes a character AI-reproducible (simple silhouettes, fixed color anchors, distinctive props).
+- **Provision:** image-model credits (fal.ai covers Nano-Banana-class models) — small budget.
 
-## B2 — Story stage
+## C2 — Screenplay stage (story → scenes, two-pass LLM)
 
-Prompt design for story + 10-scene script as strict JSON (scene = dialogue/narration in German + English visual description); validate → retry loop in n8n.
-- **Win:** 3 consecutive runs on different word sets produce valid JSON with all 10 words genuinely used; Jayon (B1 German) spot-checks the German is level-appropriate.
-- **Learn:** prompt engineering for structured output (few-shot, priming), JSON schema, the validate→retry pattern — the core automation skill.
-- **Provision:** Anthropic API key. Cost: pennies/run.
-
-## B3 — Video design stage ⭐ (the deferred decision + the creative challenge)
-
-The dedicated design step from PRD §6: research → generate 2–3 sample scenes per candidate (Gemini Omni / Kling+ElevenLabs / Veo, + one cheap open model as baseline) → judge against the locked criterion (consistency > narration control > cost) → **decide model, style template, and scene composition** (subtitles? word on screen?). Update Engineering Requirements with the decision.
-- **Win:** one sample scene Jayon is genuinely happy with + a written style template (prompt prefix, voice, composition rules) that produced it twice.
-- **Learn:** video-gen APIs (async submit → poll → download), image-reference consistency techniques, TTS/SSML pacing.
-- **Provision:** fal.ai; Google AI and/or ElevenLabs as tested. Cost: ~€10–20 of experiments — budget it deliberately.
-
-## B4 — Scene pipeline
-
-Wire B2's script through B3's chosen model: n8n loop over 10 scenes → generate (+ narration if separate TTS) → upload to Supabase Storage.
-- **Win:** one full day's 10 scene videos generated and stored, hands-off, from one trigger.
-- **Learn:** n8n loops (Split In Batches), handling long-running async jobs, object storage.
+Split B2's single pass into V2's two-pass design: STORY pass (trait-faithful, 2-character, absurd-OK) → SCREENPLAY pass (scene dissection, dialogue, CI checks, video-model limits) → PROMPT-WRITER pass (bible + scene → strict video prompt). Includes the quality-checklist evaluation between passes (loop engineering v0: validate → feedback → retry, extended from B2).
+- **Win:** for 3 different word-batches, pipeline emits 10 scene-prompts each that pass the checklist AND read well to Jayon — before any video money is spent.
+- **Learn:** multi-stage LLM chaining, evaluator prompts, checklist design.
 - **Provision:** nothing new.
 
-## B5 — Assembly
+## C3 — Video prototyping (the deferred model decision + style lock)
 
-Creatomate template: 10 scenes (+ audio overlay if applicable) → combined story video, stored alongside.
-- **Win:** a watchable ~60–80s story video where scenes flow as one narrative.
-- **Learn:** template-based rendering (composition JSON: tracks, clips, timing).
-- **Provision:** Creatomate (verify pricing). Cost: ~cents/video.
+The B3 shortlist survives (LTX-2.3 Fast / Gemini Omni / Kling 3.0 / Veo-Lite+TTS — RESEARCH_video_generation.md §5) but is now judged WITH the bible: which model best holds OUR art style + characters? Test consistency techniques: reference-image anchoring, last-frame chaining. Jayon drives manually (his stated wish: foresee every generation while learning the craft).
+- **Win:** 2 consecutive scenes with the same character, same style, acceptable German audio (or narration route chosen), at a cost Jayon accepts. Model + technique LOCKED and recorded in the engineering spec.
+- **Learn:** video-model prompting, i2v vs t2v, consistency techniques, cost control.
+- **Provision:** fal.ai key + ~€10–20 experiment budget (+ Google AI key if testing Omni).
 
-## B6 — Session app
+## C4 — Scene pipeline (semi-automated with Gate 1)
 
-React + Vite PWA: today's session from Supabase → word card → recall → reveal + self-grade (written back) → scene video → story finale.
-- **Win:** Jayon completes a real session on his phone, and his grades appear in the database.
-- **Learn:** React state for a flow, Supabase JS client, HTML5 video, PWA install.
-- **Provision:** Vercel (free) at deploy time.
+n8n: words → C2 three-pass chain → **Gate 1 (approval: Jayon sees story/screenplay/prompts + estimated cost, approves)** → generate 10 scenes via locked model → store in Supabase.
+- **Win:** one full episode's 10 scenes generated hands-off after a single approval click.
+- **Learn:** n8n wait/approve patterns (Wait node/webhook resume), async job polling, storage.
 
-## B7 — Session-driven automation (= MVP done)
+## C5 — Assembly
 
-**Event-driven, per Jayon's design (2026-07-13):** finishing a session is the trigger. App writes "session complete" → Supabase → n8n webhook fires → next session generated (fetch words → story → scenes → assembly → session row). Failure notification to Jayon. Optional safety net: a periodic reconciliation check ("next session should exist but doesn't → generate") as self-healing fallback — the only legitimate scheduled job.
-This mirrors Anki's real causality (today's outcomes precede tomorrow's queue) and is v1-proof: when grade-dependent review words arrive via AnkiConnect, the trigger is unchanged.
-- **Win:** finish a session on two consecutive days, untouched: each next morning the new session is simply there. **This is the MVP definition of done.**
-- **Learn:** webhooks & event-driven vs time-driven architecture, error workflows in n8n, idempotency (safe re-runs), monitoring an autonomous system.
-- **Provision:** nothing new (Mac-awake constraint accepted; upgrade trigger documented).
+Creatomate (locked): stitch 10 scenes (+ narration/subtitles per C3's format decision) → combined episode + per-scene cuts in Instagram-ready formats (9:16).
+- **Win:** watchable combined episode + individual scene clips, correct format, from one trigger.
+- **Learn:** template rendering, aspect/format handling.
+
+## C6 — Publishing stage with Gate 2
+
+Instagram posting via API (research step: Meta Graph API for Reels — requirements: Business/Creator account, app review; vs scheduling tools like Buffer/Later/Postiz). **Gate 2:** Jayon approves final videos + caption before anything goes public. Posting format experiment plan (which cut structure to post) designed here.
+- **Win:** one episode published to the page through the gate, scheduled, with caption + hashtags from the pipeline.
+- **Learn:** Meta API/scheduling ecosystem, approval-gated automation.
+- **Provision:** Instagram Business account + Meta app (or scheduler account).
+
+## C7 — Daily operation (= MVP done)
+
+Event/schedule-driven daily run of the full chain with both gates, failure notifications, idempotent re-runs, cost logging per episode.
+- **Win:** **3 consecutive daily episodes published end-to-end** with Jayon touching only the two gates.
+- **Learn:** error workflows, idempotency, monitoring, cost telemetry.
 
 ---
 
-**Sequencing logic:** engine → data → text → (design!) → media at scale → assembly → consumption → autonomy. Each phase produces something demonstrable and nothing depends on a later phase. B3 sits deliberately *before* mass generation so style is designed, not inherited from defaults.
+**Sequencing logic:** creative foundation (C1) → text chain hardened cheaply (C2) → spend money only when scripts are worthy (C3) → automate generation behind a gate (C4) → package (C5) → publish behind a gate (C6) → run daily (C7). Cheap stages absorb iteration; expensive stages stay gated.

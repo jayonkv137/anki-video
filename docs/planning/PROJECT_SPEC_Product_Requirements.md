@@ -1,6 +1,6 @@
 # Project Spec — Product Requirements
 
-**Status:** LOCKED (confirmed by Jayon, 2026-07-13)
+**Status:** V1 — SUPERSEDED by the 2026-07-14 pivot (see PROJECT_GOAL_AND_MILESTONES.md V2). Kept as reference: the pipeline structure (10 words → story → 10 scenes → combined video) and story rules survive; the learner app + recall-first session flow are PARKED. A V2 product spec (Instagram content product) will be drafted during C1/C6 design steps.
 **Date:** 2026-07-13 · Supersedes `Project Spec Product Requirements.docx` (original draft kept for reference)
 **Related:** `PROJECT_GOAL_AND_MILESTONES.md` (locked) · `RESEARCH_efficacy_and_competitors.md`
 

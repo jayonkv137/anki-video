@@ -1,59 +1,62 @@
-# Project Goal & Milestones
+# Project Goal & Milestones — V2 (THE PIVOT)
 
-**Project:** Anki Video — comprehensible-input story videos for daily Anki words
-**Status:** LOCKED (confirmed by Jayon, 2026-07-13)
-**Post-research decision (2026-07-13):** After the efficacy/competitor research (`RESEARCH_efficacy_and_competitors.md`), Jayon chose to keep the full story-video concept as-is — the story + video generation challenge IS the learning goal. Cost/coherence mitigations (word-type routing, recurring characters, clip caching) are noted as v1+ options, not MVP scope.
-**Created:** 2026-07-13
-**Owners:** Jayon (builder, decision-maker) · Claude Code (command center: structure, research, tutoring, execution support)
+**Project:** Stereotypical German — automated comprehensible-input story content for Instagram
+**Status:** V2 DRAFT — supersedes V1 (learner app) per Jayon's pivot, 2026-07-14. V1 text preserved in git history of this file.
+**Owners:** Jayon (creator, decision-maker) · Claude Code (command center: structure, research, tutoring, execution support)
 
 ---
 
-## 1. The End Goal (what we are building)
+## 1. The Vision (V2 — Jayon, 2026-07-14)
 
-A mobile-friendly app for an Anki German learner using the Fluent Forever 625-based German deck (AnkiWeb 1970793696), learning ~10 new words per day:
+An **Instagram page** built on a self-made world: **four stereotypical-German comic characters** (Jayon's original creations — trait sheets coming in the Character & Art Bible) in a consistent, deliberately art-directed universe. Purpose: **teach German in an entertaining, engaging way through simple stories you can watch every day.**
 
-1. The learner recalls a word first, Anki-style (German word shown → active retrieval). **Recall always comes first.**
-2. After recall, a short AI-generated comprehensible-input video plays, showing that word in action — visually, contextually, with audio, in a narrative scene.
-3. Each word's video is one scene of a single continuous story for that session.
-4. At the end of the session, the full combined story video (all 10 words woven together) plays as the finale.
-5. When the learner returns the next day, the new day's story and videos are already generated and waiting.
+- Daily content keeps the **Anki-derived structure**: 10 words/day from the 605-word deck → one story → 10 scenes (one word each) → combined story video. Exact posting format (scene-by-scene? word-reveal-then-scene? combined only?) = OPEN design question, to be tested against real audience data.
+- Stories: any genre, weird/absurd welcome — **absurdity and quirk are the product** — but structured (fixed episode skeleton), **max 2 main characters per story** (guest appearances allowed per scene), characters always true to their trait sheets, language strictly A1/A2.
+- **Quality is the differentiator.** Observed competitors (e.g. "Deutsche Aktive"-style automated pages) get views with careless AI slop. Our position: *visibly deliberate* — real art direction, real characters, real pedagogy. "AI-made, but made with intention."
+- The world is the asset: once characters + art style exist, other series run on the same universe (podcast, news-roast, specials) as parallel pipelines later.
 
-**Locked design principle (from research):** the video is feedback and reward after retrieval — it never replaces active recall. This preserves the testing effect that makes Anki work.
+## 2. The Pipeline (target architecture)
 
-## 2. The Intention (why we are doing it)
+```
+10 words (Supabase, Anki structure)
+  → STORY LLM (genre-free, trait-faithful, A1/A2, absurd-but-structured)
+  → SCREENPLAY LLM (scene-by-scene dissection: CI values, dialogue,
+     word placement, video-model limitations respected)
+  → PROMPT-WRITER stage (per scene: character sheets + art-style bible
+     → strict video prompts)
+  → [GATE 1: Jayon approves BEFORE video credits are spent]
+  → 10 scene videos (consistency via reference images / frame chaining)
+  → assembly → combined video
+  → [GATE 2: Jayon approves BEFORE publishing]
+  → scheduled Instagram posting
+```
 
-The app is the vehicle; the destination is **learning by doing**.
+Quality loops ("loop engineering") at each LLM stage: outputs evaluated against checklists before flowing downstream — never waste video credits on a weak script. The human gates are FEATURES of the design, not gaps in it.
 
-- Jayon's primary goal is to learn AI automation, pipeline building, agents, and the full anatomy of a real production-style system — by designing and building every part himself, with Claude as guide.
-- **Success is defined by understanding, not polish.** A rough, ugly MVP that Jayon fully understands end-to-end is a win. A beautiful app he can't explain is a failure.
-- At each stage, Claude directs Jayon to the foundational concepts he needs, asks sharpening questions, and never dumps finished solutions ahead of the current phase.
+## 3. Intention (unchanged from V1)
 
-## 3. Milestones
+**Learning by doing remains the primary goal** — AI automation, pipelines, agents; success = Jayon understands every part he built. New secondary goals: audience reach, portfolio value for gen-AI work in Germany, later monetization options (see STRATEGY_business_direction.md).
 
-| Version | Core functionality | Done means |
+## 4. Milestones (V2)
+
+| Version | Core | Done means |
 |---|---|---|
-| **MVP** | Fully automated pipeline: today's 10 words in → 10 scene videos + 1 combined story video out, next day's batch ready before the user arrives — shown in a simple app UI. Skeleton quality is fine: consistent story template, basic video style, no fine-tuning. | The full loop runs without manual steps and the output is watchable end-to-end. |
-| **v1** | Improve the core: better story generation, better/more consistent video output. Still core functionality only. | Noticeably better stories and videos on the same pipeline. |
-| **v2** | Support for more deck types (where feasible). Improved story prompts, fine-tuned consistent video style. UI improvements. | Works beyond the single starting deck; videos have a deliberate, consistent style. |
-| **v3** | Ambitious / speculative features discovered along the way. | Defined later. |
+| **MVP** | Full pipeline words → story → screenplay → prompts → [gate] → 10 scenes + combined video → [gate] → posted. Characters + art style established. Video step may be semi-manual. | 3 consecutive daily episodes published end-to-end through both gates. |
+| **v1** | Quality-evaluation loops before every spend, scheduling, posting-format testing against audience data, cost tuning. | Pipeline runs for days; Jayon touches only the two gates. |
+| **v2** | Parallel series on the same world (podcast, news-roast); optionally the learner app as premium layer; B2B samples. | A second content format is live. |
 
-**Not in scope for MVP:** perfect stories, polished video style, multiple decks, multiple languages, auth/accounts, production hardening.
+**Explicitly parked (from V1):** React learner app + recall-first session flow (the fixed deck still yields a ~61-episode course later — STRATEGY doc §1); AnkiConnect integration.
 
-## 4. How we work (the working agreement)
+## 5. Working agreement (V2 — two additions)
 
-- **Process:** PSB — Plan → Setup → Build. Strictly one phase at a time; each phase is discussed and explicitly agreed before moving on.
-  1. **Plan:** this doc → Product Requirements → Engineering Requirements (tool decisions researched with proof, decided one at a time together) → provision infra.
-  2. **Setup:** GitHub repo, .env, CLAUDE.md, automated docs (architecture.md, changelog.md, project_status.md, reference docs), plugins, MCPs, slash commands.
-  3. **Build:** phased sub-goals, each with a win condition **and** a learning objective for Jayon. Plan mode before implementing.
-- **Command center:** this Claude Code chat. Antigravity IDE (Opus, Sonnet, Gemini) is used for overflow/execution tasks when handed a self-contained prompt.
-- **Consequence:** all project context lives in documents in this folder — never only in chat memory — so any tool (Claude Code, Antigravity, future sessions) can pick up the full context.
-- **Project home:** `~/Desktop/Anki Video/` — planning docs at top level, `Context Docs From other chats/` for chat context, code in a repo folder created during Setup.
+All V1 rules stand: one phase at a time, phases locked explicitly, teach-first, researched options + Jayon decides, all context lives in repo files. New:
 
-## 5. Current position
+1. **Mandatory research step:** every phase and significant design decision begins with background research (web evidence, prior art, forums) recorded as `docs/planning/RESEARCH_*.md` BEFORE deciding. No decisions from vibes.
+2. **Model selection accompanies every delegation:** each handoff/sub-task names the Claude model tier to use (CLAUDE.md → "Model selection"), so tokens are spent where intelligence is needed.
 
-- [x] Step 1 — Goal & Intentions + Milestones (this doc; awaiting lock)
-- [x] Step 2a — Product Requirements (LOCKED 2026-07-13)
-- [x] Step 2b — Engineering Requirements (complete draft 2026-07-13; awaiting lock)
-- [x] Step 2c — Provisioning policy: JUST-IN-TIME — each service provisioned at the build step that first needs it (checklist tracked in Engineering Requirements doc)
-- [ ] Phase 2 — Claude Code setup
-- [ ] Phase 3 — Build MVP
+## 6. Current position
+
+- [x] V1 Plan/Setup + B0 (n8n engine) + B1 (word source, 605 words) + B2 (story stage, 3 validated stories) — ALL still load-bearing for V2
+- [x] Research library: efficacy, story design, video models/cost, Instagram market, business direction
+- [x] PIVOT recorded (2026-07-14, this doc) + risks register (RISKS_AND_REALITY_CHECKS.md)
+- [ ] NEXT: V2 build plan (BUILD_PLAN_MVP.md) → Character & Art Bible (Jayon's creative step) → video prototyping

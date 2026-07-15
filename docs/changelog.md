@@ -2,6 +2,13 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-14 — THE PIVOT: V1 learner app → V2 Instagram content pipeline
+
+- Vision V2 (Jayon): "Stereotypical German" Instagram page — 4 original comic characters, art-directed world, daily 10-word stories; quality-over-slop positioning; two human approval gates (before spend, before publish); story→screenplay→prompt three-pass LLM chain; learner app PARKED.
+- Docs re-cut: goal doc V2, build plan V2 (C1 Character/Art Bible → C2 screenplay chain → C3 video prototyping → C4 gated scene pipeline → C5 assembly → C6 publishing+gate → C7 daily ops). B0–B2 carry over unchanged.
+- New: RISKS_AND_REALITY_CHECKS.md (10 named failure modes with early warnings). New system rules in CLAUDE.md: mandatory research step per decision; model-selection table (Haiku/Sonnet/Opus/Fable) required in every delegation.
+- Instagram market research committed (RESEARCH_instagram_german_market.md): digging playbook + ~35 verified accounts + format taxonomy; gap confirmed = serialized animated CI stories.
+
 ## 2026-07-13 — B2 design: story strategy locked
 
 - Research (TPRS, exposure frequency, bizarreness/humor, story grammar) → `docs/planning/RESEARCH_story_design.md`.
