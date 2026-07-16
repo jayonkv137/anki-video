@@ -2,6 +2,10 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-15 — Canon names finalized + grammar-corrected
+
+- FINAL: Rolf die Wurst · Bert das Bier · Kati die Kartoffel · Müller das Brot. Articles corrected to noun gender (das Bier; die Wurst sing.) per new language-accuracy principle: everything learner-facing must be grammatically correct. Folders/files/docs renamed and synced (Pam-*→Kati-*, ASCII filenames). Review blocker B1 closed; Kati's polished look ruled a character trait; Bert's identity core = glass+foam.
+
 ## 2026-07-14 — THE PIVOT: V1 learner app → V2 Instagram content pipeline
 
 - Vision V2 (Jayon): "Stereotypical German" Instagram page — 4 original comic characters, art-directed world, daily 10-word stories; quality-over-slop positioning; two human approval gates (before spend, before publish); story→screenplay→prompt three-pass LLM chain; learner app PARKED.
