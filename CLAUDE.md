@@ -10,7 +10,7 @@ This is Jayon's **learning-by-doing** project. Success = his understanding, not 
 - Actively teach: explain new concepts before implementing; point to what to learn.
 - **Mandatory research step:** every phase and significant design decision starts with background research (web evidence, prior art) recorded as `docs/planning/RESEARCH_*.md` BEFORE deciding. Big decisions: researched options with proof → **Jayon decides**.
 - All project context lives in files (below), never only in chat — future sessions and other tools must pick up cold.
-- New ideas mid-phase → PARKING LOT in `docs/project_status.md`, not into scope (see RISKS doc R9).
+- New ideas mid-phase → file in `docs/planning/IDEAS_PARKING_LOT.md` same-turn, no discussion, back to phase (review ritual: at each phase win). Vision changes → append `docs/planning/VISION_HISTORY.md` in the same commit that changes goal/build docs.
 
 ## Model selection (for sessions, subagents, and handoffs)
 
@@ -32,7 +32,8 @@ Switch DOWN eagerly (Haiku for chores), UP only when a task resists two attempts
 - `docs/planning/RISKS_AND_REALITY_CHECKS.md` — known failure modes; consult before big spends
 - `docs/planning/RESEARCH_*.md` — evidence library (efficacy, story design, video models, Instagram market, business strategy)
 - `docs/architecture.md` · `docs/changelog.md` · `docs/project_status.md` — living docs, update after every meaningful change
-- `docs/planning/CHARACTER_ART_BIBLE.md` — (C1, upcoming) canonical characters + art style; ALL visual generation derives from it
+- `resources/Characters-Main-Sheet.md` — CANON character bible (Die Brotzeit-Bande: behavior/voice/story rules) + per-character folders with reference images. Art-style sheet: C1 remainder, upcoming.
+- `docs/planning/IDEAS_PARKING_LOT.md` + `docs/planning/VISION_HISTORY.md` — idea capture + evolution record
 
 ## Hard constraints
 

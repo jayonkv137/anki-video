@@ -13,15 +13,11 @@
 - [ ] C3 — Video prototyping (model + style lock; shortlist in RESEARCH_video_generation.md §5)
 - [ ] C4 — Gated scene pipeline · C5 — Assembly · C6 — Publishing + Gate 2 · C7 — Daily ops (MVP done)
 
-## PARKING LOT (ideas, not scope — see RISKS R9)
-
-- Podcast/news-roast series on the same world (v2)
-- Learner app as premium layer; AnkiConnect (parked from V1)
-- B2B samples to influencers (opportunistic)
+## PARKING LOT → moved to docs/planning/IDEAS_PARKING_LOT.md (system doc)
 
 ## Where we left off
 
-2026-07-14: Pivot recorded; all docs V2. Next session: C1 — Jayon describes his four characters in his own words; research step on AI-reproducible character design; then iterate reference images to a signed-off bible. Model note: C1 research+bible drafting = Sonnet 5; character image iteration = image models via fal.ai.
+2026-07-14: Jayon delivered C1 cast (resources/: Characters-Main-Sheet.md + 4 character folders with bibles & reference images). Claude review in docs/planning/C1_character_review.md — 2 blockers before generation: (1) canon naming conflicts across docs/folders, (2) umlaut/text errors on rendered characters. C1 remainder: Jayon's art-style sheet + naming decision. Then C2 (screenplay chain). Idea system live: IDEAS_PARKING_LOT.md + VISION_HISTORY.md.
 
 ## Learning log
 
