@@ -15,7 +15,17 @@
 
 **Quirks:** counts his Pfand bottles like a dragon counts gold — his one visible joy outside football; trusts no forecast ("Bert said sun." *packs second jacket*); his crust zipper creaks when he's emotional and he pretends it didn't; keeps exactly one photo in his jacket, never fully shown.
 
-**Voice & speaking style:** low, calm, slow, with a northern clip — words end early, as if conserving heat. Precisely because he says little, every word is delivered clearly and deliberately: the easiest German in the cast to learn from, one clean sentence at a time, framed by comfortable silence. Volume barely above quiet — except match day (full roar: "TOOOOR!").
+**Voice & speaking style:** strong, firm, and definite — the classic German sound at full strength: hard crisp consonants, words that begin with a punch and end hard, every sentence landing with falling intonation like a closed door. Short powerful statements, quickly delivered, then silence. Commanding but calm; he never shouts and never softens — the easiest German in the cast to imitate, because every word stands at attention. His delivery never changes, whatever he's feeling; the stare does the emotion, the voice states facts. Except match day (full roar: "TOOOOR!").
+
+
+**Customize Performance text:** Speaks only German, strong native pronunciation. Firm, assertive, definite — every sentence lands with falling intonation like a closed door. Hard crisp consonants, punchy word starts, hard word endings. Short powerful sentences, then silence. Commanding but calm — never shouting, never soft.
+
+**Preview sample dialogue:** Moin. Das Spiel beginnt um vier. Ich habe die Flaschen schon weggebracht. Wir gehen jetzt.
+
+**VOICE LINE (copy verbatim into every scene prompt where he speaks):**
+MÜLLER speaks only German, in a strong, firm northern voice — hard crisp consonants, short definite sentences with falling intonation, commanding but calm, silence between statements.
+
+**Per-scene emotion:** append to the Voice Line, never replace it. Match-day override: "— here roaring at full volume, still in German".
 
 **Signature phrases:** "Moin." • "Jo." / "Nee." • "Kalt." (his weather report, always accurate) • "Schon gut." • "TOOOOR!" (match day only).
 
