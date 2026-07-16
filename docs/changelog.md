@@ -2,6 +2,11 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-17 — Google Flow research + first full pipeline map
+
+- RESEARCH_google_flow.md: Flow capabilities (Ingredients/voices/SceneBuilder/Flow Agent, confirm-before-generating), NO public API (unofficial APIs = ban risk) → Flow is the manual creative cockpit; automation uses same models via Gemini API (separate billing). Competitors compared (LTX Studio closest; model APIs remain the automatable route). Episode-0 manual mockup protocol defined.
+- PIPELINE_MVP.md: first end-to-end pipeline diagram (canon injection points, 8 stages, 2 gates, Flow side-cockpit, stage ownership/status table).
+
 ## 2026-07-15 — Canon names finalized + grammar-corrected
 
 - FINAL: Rolf die Wurst · Bert das Bier · Kati die Kartoffel · Müller das Brot. Articles corrected to noun gender (das Bier; die Wurst sing.) per new language-accuracy principle: everything learner-facing must be grammatically correct. Folders/files/docs renamed and synced (Pam-*→Kati-*, ASCII filenames). Review blocker B1 closed; Kati's polished look ruled a character trait; Bert's identity core = glass+foam.
