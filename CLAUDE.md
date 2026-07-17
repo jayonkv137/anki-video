@@ -43,6 +43,15 @@ Switch DOWN eagerly (Haiku for chores), UP only when a task resists two attempts
 - Language in stories: A1/A2, short sentences; characters always true to their trait sheets; max 2 main characters per story.
 - n8n workflows exported as JSON to `workflows/` whenever changed — the repo, not the instance, is the source of truth.
 
+## Session & context system (run like a business — repeatable rituals as skills)
+
+- `/pickup` — START every session: load newest handoff packet, VERIFY vs ground truth, then act.
+- `/context-handoff` — user says "handoff" near context end: transfer packet (state+evidence, never transcript) → docs/handoffs/ → sync docs/memory → commit.
+- `/idea` — file to parking lot in one move, zero discussion.
+- `/phase-gate` — close a phase: evidence-checked win condition + parking-lot/backlog review ritual.
+- `/update-docs`, `/handoff` (Antigravity delegation) — as before.
+- Context hygiene: small sessions per task; artifacts are the interface; two repeated corrections on the same point = reset signal (snapshot by hand, fresh session); verbose exploration → subagents/forks, keep only conclusions.
+
 ## Conventions
 
 - Branch per feature; commit style `type: summary`; never commit generated media.

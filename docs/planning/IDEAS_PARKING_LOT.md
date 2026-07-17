@@ -14,5 +14,10 @@
 | 8 | 2026-07-17 | Designer collaboration: page branding, card templates, subtitle style, per-character colors | Before public launch (C6) |
 | 9 | 2026-07-17 | Global knowledge bank across parallel pipelines (full version; MVP-lite = episode log as run context, R-12) | First parallel series |
 | 10 | 2026-07-17 | Structured evergreen course navigation (pinned guides/highlights: "start here, 500 words") | Page live + first 10 episodes |
+| 11 | 2026-07-17 | Flow API as pipeline stage-5 candidate IF Google ever ships one | Flow API announcement |
+| 12 | 2026-07-17 | Per-word single-scene cuts as separate posts/stories (old V1 idea, superseded by triptych but not dead) | Format experiments in C6 show demand |
+| 13 | 2026-07-17 | Word-emphasis animation in subtitles (target word pops/colors when spoken) | Subtitle design step (C5) |
+| 14 | 2026-07-17 | MCP-based shared memory server for cross-session/pipeline context (hjarni/subrosa-style, from context research) | If file-based handoff system proves insufficient |
+| 15 | 2026-07-17 | Skill-ify more business rituals (episode QA review, weekly cost review, competitor scan) | After C7 when routines stabilize |
 
 **Rules:** one line per idea here; if an idea needs a page of thinking, it gets promoted to a RESEARCH doc first. Killed ideas move to the bottom with a one-line reason (never deleted).
