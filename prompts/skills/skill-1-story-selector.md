@@ -33,3 +33,6 @@ Score each candidate 1–5 on: (a) hard words fit ORGANICALLY, (b) visual comedy
 - Travelogue plots (multiple locations), crowd scenes, night scenes — expensive/fragile for video.
 - Repeating scenario or main cast from the episode log.
 - Making the pigeon/prop the protagonist — the CHARACTERS carry the show.
+
+## Naming law
+Always use FULL canonical character names, everywhere, exactly: Rolf die Wurst · Bert das Bier · Kati die Kartoffel · Müller das Brot. Never abbreviations, titles, or variants.

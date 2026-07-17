@@ -126,6 +126,9 @@ def substitute_canon(prompts):
     canon = (REPO / "prompts" / "canon" / "canon_blocks.md").read_text(encoding="utf-8")
     def block(header):
         m = re.search(rf"## {re.escape(header)}\n(.+?)(?=\n## |\Z)", canon, re.S)
+        if not m:  # fuzzy: match by first name (e.g. "Kati" -> "Kati die Kartoffel")
+            first = header.split(":")[-1].strip().split()[0]
+            m = re.search(rf"## CHAR_BLOCK: {re.escape(first)}[^\n]*\n(.+?)(?=\n## |\Z)", canon, re.S)
         return m.group(1).strip() if m else f"[MISSING CANON: {header}]"
     style = block("STYLE_BLOCK")
     def sub(text):
