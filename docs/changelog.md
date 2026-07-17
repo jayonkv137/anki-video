@@ -2,6 +2,13 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-17 — C2 v1 SHIPPED: the three-skill text chain works end-to-end
+
+- prompts/skills/: skill-1 story-selector (word audit → 3 scored scenario candidates → cast by belief-collision → beats w/ hook+human-beat), skill-2 screenplay-writer (10 subtitled filmable scenes, voice budgets, retention+CI rules), skill-3 prompt-writer (Veo/Flow + Seedance variants, canon placeholders substituted by code).
+- prompts/canon/canon_blocks.md: INTERIM style block + 4 character visual blocks (mechanical injection — LLM never paraphrases canon).
+- scripts/generate_episode.py: chained harness w/ schema-enforced structured outputs + streaming (two live failures fixed: 8k/16k max_tokens truncations), semantic validation (word coverage + Müller word budget), episode log as run context, artifacts + pretty episode.md per run.
+- First auto-episode passed validation: "Kati und der Handtuch-Krieg" (Freibad towel war, Kati×Rolf). R-6 hook findings encoded in skill-2.
+
 ## 2026-07-17 — Google Flow research + first full pipeline map
 
 - RESEARCH_google_flow.md: Flow capabilities (Ingredients/voices/SceneBuilder/Flow Agent, confirm-before-generating), NO public API (unofficial APIs = ban risk) → Flow is the manual creative cockpit; automation uses same models via Gemini API (separate billing). Competitors compared (LTX Studio closest; model APIs remain the automatable route). Episode-0 manual mockup protocol defined.

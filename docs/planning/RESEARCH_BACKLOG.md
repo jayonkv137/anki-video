@@ -9,7 +9,7 @@
 | R-3 | Art-style system for automation | C1 | high | ✅ done → RESEARCH_art_style_system.md |
 | R-4 | Google Flow capabilities/API | C3 | high | ✅ done → RESEARCH_google_flow.md |
 | R-5 | IG German market map | strategy | high | ✅ done → RESEARCH_instagram_german_market.md |
-| R-6 | **Hooks + IG algorithm + retention mechanics** (what makes reels hold attention; encode as scene-1 rules + checklist) | C2 | **high** | ⌕ open |
+| R-6 | Hooks + retention mechanics | C2 | high | ✅ core findings encoded in skill-2 (visual pattern-interrupt first frame, 40% muted, ≤8-word text hooks, no slow builds; sources: opus.pro/flowcast/fobet 2026 guides). Deeper algo research still open for C6. |
 | R-7 | **Posting format: triptych vs alternatives** (saves/shares data, carousel vs reel dynamics, 3-posts/day practice, evergreen course accounts) | C6 | high | ⌕ open |
 | R-8 | **Reels subtitle best practices** (styles, timing, readability for learners, tooling) | C3/C5 | med | ⌕ open |
 | R-9 | **NicosWeg (DW) visual storytelling** — how it teaches via scenes; steal principles for screenplay rules | C2 | med | ⌕ open |
