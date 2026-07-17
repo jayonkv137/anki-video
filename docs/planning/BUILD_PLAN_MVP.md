@@ -20,7 +20,7 @@ Jayon defines the four stereotypical-German characters (names, trait sheets, spe
 
 ## C2 — Screenplay stage (story → scenes, two-pass LLM)
 
-Split B2's single pass into V2's two-pass design: STORY pass (trait-faithful, 2-character, absurd-OK) → SCREENPLAY pass (scene dissection, dialogue, CI checks, video-model limits) → PROMPT-WRITER pass (bible + scene → strict video prompt). Includes the quality-checklist evaluation between passes (loop engineering v0: validate → feedback → retry, extended from B2).
+Split B2's single pass into V2's design: SCENARIO pass (scenario-first selection per CONTENT_STRATEGY §5.1, one-environment default, optional Jayon input param) → STORY pass (trait-faithful, practical everyday German, hook in scene 1) → SCREENPLAY pass (scene dissection, dialogue, CI checks, video-model limits) → PROMPT-WRITER pass (bible + scene → strict video prompt). Includes the quality-checklist evaluation between passes (loop engineering v0: validate → feedback → retry, extended from B2).
 - **Win:** for 3 different word-batches, pipeline emits 10 scene-prompts each that pass the checklist AND read well to Jayon — before any video money is spent.
 - **Learn:** multi-stage LLM chaining, evaluator prompts, checklist design.
 - **Provision:** nothing new.
@@ -40,13 +40,13 @@ n8n: words → C2 three-pass chain → **Gate 1 (approval: Jayon sees story/scre
 
 ## C5 — Assembly
 
-Creatomate (locked): stitch 10 scenes (+ narration/subtitles per C3's format decision) → combined episode + per-scene cuts in Instagram-ready formats (9:16).
+Creatomate (locked): stitch 10 scenes + BRANDED SUBTITLES (hard requirement, style from design step) → combined episode (9:16) + optional per-scene cuts. Stage 6b (pending MVP-scope decision): word-card generator for triptych carousels (template-based, pixel-accurate text).
 - **Win:** watchable combined episode + individual scene clips, correct format, from one trigger.
 - **Learn:** template rendering, aspect/format handling.
 
 ## C6 — Publishing stage with Gate 2
 
-Instagram posting via API (research step: Meta Graph API for Reels — requirements: Business/Creator account, app review; vs scheduling tools like Buffer/Later/Postiz). **Gate 2:** Jayon approves final videos + caption before anything goes public. Posting format experiment plan (which cut structure to post) designed here.
+Instagram posting via API (research R-10) + posting-format decision (triptych vs reel-only, research R-7) + launch sequence (character intros, CONTENT_STRATEGY §2). **Gate 2:** Jayon approves final videos + caption before anything goes public. Posting format experiment plan (which cut structure to post) designed here.
 - **Win:** one episode published to the page through the gate, scheduled, with caption + hashtags from the pipeline.
 - **Learn:** Meta API/scheduling ecosystem, approval-gated automation.
 - **Provision:** Instagram Business account + Meta app (or scheduler account).

@@ -10,5 +10,9 @@
 | 4 | 2026-07-14 | **NicosWeg-style structured learning path**: an IG page (or track) where every day = one lesson in a continuous A1→A2 narrative arc with the characters; sentence-by-sentence progression | C7 done + format data from real posts |
 | 5 | 2026-07-14 | **Global memory repository across all automations**: one shared story-world memory (what happened in which episode, what was taught, character continuity) that ALL parallel pipelines read/write — continuity engine for the universe | First parallel series starts (idea #3), OR story continuity errors appear in daily episodes |
 | 6 | 2026-07-14 | Scale proof: same pipeline run for 100+ words/other decks/other languages | C7 done |
+| 7 | 2026-07-17 | useapi.net unofficial Flow API as automation stopgap (ToS-risk; burner account only) | Only if C3 shows Flow-exclusive features beat Gemini-API refs decisively |
+| 8 | 2026-07-17 | Designer collaboration: page branding, card templates, subtitle style, per-character colors | Before public launch (C6) |
+| 9 | 2026-07-17 | Global knowledge bank across parallel pipelines (full version; MVP-lite = episode log as run context, R-12) | First parallel series |
+| 10 | 2026-07-17 | Structured evergreen course navigation (pinned guides/highlights: "start here, 500 words") | Page live + first 10 episodes |
 
 **Rules:** one line per idea here; if an idea needs a page of thinking, it gets promoted to a RESEARCH doc first. Killed ideas move to the bottom with a one-line reason (never deleted).
