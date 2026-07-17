@@ -59,6 +59,10 @@ Mapped to the pipeline: **words in → story → audio → video → assembly �
 **#10 Hosting/scheduling: n8n self-hosted in Docker on the Mac** *(2026-07-13)* — free, teaches Docker; nightly generation runs while the Mac is awake (accepted MVP constraint). **Upgrade trigger:** when unattended daily reliability matters → cheap VPS (~€5/mo) or n8n Cloud. App hosting: Vercel free tier.
 *Learning foundation for Jayon:* Docker run/compose basics, volumes (so n8n workflows survive restarts), cron expressions.
 
+## Run context, ledger & memory (added 2026-07-18)
+
+Stage-0 **Run Context Pack** (code-assembled: MISSION + bible + canon blocks + prompting guidelines distilled from Jayon's Seedance/Omni research in resources/ + series-memory digest + last-run state) injected into every LLM stage; **run ledger** (Supabase `runs`/`run_events`: per-stage artifacts, hashes, costs, gate decisions, canon versions) enables resume + traceability; **series memory** (`episodes` table) feeds the universe-growing digest. Change management via versioned canon files + /tune regression ritual. Authoritative spec: EXECUTION_PLAN_text_pipeline.md.
+
 ## Technical architecture (MVP)
 
 ```

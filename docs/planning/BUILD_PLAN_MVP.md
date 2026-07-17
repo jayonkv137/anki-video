@@ -18,7 +18,11 @@ Jayon defines the four stereotypical-German characters (names, trait sheets, spe
 - **Learn:** image-model prompting, reference/seed techniques, what makes a character AI-reproducible (simple silhouettes, fixed color anchors, distinctive props).
 - **Provision:** image-model credits (fal.ai covers Nano-Banana-class models) — small budget.
 
-## C2 — Screenplay stage (story → scenes, two-pass LLM)
+## C2 — Text pipeline v2 (NOW GOVERNED BY docs/planning/EXECUTION_PLAN_text_pipeline.md — tasks E1–E7, executed in Antigravity)
+
+*(Original C2 sketch below; the execution plan supersedes details: adds Stage-0 Run Context Pack init, run ledger + series memory, 3-option story premises with Gate A choice, quality-check stage, dual Seedance/Omni prompt packages with reference mapping, /tune change management.)*
+
+### C2 original sketch (superseded)
 
 Split B2's single pass into V2's design: SCENARIO pass (scenario-first selection per CONTENT_STRATEGY §5.1, one-environment default, optional Jayon input param) → STORY pass (trait-faithful, practical everyday German, hook in scene 1) → SCREENPLAY pass (scene dissection, dialogue, CI checks, video-model limits) → PROMPT-WRITER pass (bible + scene → strict video prompt). Includes the quality-checklist evaluation between passes (loop engineering v0: validate → feedback → retry, extended from B2).
 - **Win:** for 3 different word-batches, pipeline emits 10 scene-prompts each that pass the checklist AND read well to Jayon — before any video money is spent.

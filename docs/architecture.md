@@ -12,6 +12,10 @@
 
 B0 + B1 complete — n8n (Docker, persistent) serves webhook workflows; Supabase holds the 605-word deck with `introduced_on` tracking; `B1 Next Words` workflow fetches-and-stamps the next 10 unseen words.
 
+## Planned next (E1–E7, see docs/planning/EXECUTION_PLAN_text_pipeline.md)
+
+`pipeline/` package (rcp/ledger/stages/cli), Supabase `runs`+`run_events`+`episodes`, skills v2 (1a options / 1b expand / 2 / 2q quality / 3 dual-prompts), Gate A CLI choice, /tune governance.
+
 ## Components
 
 ### n8n engine (B0)

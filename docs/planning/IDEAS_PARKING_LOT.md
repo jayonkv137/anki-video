@@ -18,6 +18,7 @@
 | 12 | 2026-07-17 | Per-word single-scene cuts as separate posts/stories (old V1 idea, superseded by triptych but not dead) | Format experiments in C6 show demand |
 | 13 | 2026-07-17 | Word-emphasis animation in subtitles (target word pops/colors when spoken) | Subtitle design step (C5) |
 | 14 | 2026-07-17 | MCP-based shared memory server for cross-session/pipeline context (hjarni/subrosa-style, from context research) | If file-based handoff system proves insufficient |
+| 15b | 2026-07-18 | n8n port of text pipeline v2 (webhook Gate A via Telegram/email) — deliberately deferred to C4 | E7 done + C3 model locked |
 | 15 | 2026-07-17 | Skill-ify more business rituals (episode QA review, weekly cost review, competitor scan) | After C7 when routines stabilize |
 
 **Rules:** one line per idea here; if an idea needs a page of thinking, it gets promoted to a RESEARCH doc first. Killed ideas move to the bottom with a one-line reason (never deleted).

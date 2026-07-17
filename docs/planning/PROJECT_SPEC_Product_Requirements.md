@@ -1,5 +1,7 @@
 # Project Spec — Product Requirements
 
+**2026-07-18 (V2 product behavior additions, authoritative in EXECUTION_PLAN_text_pipeline.md):** Jayon selects among 3 story-premise options at Gate A (with optional steering note); every run is initialized with full project context + episode history; all pipeline behavior changes go through the versioned /tune process.
+
 **Status:** V1 — SUPERSEDED by the 2026-07-14 pivot (see PROJECT_GOAL_AND_MILESTONES.md V2). Kept as reference: the pipeline structure (10 words → story → 10 scenes → combined video) and story rules survive; the learner app + recall-first session flow are PARKED. A V2 product spec (Instagram content product) will be drafted during C1/C6 design steps.
 **Date:** 2026-07-13 · Supersedes `Project Spec Product Requirements.docx` (original draft kept for reference)
 **Related:** `PROJECT_GOAL_AND_MILESTONES.md` (locked) · `RESEARCH_efficacy_and_competitors.md`

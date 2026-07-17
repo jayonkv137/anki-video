@@ -1,6 +1,6 @@
 # The MVP Pipeline — full end-to-end map (first drawn 2026-07-17)
 
-The complete automated flow as currently planned, words → published Instagram episode. n8n orchestrates everything; Supabase is the single state store; canon files in this repo are injected verbatim (never paraphrased) at the marked points. Two human gates. Flow (Google) is a MANUAL cockpit beside the pipeline, not a node in it (no API — see RESEARCH_google_flow.md).
+The complete automated flow as currently planned, words → published Instagram episode. **2026-07-18: stages 1–4 (text half) are now specified in detail — incl. Stage-0 RCP initialization, run ledger/series memory, Gate-A story choice, quality checker, dual prompt packages — in EXECUTION_PLAN_text_pipeline.md (authoritative for the text half).** n8n orchestrates everything; Supabase is the single state store; canon files in this repo are injected verbatim (never paraphrased) at the marked points. Two human gates. Flow (Google) is a MANUAL cockpit beside the pipeline, not a node in it (no API — see RESEARCH_google_flow.md).
 
 ```
                         ┌─────────────────────────────────────────────┐

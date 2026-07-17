@@ -31,6 +31,8 @@ An **Instagram page** built on a self-made world: **four stereotypical-German co
   → scheduled Instagram posting
 ```
 
+**2026-07-18 additions:** every run starts from a Run Context Pack (mission+canon+series-memory digest) so the automation acts like a creator who knows the whole project; a run ledger + series memory make history verifiable; Jayon chooses among 3 story premises at Gate A; /tune is the governed way to change any pipeline behavior. Detail: EXECUTION_PLAN_text_pipeline.md.
+
 Quality loops ("loop engineering") at each LLM stage: outputs evaluated against checklists before flowing downstream — never waste video credits on a weak script. The human gates are FEATURES of the design, not gaps in it.
 
 ## 3. Intention (unchanged from V1)
@@ -59,4 +61,4 @@ All V1 rules stand: one phase at a time, phases locked explicitly, teach-first, 
 - [x] V1 Plan/Setup + B0 (n8n engine) + B1 (word source, 605 words) + B2 (story stage, 3 validated stories) — ALL still load-bearing for V2
 - [x] Research library: efficacy, story design, video models/cost, Instagram market, business direction
 - [x] PIVOT recorded (2026-07-14, this doc) + risks register (RISKS_AND_REALITY_CHECKS.md)
-- [ ] NEXT: V2 build plan (BUILD_PLAN_MVP.md) → Character & Art Bible (Jayon's creative step) → video prototyping
+- [x] V2 build plan · C1 ~80% (cast canon; style system pending) · C2 v1 proven → **NOW: EXECUTION_PLAN_text_pipeline.md (E1–E7 in Antigravity)** → then C3 video prototyping

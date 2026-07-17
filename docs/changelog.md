@@ -2,6 +2,10 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-18 — Text-pipeline v2 architecture locked + Antigravity execution plan
+
+- EXECUTION_PLAN_text_pipeline.md: Stage-0 Run Context Pack (answering Jayon's initialization question — yes, first, code-assembled, injected per stage; stateless-with-shared-pack chosen over one long chat per context-rot research), run ledger + series memory (Supabase), 3-option story premises + Gate A choice, quality-check stage, skill-3 v2 dual Seedance/Omni packages with reference-role mapping (per Jayon's two prompting-research files in resources/), /tune change-management ritual (+ new /tune skill). Tasks E1–E7 for Antigravity (Opus), Jayon parts listed. Core docs synced with pointers.
+
 ## 2026-07-17 — C2 v1 SHIPPED: the three-skill text chain works end-to-end
 
 - prompts/skills/: skill-1 story-selector (word audit → 3 scored scenario candidates → cast by belief-collision → beats w/ hook+human-beat), skill-2 screenplay-writer (10 subtitled filmable scenes, voice budgets, retention+CI rules), skill-3 prompt-writer (Veo/Flow + Seedance variants, canon placeholders substituted by code).
