@@ -50,9 +50,11 @@ STORY_SCHEMA = _schema(
 
 # Story options: three premises (lighter schema for Gate A)
 OPTION_SCHEMA = _schema(
-    title_de=STR, scenario=STR, environment=STR, mains=_arr(STR),
-    hook_visual=STR, human_beat=STR,
-    four_beat_sketch=_arr(STR),
+    title_de=STR, scenario=STR, scenario_en=STR,
+    environment=STR, environment_en=STR, mains=_arr(STR),
+    hook_visual=STR, hook_visual_en=STR,
+    human_beat=STR, human_beat_en=STR,
+    four_beat_sketch=_arr(STR), sketch_en=STR,
     word_fit_notes=STR, self_score=INT,
 )
 
@@ -155,8 +157,12 @@ def stage_story_options(run_id: str, rcp: RunContextPack, words: list[dict],
     options_system = (
         rcp.for_story_stage() + "\n\n" + skill + "\n\n"
         "OVERRIDE: Instead of committing to ONE story, produce EXACTLY 3 premise options.\n"
-        "For each option: title_de, scenario, environment, mains, hook_visual, human_beat, "
-        "four_beat_sketch (4 strings), word_fit_notes (how the hard words fit), self_score (1-10).\n"
+        "For each option: title_de, scenario (German), scenario_en (English translation), "
+        "environment (German), environment_en (English), mains, "
+        "hook_visual (German), hook_visual_en (English), "
+        "human_beat (German), human_beat_en (English), "
+        "four_beat_sketch (4 German strings), sketch_en (English summary of the 4 beats), "
+        "word_fit_notes (how the hard words fit — write in English), self_score (1-10).\n"
         "Return JSON: {\"options\": [option1, option2, option3]}"
     )
 
@@ -171,16 +177,20 @@ def stage_story_options(run_id: str, rcp: RunContextPack, words: list[dict],
     options_path = ep_dir / "options.json"
     options_path.write_text(json.dumps(options, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # Write human-readable options.md
+    # Write human-readable options.md (German + English side by side)
     md = ["# Story Options — choose one\n"]
     for i, opt in enumerate(options.get("options", []), 1):
         md.append(f"## Option {i}: {opt.get('title_de', '?')} (score: {opt.get('self_score', '?')}/10)\n")
-        md.append(f"**Scenario:** {opt.get('scenario', '')}\n")
-        md.append(f"**Environment:** {opt.get('environment', '')}\n")
+        md.append(f"**Scenario (DE):** {opt.get('scenario', '')}\n")
+        md.append(f"**Scenario (EN):** {opt.get('scenario_en', '')}\n")
+        md.append(f"**Environment:** {opt.get('environment', '')} — {opt.get('environment_en', '')}\n")
         md.append(f"**Mains:** {', '.join(opt.get('mains', []))}\n")
-        md.append(f"**Hook:** {opt.get('hook_visual', '')}\n")
-        md.append(f"**Human beat:** {opt.get('human_beat', '')}\n")
-        md.append(f"**Sketch:** {' → '.join(opt.get('four_beat_sketch', []))}\n")
+        md.append(f"**Hook (DE):** {opt.get('hook_visual', '')}\n")
+        md.append(f"**Hook (EN):** {opt.get('hook_visual_en', '')}\n")
+        md.append(f"**Human beat (DE):** {opt.get('human_beat', '')}\n")
+        md.append(f"**Human beat (EN):** {opt.get('human_beat_en', '')}\n")
+        md.append(f"**Sketch (DE):** {' → '.join(opt.get('four_beat_sketch', []))}\n")
+        md.append(f"**Sketch (EN):** {opt.get('sketch_en', '')}\n")
         md.append(f"**Word fit:** {opt.get('word_fit_notes', '')}\n")
     md.append("\n---\n")
     md.append("Choose with: `python -m pipeline choose <1|2|3> [--note \"...\"]`\n")
