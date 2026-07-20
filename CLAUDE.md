@@ -49,6 +49,7 @@ Switch DOWN eagerly (Haiku for chores), UP only when a task resists two attempts
 - `/context-handoff` — user says "handoff" near context end: transfer packet (state+evidence, never transcript) → docs/handoffs/ → sync docs/memory → commit.
 - `/idea` — file to parking lot in one move, zero discussion.
 - `/phase-gate` — close a phase: evidence-checked win condition + parking-lot/backlog review ritual.
+- `/learn` — trigger the Universal Learning System tutor. When the user asks to learn or understand a topic/code, read and execute the workflow defined in `docs/learning_system/SYSTEM_PROMPT.md`.
 - `/update-docs`, `/handoff` (Antigravity delegation) — as before.
 - Context hygiene: small sessions per task; artifacts are the interface; two repeated corrections on the same point = reset signal (snapshot by hand, fresh session); verbose exploration → subagents/forks, keep only conclusions.
 

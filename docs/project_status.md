@@ -8,21 +8,23 @@
 
 - [x] V1: Plan + Setup + B0 (n8n) + B1 (word source) + B2 (story stage)
 - [x] 2026-07-14 PIVOT → V2 Instagram content pipeline (docs re-cut)
-- [ ] **C1 — Character & Art Bible (NEXT; Jayon's creative step + research on AI-reproducible character design)**
-- [~] C2 — Screenplay chain v1 BUILT (3 skills + harness, 1 episode passed); remaining: Jayon quality iteration on multiple batches, then win condition (3 batches pass him)
+- [ ] **C1 — Character & Art Bible (Jayon's creative step + research on AI-reproducible character design)**
+- [~] C2 — Screenplay chain: v1 shipped (3 skills + harness, 1 episode passed). **E1–E4 DONE** (canon system, ledger, pipeline package with Gate A). **E5–E7 NEXT** to reach C2 win condition (3 batches Jayon approves).
 - [ ] C3 — Video prototyping (model + style lock; shortlist in RESEARCH_video_generation.md §5)
-- [ ] C4 — Gated scene pipeline · C5 — Assembly · C6 — Publishing + Gate 2 · C7 — Daily ops (MVP done)
+- [ ] C4 — Gated scene pipeline (n8n port) · C5 — Assembly · C6 — Publishing + Gate 2 · C7 — Daily ops (MVP done)
 
 ## PARKING LOT → moved to docs/planning/IDEAS_PARKING_LOT.md (system doc)
 
 ## Where we left off
 
-→ **EXECUTE NOW (Antigravity, Opus): docs/planning/EXECUTION_PLAN_text_pipeline.md — tasks E1–E7.** Opening prompt is in the plan §4.
-→ Handoff packets: docs/handoffs/ (newest first) — Claude Code sessions: run `/pickup`.
+→ **CONTINUE EXECUTION: docs/planning/EXECUTION_PLAN_text_pipeline.md — tasks E5–E7.** E1–E4 done and committed. Pipeline package live (`python -m pipeline run/choose/status`). One test run paused at Gate A (run `e0c04e38`, words 27-575).
+→ Handoff packets: docs/handoffs/ (newest first) — new sessions: run `/pickup`.
 
-2026-07-17 (latest): C2 v1 shipped — run `./.venv/bin/python scripts/generate_episode.py --random` (or --start N / --note "..."), read output/episodes/ep_*/episode.md, judge quality, iterate skills. Earlier: Jayon's content-structure session fully filed: CONTENT_STRATEGY_instagram.md (triptych, launch sequence, card pipeline 6b, subtitles+hook requirements, scenario-first story stage, Ted-in-real-world direction) + RESEARCH_BACKLOG.md (system: 14 items, 5 done). Episode-01 gold-standard screenplay in episodes/episode-01.md — Jayon shoots it manually in Flow. useapi verdict: parked (#7). Earlier 2026-07-17: Google Flow researched (RESEARCH_google_flow.md): no public API → Flow = manual cockpit (C1 assets, C3 tests, Episode-0 mockup protocol §4); automated pipeline stays n8n + Gemini API. Full pipeline map drawn: PIPELINE_MVP.md. Jayon has full cast in Flow incl. voices — ACTION for Jayon: rename Flow characters to canon grammar (Rolf die Wurst · Bert das Bier · Kati die Kartoffel · Müller das Brot). Prior 2026-07-15: names finalized+synced (Rolf/Bert/Kati/Müller). Jayon doing: image text fixes, style system. Claude doing: art-style-system research. Prior: Jayon delivered C1 cast (resources/: Characters-Main-Sheet.md + 4 character folders with bibles & reference images). Claude review in docs/planning/C1_character_review.md — 2 blockers before generation: (1) canon naming conflicts across docs/folders, (2) umlaut/text errors on rendered characters. C1 remainder: Jayon's art-style sheet + naming decision. Then C2 (screenplay chain). Idea system live: IDEAS_PARKING_LOT.md + VISION_HISTORY.md.
+2026-07-20 (latest): E1-E4 completed in Antigravity (Opus) session. E1: prompting canon distilled (Seedance + Omni guidelines, ≤100 lines each, Jayon-approved). E2: MISSION.md + REGISTRY.md (hash-verified canon). E3: Supabase ledger tables (runs, run_events, episodes) + migration of episode_log.json. E4: pipeline/ package refactor (rcp.py, ledger.py, stages.py, cli.py) — proven live: `pipeline run --random` reaches Gate A, `pipeline status` shows ledger truth. Learning system added by Jayon in parallel session (.agents/skills/learn/, docs/learning_system/).
+
+Earlier: 2026-07-18: Execution plan locked (E1-E7 tasks, single source of truth). 2026-07-17: C2 v1 shipped — 3-skill chain + harness, first episode passed. Content strategy, Flow research, pipeline map. 2026-07-15: Canon names finalized. 2026-07-14: THE PIVOT to V2. Prior: B0-B2 complete, research library built.
 
 ## Learning log
 
-- Covered: PSB method, evidence-chained decisions, git/gh, Docker+n8n basics, Supabase/PostgREST, structured outputs + semantic validate→retry (incl. two real failure lessons: -eln stemming false positive, max_tokens truncation).
-- Up next (C1): image-model prompting, reference/seed consistency techniques, character design for AI reproducibility.
+- Covered: PSB method, evidence-chained decisions, git/gh, Docker+n8n basics, Supabase/PostgREST, structured outputs + semantic validate→retry (incl. two real failure lessons: -eln stemming false positive, max_tokens truncation). NEW: RCP architecture (why stateless-with-shared-pack beats one-long-conversation), hash-verified canon (tamper detection), ledger-based run tracking (resumability + auditability), Gate A pattern (human choice before committing resources).
+- Up next (E5): skill splitting (story options vs expand), quality-check skill design, dual video-model prompt packages.

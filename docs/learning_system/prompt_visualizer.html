@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Learning System: Prompt Visualizer</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #38bdf8;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --danger: #f87171;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        header {
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .column {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h2 {
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: var(--accent);
+            color: var(--bg);
+            font-weight: bold;
+        }
+
+        .instructions {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Drag and Drop styles */
+        .assembly-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 100px;
+        }
+
+        .block-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background-color: rgba(15, 23, 42, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .draggable-block {
+            background-color: var(--card-bg);
+            border: 1px solid var(--accent);
+            color: var(--text);
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: grab;
+            user-select: none;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .draggable-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+        }
+
+        .draggable-block.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        /* Prompt Output Styles */
+        .output-zone {
+            background-color: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            min-height: 150px;
+            position: relative;
+        }
+
+        .output-zone::before {
+            content: "Live Compiled Prompt";
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background-color: var(--bg);
+            padding: 0 6px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .highlight-first-30 {
+            background-color: rgba(74, 222, 128, 0.2);
+            border-bottom: 2px solid var(--success);
+            padding: 2px 0;
+            font-weight: bold;
+        }
+
+        .stat-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .status.ok { color: var(--success); }
+        .status.warning { color: var(--warning); }
+        .status.danger { color: var(--danger); }
+
+        /* Gemini interactive tools */
+        .interactive-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        textarea, input, select {
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        button {
+            background-color: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .tts-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .tag-token {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin: 2px;
+        }
+        .tag-token.control {
+            background-color: rgba(251, 191, 36, 0.2);
+            border: 1px solid var(--warning);
+            color: var(--warning);
+        }
+        .tag-token.text {
+            background-color: rgba(56, 189, 248, 0.2);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Universal Learning System</h1>
+        <p class="instructions">Phase E1: Prompting Canon drag-and-drop structural visualizer</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- COLUMN 1: SEEDANCE 2.5 -->
+        <div class="column" id="seedance-panel">
+            <h2>Seedance 2.5 Assembly <span class="badge">Audio-First</span></h2>
+            <p class="instructions">Drag the prompt building blocks into the Assembly Zone in the correct canon order. See how the "First 30 words" highlighting updates.</p>
+            
+            <div class="block-pool" id="seedance-pool">
+                <div class="draggable-block" draggable="true" id="block-ref" data-text="Define the sausage in @Image1 as Rolf die Wurst. Define the potato in @Image2 as Kati die Kartoffel.">Ref Assignments</div>
+                <div class="draggable-block" draggable="true" id="block-shot" data-text="Shot 1: 0-5s. Rolf die Wurst grabs the coffee mug. Shot 2: 5-10s. Rolf die Wurst drops the mug.">Shot Structure</div>
+                <div class="draggable-block" draggable="true" id="block-camera" data-text="Camera: slow dolly in, steady motion, tight focus, no zoom, maintain subject size in frame.">Camera & Spatial</div>
+                <div class="draggable-block" draggable="true" id="block-env" data-text="Environment: a cluttered Bavarian kitchen, warm early morning light casting long shadows.">Environment & Lighting</div>
+                <div class="draggable-block" draggable="true" id="block-style" data-text="Style: Use @Image3 as global stylistic reference for textures, materials, and cinematic grading.">Global Style</div>
+                <div class="draggable-block" draggable="true" id="block-audio" data-text="Audio: Rolf die Wurst says in German {Wir haben kein Bier mehr!} synchronized to @Audio1.">Audio & Lip-Sync</div>
+                <div class="draggable-block" draggable="true" id="block-constraints" data-text="Audio Constraints: No background music, purely spoken dialogue. Avoid: cartoon rendering, glossy CG.">Constraints</div>
+            </div>
+
+            <h3>Assembly Zone</h3>
+            <div class="assembly-zone" id="seedance-assembly">
+                <!-- Dropped items go here -->
+            </div>
+
+            <div class="stat-bar">
+                <span>Length: <span id="seedance-len">0</span> / 3000 chars</span>
+                <span>Order Status: <span id="seedance-status" class="status warning">Empty</span></span>
+            </div>
+
+            <div class="output-zone" id="seedance-output">Drag blocks above to compile the prompt...</div>
+        </div>
+
+        <!-- COLUMN 2: GEMINI OMNI FLASH -->
+        <div class="column" id="omni-panel">
+            <h2>Gemini Omni Flash <span class="badge">Stateful Prose</span></h2>
+            <p class="instructions">Gemini requires natural director's prose and strict TTS alternating syntax. Fiddle with the tools below to compile a correct Gemini prompt.</p>
+
+            <div class="interactive-form">
+                <label for="omni-continuity">1. Continuity Warding (Prevents random cuts)</label>
+                <select id="omni-continuity">
+                    <option value="">[None Selected - Risk Cuts]</option>
+                    <option value="In a single continuous shot, ">In a single continuous shot (Canon)</option>
+                    <option value="In a single unbroken scene, ">In a single unbroken scene (Canon)</option>
+                    <option value="No scene cuts, ">No scene cuts (Canon)</option>
+                </select>
+
+                <label for="omni-prose">2. Cinematic Action (Describe in flowing prose)</label>
+                <textarea id="omni-prose" rows="3" placeholder="Describe camera movement and physics organically...">The camera slowly tracks Rolf die Wurst as he paces around the kitchen table, his steam rising in the cool morning air.</textarea>
+
+                <label for="omni-tts">3. TTS Alternating Syntax Builder (Tags must alternate with text)</label>
+                <input type="text" id="omni-tts" value="[cautious] Wir müssen aufpassen. [whispers] Sie könnten uns hören." placeholder="Tags in [] must alternate with text...">
+                <div class="tts-preview" id="tts-validation"></div>
+            </div>
+
+            <div class="stat-bar">
+                <span>Alternating Syntax: <span id="omni-syntax-status" class="status ok">Valid</span></span>
+            </div>
+
+            <div class="output-zone" id="omni-output">Compiling...</div>
+        </div>
+
+    </div>
+
+    <script>
+        // Drag and Drop Logic for Seedance
+        const pool = document.getElementById('seedance-pool');
+        const assembly = document.getElementById('seedance-assembly');
+        const output = document.getElementById('seedance-output');
+        const lenSpan = document.getElementById('seedance-len');
+        const statusSpan = document.getElementById('seedance-status');
+
+        const CANON_ORDER = ['block-ref', 'block-shot', 'block-camera', 'block-env', 'block-style', 'block-audio', 'block-constraints'];
+
+        // Make blocks draggable
+        document.querySelectorAll('.draggable-block').forEach(block => {
+            block.addEventListener('dragstart', () => block.classList.add('dragging'));
+            block.addEventListener('dragend', () => {
+                block.classList.remove('dragging');
+                updateCompilation();
+            });
+        });
+
+        // Allow assembly and pool to accept drops
+        [assembly, pool].forEach(zone => {
+            zone.addEventListener('dragover', e => {
+                e.preventDefault();
+                const dragging = document.querySelector('.dragging');
+                zone.appendChild(dragging);
+            });
+        });
+
+        function updateCompilation() {
+            const items = Array.from(assembly.children);
+            if (items.length === 0) {
+                output.innerHTML = 'Drag blocks above to compile the prompt...';
+                lenSpan.textContent = '0';
+                statusSpan.textContent = 'Empty';
+                statusSpan.className = 'status warning';
+                return;
+            }
+
+            let textParts = items.map(item => item.getAttribute('data-text'));
+            let promptText = textParts.join('\n\n');
+            
+            // Apply First 30 words highlighting
+            let words = promptText.split(/\s+/);
+            let first30 = words.slice(0, 30).join(' ');
+            let rest = words.slice(30).join(' ');
+            
+            output.innerHTML = `<span class="highlight-first-30">${first30}</span> ${rest}`;
+            lenSpan.textContent = promptText.length;
+
+            // Check Order
+            const currentOrder = items.map(item => item.id);
+            const isCanon = currentOrder.every((id, idx) => id === CANON_ORDER[idx]) && currentOrder.length === CANON_ORDER.length;
+
+            if (isCanon) {
+                statusSpan.textContent = 'Perfect Canon! ✓';
+                statusSpan.className = 'status ok';
+            } else if (currentOrder.length < CANON_ORDER.length) {
+                statusSpan.textContent = 'Incomplete';
+                statusSpan.className = 'status warning';
+            } else {
+                statusSpan.textContent = 'Wrong Order! Check prompt structure.';
+                statusSpan.className = 'status danger';
+            }
+        }
+
+        // Gemini Omni Live Compiler
+        const omniCont = document.getElementById('omni-continuity');
+        const omniProse = document.getElementById('omni-prose');
+        const omniTts = document.getElementById('omni-tts');
+        const omniOutput = document.getElementById('omni-output');
+        const syntaxStatus = document.getElementById('omni-syntax-status');
+        const ttsVal = document.getElementById('tts-validation');
+
+        function compileOmni() {
+            const continuity = omniCont.value;
+            const prose = omniProse.value;
+            const tts = omniTts.value;
+
+            // Simple parser to validate tag/text alternation
+            // Pattern: tag [anything] followed by text, alternating
+            const tokens = [];
+            const regex = /(\[[^\]]+\])|([^\[]+)/g;
+            let match;
+            while ((match = regex.exec(tts)) !== null) {
+                if (match[1]) {
+                    tokens.push({ type: 'control', val: match[1] });
+                } else if (match[2].trim()) {
+                    tokens.push({ type: 'text', val: match[2].trim() });
+                }
+            }
+
+            // Validate alternation: no two controls adjacent, no two texts adjacent
+            let isValid = true;
+            let validationHtml = '';
+            for (let i = 0; i < tokens.length; i++) {
+                const tok = tokens[i];
+                validationHtml += `<span class="tag-token ${tok.type}">${tok.val}</span>`;
+                if (i > 0 && tokens[i].type === tokens[i-1].type) {
+                    isValid = false;
+                }
+            }
+            ttsVal.innerHTML = validationHtml;
+
+            if (isValid && tokens.length > 0) {
+                syntaxStatus.textContent = "Valid ✓";
+                syntaxStatus.className = "status ok";
+            } else if (tokens.length === 0) {
+                syntaxStatus.textContent = "Empty";
+                syntaxStatus.className = "status warning";
+            } else {
+                syntaxStatus.textContent = "Syntax Error! Adjacent tags/texts.";
+                syntaxStatus.className = "status danger";
+            }
+
+            // Compile visual text
+            omniOutput.innerHTML = `[# References &lt;IMAGE_REF_0&gt;@Image1 &lt;IMAGE_REF_1&gt;@Image2]\nUse Image 1 and Image 2 as global aesthetic references. These images must not be used as literal initial frames.\n\n${continuity}${prose}\n\nAudio: kitchen ambience, and Rolf die Wurst says in de-DE:\n"${tts}"\n\nFormat: 10s, 9:16`;
+        }
+
+        [omniCont, omniProse, omniTts].forEach(el => el.addEventListener('input', compileOmni));
+        omniCont.addEventListener('change', compileOmni);
+
+        // Run initial compile
+        compileOmni();
+    </script>
+</body>
+</html>

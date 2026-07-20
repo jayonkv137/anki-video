@@ -2,6 +2,14 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-18 → 2026-07-20 — E1–E4 execution (Antigravity/Opus session)
+
+- **E1: Canon distillation.** Distilled `resources/AI Prompting Consistency Research.md` + `resources/Seedance Gemini Omni German Dialogue.pdf` → `prompts/canon/prompting_guidelines_seedance.md` (88 lines) + `prompts/canon/prompting_guidelines_omni.md` (101 lines). All rules traceable to source sections. Jayon-approved.
+- **E2: Mission + Registry.** `prompts/canon/MISSION.md` (29 lines, distilled from PROJECT_GOAL_AND_MILESTONES.md) + `prompts/canon/REGISTRY.md` (SHA-256 hash table for all 5 canon files). RCP builder verifies at run start.
+- **E3: Ledger + series memory.** Three Supabase tables: `runs` (status/stage/cost/canon versions), `run_events` (per-stage artifacts+tokens+hashes), `episodes` (series memory — scenario/cast/verdict). SQL migration at `scripts/migrations/001_ledger_tables.sql`. Migrated `episode_log.json` → `episodes` table. Round-trip test passed.
+- **E4: Pipeline package refactor.** `pipeline/` package: `rcp.py` (canon loader + hash verifier + series memory digest), `ledger.py` (Supabase CRUD for runs/events/episodes + cost tracking), `stages.py` (pure functions: words → 3 story options → expand → screenplay + validate → quality check → prompts + canon substitution → finalize), `cli.py` (run/choose/status/resume commands). Live test: `pipeline run --random` → Gate A pause verified; `pipeline status` shows ledger truth. Model: Claude Sonnet 5 for all creative stages.
+- **Learning system** (Jayon parallel session): `/learn` skill added to CLAUDE.md, `.agents/skills/learn/SKILL.md`, `docs/learning_system/` (README, LEARNING_LEDGER.md, db_ledger_visualizer.html).
+
 ## 2026-07-18 — Text-pipeline v2 architecture locked + Antigravity execution plan
 
 - EXECUTION_PLAN_text_pipeline.md: Stage-0 Run Context Pack (answering Jayon's initialization question — yes, first, code-assembled, injected per stage; stateless-with-shared-pack chosen over one long chat per context-rot research), run ledger + series memory (Supabase), 3-option story premises + Gate A choice, quality-check stage, skill-3 v2 dual Seedance/Omni packages with reference-role mapping (per Jayon's two prompting-research files in resources/), /tune change-management ritual (+ new /tune skill). Tasks E1–E7 for Antigravity (Opus), Jayon parts listed. Core docs synced with pointers.

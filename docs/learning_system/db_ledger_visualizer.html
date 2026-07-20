@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Learning System: Supabase Ledger Visualizer</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #38bdf8;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --primary: #6366f1;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        header {
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: var(--accent);
+        }
+
+        .instructions {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        button.btn-accent {
+            background-color: var(--accent);
+            color: var(--bg);
+        }
+        button.btn-accent:hover {
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+        }
+
+        button.btn-danger {
+            background-color: var(--danger);
+        }
+        button.btn-danger:hover {
+            box-shadow: 0 4px 12px rgba(248, 113, 113, 0.4);
+        }
+
+        button:disabled {
+            background-color: #475569;
+            color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .workspace {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .table-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            margin: 0;
+        }
+
+        .table-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--accent);
+        }
+
+        .db-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .db-table th, .db-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .db-table th {
+            background-color: rgba(15, 23, 42, 0.4);
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .db-table tr.active-row {
+            background-color: rgba(56, 189, 248, 0.1);
+        }
+
+        .db-table tr.new-row {
+            animation: highlightNew 1s ease-out;
+        }
+
+        @keyframes highlightNew {
+            0% { background-color: rgba(74, 222, 128, 0.4); }
+            100% { background-color: transparent; }
+        }
+
+        .db-table tr.cascade-delete {
+            animation: fadeOutDelete 0.8s ease-in forwards;
+        }
+
+        @keyframes fadeOutDelete {
+            0% { background-color: rgba(248, 113, 113, 0.4); opacity: 1; }
+            100% { background-color: rgba(248, 113, 113, 0.1); opacity: 0; transform: scaleY(0); display: none; }
+        }
+
+        /* Sidebar Info Panel */
+        .info-panel {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .info-panel h3 {
+            margin: 0 0 10px 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .explanation-box {
+            background-color: rgba(15, 23, 42, 0.5);
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .explanation-box strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background-color: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-card .num {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--success);
+        }
+
+        .stat-card .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Connector Lines (Foreign Keys representation) */
+        .fk-badge {
+            background-color: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Supabase Ledger Schema Visualizer</h1>
+        <p class="instructions">An interactive sandbox explaining the relational schema of your run ledger tables: runs, run_events, and episodes.</p>
+    </header>
+
+    <div class="controls">
+        <button id="btn-start" class="btn-accent">🚀 Start New Run</button>
+        <button id="btn-event" disabled>📝 Log Stage Event</button>
+        <button id="btn-cost" disabled>💰 Add LLM Cost</button>
+        <button id="btn-episode" disabled>🎬 Save Completed Episode</button>
+        <button id="btn-delete" class="btn-danger" disabled>🗑️ Cascading Delete Run</button>
+    </div>
+
+    <div class="workspace">
+        
+        <!-- LEFT COLUMN: LIVE DATABASE TABLES -->
+        <div style="display: flex; flex-direction: column; gap: 30px;">
+            
+            <!-- RUNS TABLE -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>Table: runs</h2>
+                    <span class="fk-badge">Primary Key: id</span>
+                </div>
+                <table class="db-table" id="table-runs">
+                    <thead>
+                        <tr>
+                            <th>id (UUID)</th>
+                            <th>status</th>
+                            <th>stage</th>
+                            <th>cost_cents</th>
+                            <th>word_positions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-muted);">Database is empty. Click "Start New Run" above.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RUN EVENTS TABLE -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>Table: run_events</h2>
+                    <span class="fk-badge">Foreign Key: run_id ➔ runs.id</span>
+                </div>
+                <table class="db-table" id="table-events">
+                    <thead>
+                        <tr>
+                            <th>id (bigint)</th>
+                            <th>run_id (FK)</th>
+                            <th>stage</th>
+                            <th>status</th>
+                            <th>tokens_in</th>
+                            <th>tokens_out</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: var(--text-muted);">No events logged yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- EPISODES TABLE -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>Table: episodes</h2>
+                    <span class="fk-badge">Foreign Key: run_id ➔ runs.id</span>
+                </div>
+                <table class="db-table" id="table-episodes">
+                    <thead>
+                        <tr>
+                            <th>run_id (FK)</th>
+                            <th>title_de</th>
+                            <th>scenario</th>
+                            <th>mains</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--text-muted);">No episodes completed yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: INTERACTIVE PEDAGOGY -->
+        <div class="info-panel">
+            <h3>Schema Insights</h3>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="num" id="stat-total-cost">0.00$</div>
+                    <div class="label">Total Spent</div>
+                </div>
+                <div class="stat-card">
+                    <div class="num" id="stat-events-count">0</div>
+                    <div class="label">Logged Events</div>
+                </div>
+            </div>
+
+            <div class="explanation-box" id="explanation">
+                <strong>Database Ready</strong>
+                Click "Start New Run" to open an active session. The pipeline creates a unique UUID for the run and updates its status to 'running'.
+            </div>
+
+            <div class="explanation-box" style="border-left-color: var(--accent);">
+                <strong>💡 Did you know?</strong>
+                Because of the PostgREST API, we don't write SQL queries in python. We write:
+                <code style="display: block; background: #0f172a; padding: 6px; border-radius: 4px; font-size: 0.8rem; margin-top: 5px; color: var(--accent);">
+                    requests.post(url, json=data)
+                </code>
+                Supabase converts this JSON directly into SQL under the hood!
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let runId = null;
+        let currentStageIdx = 0;
+        let totalCost = 0;
+        let eventCounter = 1001;
+
+        const stages = ["init", "words", "story_options", "screenplay", "quality_check", "prompts", "finalize"];
+
+        const btnStart = document.getElementById("btn-start");
+        const btnEvent = document.getElementById("btn-event");
+        const btnCost = document.getElementById("btn-cost");
+        const btnEpisode = document.getElementById("btn-episode");
+        const btnDelete = document.getElementById("btn-delete");
+
+        const tableRuns = document.getElementById("table-runs").querySelector("tbody");
+        const tableEvents = document.getElementById("table-events").querySelector("tbody");
+        const tableEpisodes = document.getElementById("table-episodes").querySelector("tbody");
+
+        const explanation = document.getElementById("explanation");
+        const statCost = document.getElementById("stat-total-cost");
+        const statEvents = document.getElementById("stat-events-count");
+
+        // Helper: Generate UUID
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // Action 1: Start Run
+        btnStart.addEventListener("click", () => {
+            runId = generateUUID();
+            currentStageIdx = 0;
+            totalCost = 0;
+            
+            // Update buttons
+            btnStart.disabled = true;
+            btnEvent.disabled = false;
+            btnCost.disabled = false;
+            btnEpisode.disabled = true;
+            btnDelete.disabled = false;
+
+            // Clear events & episodes UI
+            tableEvents.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No events logged yet.</td></tr>`;
+            tableEpisodes.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No episodes completed yet.</td></tr>`;
+
+            // Write row to runs
+            tableRuns.innerHTML = `
+                <tr class="new-row active-row">
+                    <td><code style="color: var(--accent);">${runId.substring(0,8)}...</code></td>
+                    <td><span style="color: var(--success);">running</span></td>
+                    <td id="run-stage-val">init</td>
+                    <td id="run-cost-val">0</td>
+                    <td>[311, 312, 313]</td>
+                </tr>
+            `;
+
+            statCost.textContent = "0.00$";
+            statEvents.textContent = "0";
+
+            explanation.innerHTML = `
+                <strong>🟢 Run Started!</strong>
+                A new row has been inserted into the <code>runs</code> table with status <code>'running'</code> and stage <code>'init'</code>.
+                <br><br>
+                Notice the unique ID. This UUID is our anchor; any event logged next must link back to this exact ID using a <strong>Foreign Key</strong>.
+            `;
+        });
+
+        // Action 2: Log Stage Event
+        btnEvent.addEventListener("click", () => {
+            if (currentStageIdx >= stages.length - 1) {
+                explanation.innerHTML = `
+                    <strong>🏁 Pipeline Finalized!</strong>
+                    You've run all stages. You can now choose to save this run as a completed episode in the series memory (Table: <code>episodes</code>).
+                `;
+                return;
+            }
+
+            currentStageIdx++;
+            const newStage = stages[currentStageIdx];
+
+            // Update runs UI
+            document.getElementById("run-stage-val").textContent = newStage;
+
+            // Clear empty row if first event
+            if (tableEvents.innerHTML.includes("No events logged")) {
+                tableEvents.innerHTML = "";
+            }
+
+            // Write event row
+            const tr = document.createElement("tr");
+            tr.className = "new-row";
+            tr.innerHTML = `
+                <td><code>${eventCounter++}</code></td>
+                <td><code style="color: var(--primary);">${runId.substring(0,8)}...</code></td>
+                <td><strong>${newStage}</strong></td>
+                <td><span style="color: var(--success);">completed</span></td>
+                <td>0</td>
+                <td>0</td>
+            `;
+            tableEvents.appendChild(tr);
+
+            // Update stats
+            statEvents.textContent = tableEvents.children.length;
+
+            explanation.innerHTML = `
+                <strong>📝 Stage Changed to: '${newStage}'</strong>
+                We just ran the logic for <code>${newStage}</code> and logged a new row in the <code>run_events</code> table.
+                <br><br>
+                Look at the <strong>run_id</strong> field in the event table. It matches the parent run's ID exactly! This represents a <code>Foreign Key (FK)</code> relationship.
+            `;
+
+            if (newStage === "finalize") {
+                btnEvent.disabled = true;
+                btnEpisode.disabled = false;
+            }
+        });
+
+        // Action 3: Add LLM Cost
+        btnCost.addEventListener("click", () => {
+            const tIn = Math.floor(Math.random() * 5000) + 2000;
+            const tOut = Math.floor(Math.random() * 2000) + 500;
+            
+            // Cost logic: Sonnet 5 approx $3/M in, $15/M out
+            const cents = Math.round((tIn * 0.3 + tOut * 1.5) / 100);
+            totalCost += cents;
+
+            // Update runs UI cost field
+            document.getElementById("run-cost-val").textContent = totalCost;
+
+            // Update event row tokens (update last row)
+            const rows = tableEvents.querySelectorAll("tr");
+            if (rows.length > 0) {
+                const lastRow = rows[rows.length - 1];
+                const cells = lastRow.querySelectorAll("td");
+                if (cells.length > 4) {
+                    cells[4].textContent = tIn;
+                    cells[5].textContent = tOut;
+                    lastRow.classList.add("new-row");
+                    setTimeout(() => lastRow.classList.remove("new-row"), 1000);
+                }
+            }
+
+            statCost.textContent = (totalCost / 100).toFixed(2) + "$";
+
+            explanation.innerHTML = `
+                <strong>💰 Cost added: ${cents} cents</strong>
+                We calculated the tokens spent (In: ${tIn}, Out: ${tOut}) and updated the <code>cost_cents</code> field in the parent <code>runs</code> table.
+                <br><br>
+                This ensures you have aggregate visibility on how much this specific generation run cost overall.
+            `;
+        });
+
+        // Action 4: Save Episode
+        btnEpisode.addEventListener("click", () => {
+            btnEpisode.disabled = true;
+            
+            // Clear empty state
+            tableEpisodes.innerHTML = "";
+
+            // Write episode row
+            const tr = document.createElement("tr");
+            tr.className = "new-row";
+            tr.innerHTML = `
+                <td><code style="color: var(--primary);">${runId.substring(0,8)}...</code></td>
+                <td><strong>Katis Abenteuer</strong></td>
+                <td>Kati seeks the perfect slice of bread.</td>
+                <td>["Kati die Kartoffel", "Müller das Brot"]</td>
+            `;
+            tableEpisodes.appendChild(tr);
+
+            explanation.innerHTML = `
+                <strong>🎬 Saved to Episodes (Series Memory)</strong>
+                The completed run is now compressed and pushed to the <code>episodes</code> table.
+                <br><br>
+                Future runs will load the last 5 episodes from this table to construct the <strong>Series Memory Digest</strong>, preventing the pipeline from repeating this exact scenario!
+            `;
+        });
+
+        // Action 5: Cascading Delete
+        btnDelete.addEventListener("click", () => {
+            btnStart.disabled = false;
+            btnEvent.disabled = true;
+            btnCost.disabled = true;
+            btnEpisode.disabled = true;
+            btnDelete.disabled = true;
+
+            // Visual cascade animation
+            const runRows = tableRuns.querySelectorAll("tr");
+            runRows.forEach(r => r.className = "cascade-delete");
+
+            const eventRows = tableEvents.querySelectorAll("tr");
+            eventRows.forEach(r => r.className = "cascade-delete");
+
+            const episodeRows = tableEpisodes.querySelectorAll("tr");
+            episodeRows.forEach(r => r.className = "cascade-delete");
+
+            explanation.innerHTML = `
+                <strong>💥 ON DELETE CASCADE TRIGGERED!</strong>
+                When we run <code>DELETE FROM runs WHERE id = '${runId}'</code>, look what happens:
+                <br><br>
+                Because of the <code>ON DELETE CASCADE</code> constraint we set in the SQL DDL schema, PostgreSQL automatically finds all rows in <code>run_events</code> and <code>episodes</code> linked to this run ID and purges them too!
+            `;
+
+            setTimeout(() => {
+                tableRuns.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Database is empty. Click "Start New Run" above.</td></tr>`;
+                tableEvents.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No events logged yet.</td></tr>`;
+                tableEpisodes.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No episodes completed yet.</td></tr>`;
+                runId = null;
+            }, 800);
+        });
+    </script>
+</body>
+</html>
