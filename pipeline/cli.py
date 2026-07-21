@@ -254,6 +254,13 @@ def main():
     p_resume = sub.add_parser("resume", help="Resume a failed/interrupted run")
     p_resume.add_argument("run_id", help="Run ID to resume")
 
+    # assemble (M5): clips + screenplay → subtitled 9:16 episode video
+    p_asm = sub.add_parser("assemble", help="Stitch clips/scene_NN.mp4 into a subtitled episode video")
+    p_asm.add_argument("episode", help="Episode dir name under output/episodes/ (e.g. ep_22-499)")
+    p_asm.add_argument("--clips", help="Clips dir (default <ep_dir>/clips)")
+    p_asm.add_argument("--audio", help="Master audio file replacing clip audio")
+    p_asm.add_argument("--out", help="Output file (default <ep_dir>/final.mp4)")
+
     args = parser.parse_args()
 
     if args.command == "run":
@@ -264,3 +271,12 @@ def main():
         cmd_status(args)
     elif args.command == "resume":
         cmd_resume(args)
+    elif args.command == "assemble":
+        from .assemble import assemble_episode
+        ep_dir = REPO / "output" / "episodes" / args.episode
+        assemble_episode(
+            ep_dir,
+            clips_dir=Path(args.clips) if args.clips else None,
+            audio=Path(args.audio) if args.audio else None,
+            out=Path(args.out) if args.out else None,
+        )
