@@ -194,6 +194,30 @@ def gen_caption(run_id: str):
     return {"status": "started"}
 
 
+class Gen(BaseModel):
+    provider: str = "mock"
+
+
+@app.post("/api/runs/{run_id}/generate")
+def generate_clips(run_id: str, body: Gen):
+    run = ledger.get_run(run_id)
+    ep = _ep_dir(run) if run else None
+    if not ep or not (ep / "screenplay.json").exists():
+        raise HTTPException(409, "no screenplay yet")
+    _spawn(["generate", run_id, "--provider", body.provider], "generate")
+    return {"status": "started", "provider": body.provider}
+
+
+@app.post("/api/runs/{run_id}/autopilot")
+def autopilot(run_id: str, body: Gen):
+    run = ledger.get_run(run_id)
+    ep = _ep_dir(run) if run else None
+    if not ep or not (ep / "screenplay.json").exists():
+        raise HTTPException(409, "no screenplay yet")
+    _spawn(["autopilot", run_id, "--provider", body.provider], "autopilot")
+    return {"status": "started", "provider": body.provider}
+
+
 @app.post("/api/runs/{run_id}/assemble")
 def assemble(run_id: str):
     run = ledger.get_run(run_id)

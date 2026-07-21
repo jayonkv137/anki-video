@@ -212,8 +212,16 @@ function render(){
         ${has?'✓':'+'} <span>scene ${i}</span>
         <input type="file" id="up${i}" accept="video/*" style="display:none" onchange="uploadClip(${i},this)"></div>`;}
     b.innerHTML=`
-      <div class="h2" style="padding:0 0 6px">1 · CLIPS (${clips.length}/${nsc}) — click a slot to upload scene_NN.mp4</div>
+      <div style="background:#111a26;border:1px solid var(--accent);border-radius:8px;padding:12px;margin-bottom:12px">
+        <div style="font:600 12px ui-monospace,monospace;color:var(--accent);margin-bottom:6px">⚡ AUTOPILOT — hands-off, background</div>
+        <div class="muted" style="font-size:12px;margin-bottom:8px">generate clips → stitch + subtitles → caption, in one run.</div>
+        <button onclick="autopilot('mock')">▶ Run autopilot (mock — free)</button>
+        <button class="ghost" onclick="autopilot('fal')" title="needs FAL_KEY in .env">▶ real Seedance (fal)</button>
+      </div>
+      <div class="h2" style="padding:0 0 6px">1 · CLIPS (${clips.length}/${nsc}) — click a slot to upload, or generate below</div>
       <div class="slots">${grid}</div>
+      <div style="margin-top:8px"><button class="ghost" onclick="genClips('mock')">⟳ Generate all (mock)</button>
+        <button class="ghost" onclick="genClips('fal')" title="needs FAL_KEY">⟳ Generate all (real Seedance)</button></div>
       <div class="h2" style="padding:12px 0 6px">2 · ASSEMBLE</div>
       <button onclick="doAssemble()" ${clips.length?'':'disabled'}>▶ Stitch + subtitles → final.mp4</button>
       <div class="h2" style="padding:12px 0 6px">3 · FINAL VIDEO ${art.final_video?'✓':''}</div>
@@ -235,6 +243,17 @@ async function genCaption(){
   try{await j(`/api/runs/${sel}/caption`,{method:"POST"});
     alert("Caption generating (~$0.02) — refreshes in a few seconds."); setTimeout(refresh,4000);
   }catch(e){alert("Caption failed: "+e.message)}
+}
+async function autopilot(provider){
+  try{await j(`/api/runs/${sel}/autopilot`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider})});
+    alert(`Autopilot started (${provider}): generate → assemble → caption, in the background. Watch it fill in.`);
+    setTimeout(refresh,8000);
+  }catch(e){alert("Autopilot failed: "+e.message)}
+}
+async function genClips(provider){
+  try{await j(`/api/runs/${sel}/generate`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider})});
+    alert(`Generating clips (${provider}) in the background…`); setTimeout(refresh,8000);
+  }catch(e){alert("Generate failed: "+e.message)}
 }
 async function doAssemble(){
   try{const r=await j(`/api/runs/${sel}/assemble`,{method:"POST"});

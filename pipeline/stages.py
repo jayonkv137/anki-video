@@ -632,6 +632,47 @@ def stage_finalize(run_id: str, story: dict, sp: dict, prompts: dict,
     print(f"{'='*60}")
 
 
+# ── Stage 8.5: Video generation (per-scene clips) ────────────────
+
+def stage_generate(run_id: str, sp: dict, ep_dir: Path, provider_name: str = "mock") -> list[Path]:
+    """Generate one clip per scene via the chosen video provider (mock | fal | …).
+    Reads prompts/scene_NN.seedance.json + refs_manifest; writes clips/scene_NN.mp4."""
+    from .providers import get_video_provider
+    provider = get_video_provider(provider_name)
+    pdir, clips = ep_dir / "prompts", ep_dir / "clips"
+    clips.mkdir(parents=True, exist_ok=True)
+    manifest = {}
+    mp = pdir / "refs_manifest.json"
+    if mp.exists():
+        manifest = json.loads(mp.read_text(encoding="utf-8")).get("scenes", {})
+
+    print(f"→ generating {len(sp.get('scenes', []))} clips via provider '{provider.name}'…")
+    out = []
+    for sc in sp.get("scenes", []):
+        n = sc.get("scene_number")
+        seedance = {}
+        sf = pdir / f"scene_{n:02d}.seedance.json"
+        if sf.exists():
+            seedance = json.loads(sf.read_text(encoding="utf-8"))
+        refs = manifest.get(str(n), [])
+        dest = clips / f"scene_{n:02d}.mp4"
+        try:
+            provider.generate(sc, seedance, refs, dest)
+            out.append(dest)
+            print(f"  ✓ scene {n} → {dest.name}")
+            ledger.log_event(run_id, "generate", "completed",
+                             artifact_path=str(dest.relative_to(REPO)),
+                             detail={"scene": n, "provider": provider.name})
+        except Exception as e:
+            print(f"  ✗ scene {n}: {e}")
+            ledger.log_event(run_id, "generate", "failed",
+                             detail={"scene": n, "provider": provider.name, "error": str(e)})
+            raise
+    ledger.update_run(run_id, stage="generate")
+    print(f"✅ {len(out)} clips in {clips.relative_to(REPO)}/  (provider: {provider.name})")
+    return out
+
+
 # ── Stage 9: Caption (Instagram post copy) ───────────────────────
 
 def _norm_hashtags(tags: list[str]) -> list[str]:

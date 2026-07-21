@@ -205,6 +205,50 @@ def cmd_status(args):
         print(f"  → Then: python -m pipeline choose <1|2|3> [--note \"...\"]")
 
 
+# ── GENERATE command ─────────────────────────────────────────────
+
+def cmd_generate(args):
+    """Generate scene clips for a run via a video provider (mock | fal)."""
+    run = ledger.get_run(args.run_id)
+    if not run:
+        print(f"Run {args.run_id} not found")
+        sys.exit(1)
+    ep_dir = _ep_dir_for_positions(run.get("word_positions", []))
+    sp_path = ep_dir / "screenplay.json"
+    if not sp_path.exists():
+        print(f"No screenplay at {ep_dir.relative_to(REPO)} — run must reach the screenplay stage first.")
+        sys.exit(1)
+    sp = json.loads(sp_path.read_text(encoding="utf-8"))
+    stages.stage_generate(run["id"], sp, ep_dir, provider_name=args.provider)
+
+
+# ── AUTOPILOT command (generate → assemble → caption) ────────────
+
+def cmd_autopilot(args):
+    """Full post-Gate-A finish in one command: clips → subtitled video → caption."""
+    run = ledger.get_run(args.run_id)
+    if not run:
+        print(f"Run {args.run_id} not found"); sys.exit(1)
+    ep_dir = _ep_dir_for_positions(run.get("word_positions", []))
+    sp_path = ep_dir / "screenplay.json"
+    if not sp_path.exists():
+        print(f"No screenplay at {ep_dir.relative_to(REPO)} — needs a completed run."); sys.exit(1)
+    sp = json.loads(sp_path.read_text(encoding="utf-8"))
+
+    print("── AUTOPILOT 1/3 · generate clips ──")
+    stages.stage_generate(run["id"], sp, ep_dir, provider_name=args.provider)
+    print("\n── AUTOPILOT 2/3 · assemble + subtitles ──")
+    from .assemble import assemble_episode
+    assemble_episode(ep_dir)
+    print("\n── AUTOPILOT 3/3 · caption ──")
+    story = json.loads((ep_dir / "story.json").read_text(encoding="utf-8"))
+    rcp = RunContextPack()
+    client = Anthropic()
+    words = stages.fetch_words_by_positions(run.get("word_positions", []))
+    stages.stage_caption(run["id"], rcp, story, words, ep_dir, client)
+    print(f"\n✅ AUTOPILOT complete — {ep_dir.relative_to(REPO)}/final.mp4 + caption.md ready to post.")
+
+
 # ── CAPTION command ──────────────────────────────────────────────
 
 def cmd_caption(args):
@@ -276,6 +320,16 @@ def main():
     p_resume = sub.add_parser("resume", help="Resume a failed/interrupted run")
     p_resume.add_argument("run_id", help="Run ID to resume")
 
+    # generate (M4): scene prompts → video clips via a provider
+    p_gen = sub.add_parser("generate", help="Generate scene clips via a video provider")
+    p_gen.add_argument("run_id", help="Run ID (must have prompts)")
+    p_gen.add_argument("--provider", default="mock", help="mock | fal (default mock — no key needed)")
+
+    # autopilot: generate → assemble → caption, one command
+    p_auto = sub.add_parser("autopilot", help="generate clips → assemble subtitled video → caption")
+    p_auto.add_argument("run_id", help="Run ID (completed run)")
+    p_auto.add_argument("--provider", default="mock", help="mock | fal")
+
     # caption (M6): episode → Instagram post copy
     p_cap = sub.add_parser("caption", help="Generate the Instagram caption for a run")
     p_cap.add_argument("run_id", help="Run ID (must have a completed story)")
@@ -297,6 +351,10 @@ def main():
         cmd_status(args)
     elif args.command == "resume":
         cmd_resume(args)
+    elif args.command == "generate":
+        cmd_generate(args)
+    elif args.command == "autopilot":
+        cmd_autopilot(args)
     elif args.command == "caption":
         cmd_caption(args)
     elif args.command == "assemble":

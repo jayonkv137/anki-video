@@ -2,6 +2,14 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-21 — M4 video generation: provider system (mock + real Seedance) + autopilot
+
+- **Provider architecture** (`pipeline/providers/video.py`): one interface, two backends. `MockVideoProvider` renders real per-scene placeholder .mp4s locally (no key, no cost) so the WHOLE pipeline runs end-to-end today; `FalVideoProvider` calls real Seedance via fal.ai, activated by `FAL_KEY` in .env — one-key swap, no rewrite. Factory `get_video_provider(name)`.
+- **`pipeline generate <run_id> --provider mock|fal`** (`stage_generate`): loops scenes, reads scene_NN.seedance.json + refs_manifest, writes clips/scene_NN.mp4, logs per-scene to ledger.
+- **`pipeline autopilot <run_id>`**: full hands-off finish — generate → assemble (subtitles) → caption in one background run. **Proven end-to-end**: mock autopilot on ep_22-499 → 10 clips → stitched 69s 1080×1920 video with burned DE/EN subtitles (frame-verified) → caption. This is the automation working through to a postable video with zero manual steps.
+- **Command Center: post studio v3** — ⚡ Autopilot panel (mock/real buttons), Generate-all buttons, per-scene clip status; all one-click. Browser-verified.
+- **`docs/planning/REAL_API_CONNECTION.md`**: exactly how the real APIs connect (fal.ai Seedance, ElevenLabs, Instagram Graph), which keys you add, why n8n is optional, and the honesty note (real adapters are written to the standard SDK flow but unverified until keyed — first real call confirms exact schemas).
+
 ## 2026-07-21 — Caption generator (skill-4) + Command Center v2 (post studio)
 
 - **Skill-4 caption writer + `pipeline caption <run_id>`** (`stage_caption`, CAPTION_SCHEMA): episode → Instagram post copy — scroll-stopping hook, story tease, all 10 words with correct articles + English, a comment-driving CTA using today's vocabulary, and normalized hashtags. Writes caption.json + caption.md. Verified on ep_22-499 (~$0.02). The missing "you can't post without a caption" piece for M6. (Minor: it emitted an off-brand `#germanpuppets` tag — captions are human-editable; a skill note can pin brand voice later.)
