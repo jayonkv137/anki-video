@@ -205,6 +205,28 @@ def cmd_status(args):
         print(f"  → Then: python -m pipeline choose <1|2|3> [--note \"...\"]")
 
 
+# ── CAPTION command ──────────────────────────────────────────────
+
+def cmd_caption(args):
+    """Generate the Instagram caption for a run (needs story.json)."""
+    run = ledger.get_run(args.run_id)
+    if not run:
+        print(f"Run {args.run_id} not found")
+        sys.exit(1)
+    positions = run.get("word_positions", [])
+    ep_dir = _ep_dir_for_positions(positions)
+    story_path = ep_dir / "story.json"
+    if not story_path.exists():
+        print(f"No story.json at {ep_dir.relative_to(REPO)} — run must be past Gate A first.")
+        sys.exit(1)
+
+    story = json.loads(story_path.read_text(encoding="utf-8"))
+    rcp = RunContextPack()
+    client = Anthropic()
+    words = stages.fetch_words_by_positions(positions)
+    stages.stage_caption(run["id"], rcp, story, words, ep_dir, client)
+
+
 # ── RESUME command ───────────────────────────────────────────────
 
 def cmd_resume(args):
@@ -254,6 +276,10 @@ def main():
     p_resume = sub.add_parser("resume", help="Resume a failed/interrupted run")
     p_resume.add_argument("run_id", help="Run ID to resume")
 
+    # caption (M6): episode → Instagram post copy
+    p_cap = sub.add_parser("caption", help="Generate the Instagram caption for a run")
+    p_cap.add_argument("run_id", help="Run ID (must have a completed story)")
+
     # assemble (M5): clips + screenplay → subtitled 9:16 episode video
     p_asm = sub.add_parser("assemble", help="Stitch clips/scene_NN.mp4 into a subtitled episode video")
     p_asm.add_argument("episode", help="Episode dir name under output/episodes/ (e.g. ep_22-499)")
@@ -271,6 +297,8 @@ def main():
         cmd_status(args)
     elif args.command == "resume":
         cmd_resume(args)
+    elif args.command == "caption":
+        cmd_caption(args)
     elif args.command == "assemble":
         from .assemble import assemble_episode
         ep_dir = REPO / "output" / "episodes" / args.episode

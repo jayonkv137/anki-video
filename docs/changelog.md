@@ -2,6 +2,11 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-21 — Caption generator (skill-4) + Command Center v2 (post studio)
+
+- **Skill-4 caption writer + `pipeline caption <run_id>`** (`stage_caption`, CAPTION_SCHEMA): episode → Instagram post copy — scroll-stopping hook, story tease, all 10 words with correct articles + English, a comment-driving CTA using today's vocabulary, and normalized hashtags. Writes caption.json + caption.md. Verified on ep_22-499 (~$0.02). The missing "you can't post without a caption" piece for M6. (Minor: it emitted an off-brand `#germanpuppets` tag — captions are human-editable; a skill note can pin brand voice later.)
+- **Command Center v2** (`dashboard/`): the loop is now fully drivable from the UI. New "post" tab = a 4-step studio: clip-upload grid (drop scene_NN.mp4 per scene, live 10/10 status) → Assemble button (spawns `pipeline assemble`) → in-page final video → post copy (Generate/Regenerate caption). New "caption" tab. Overview stats strip in header (runs/done/at-gate/total-cost). New endpoints: POST caption, POST assemble, multipart clip upload, GET stats. Browser-verified end-to-end (clips→assemble→video→caption all render, no console errors).
+
 ## 2026-07-21 — M5 Assembly + M7 Command Center v1 SHIPPED
 
 - **M5 — `pipeline assemble <ep>`** (`pipeline/assemble.py`): scene clips → normalized (1080x1920@30, single audio track) → concat → subtitles burned from screenplay.json dialogue (DE + EN italic, distributed over real clip durations) → optional master-audio replacement → `final.mp4`. Verified with 10 dummy clips against the real ep_22-499 screenplay; frame-extract confirms burned subtitles. The moment real clips exist, the postable video is one command away.

@@ -91,6 +91,9 @@ QC_SCHEMA = _schema(
     feedback=STR,
 )
 
+# Caption: Instagram post copy (skill-4)
+CAPTION_SCHEMA = _schema(caption=STR, hashtags=_arr(STR))
+
 
 # ── LLM call helper ─────────────────────────────────────────────
 
@@ -627,3 +630,44 @@ def stage_finalize(run_id: str, story: dict, sp: dict, prompts: dict,
     print(f"   Total cost: ~{run.get('cost_cents', 0)} cents")
     print(f"   Read episode.md and judge the quality.")
     print(f"{'='*60}")
+
+
+# ── Stage 9: Caption (Instagram post copy) ───────────────────────
+
+def _norm_hashtags(tags: list[str]) -> list[str]:
+    out, seen = [], set()
+    for t in tags:
+        t = "#" + t.lstrip("#").strip().replace(" ", "")
+        if t != "#" and t.lower() not in seen:
+            seen.add(t.lower())
+            out.append(t)
+    return out
+
+
+def stage_caption(run_id: str, rcp: RunContextPack, story: dict,
+                  words: list[dict], ep_dir: Path, client: Anthropic) -> dict:
+    """Generate the Instagram caption + hashtags (skill-4). Writes caption.json +
+    caption.md; the post-ready copy for M6."""
+    skill = _load_skill("skill-4-caption.md")
+    skill = (skill.replace("{{STORY_JSON}}", json.dumps(story, ensure_ascii=False))
+             .replace("{{WORDS_JSON}}", json.dumps(words, ensure_ascii=False)))
+    system = f"# PROJECT MISSION\n{rcp.mission}\n\n" + skill
+
+    cap, t_in, t_out = _call(
+        client, system, "Write the Instagram caption JSON now.",
+        "skill-4 caption", CAPTION_SCHEMA, run_id, "caption", max_tokens=2000,
+    )
+    cap["hashtags"] = _norm_hashtags(cap.get("hashtags", []))
+
+    ep_dir.mkdir(parents=True, exist_ok=True)
+    (ep_dir / "caption.json").write_text(json.dumps(cap, ensure_ascii=False, indent=2), encoding="utf-8")
+    post = cap.get("caption", "").rstrip() + "\n\n" + " ".join(cap.get("hashtags", []))
+    (ep_dir / "caption.md").write_text(post, encoding="utf-8")
+
+    sha = ledger.sha256_file(ep_dir / "caption.json")
+    ledger.log_event(run_id, "caption", "completed",
+                     artifact_path=str((ep_dir / "caption.md").relative_to(REPO)),
+                     artifact_sha256=sha, tokens_in=t_in, tokens_out=t_out)
+
+    print(f"\n✅ caption → {ep_dir.relative_to(REPO)}/caption.md ({len(cap.get('hashtags', []))} hashtags)")
+    return cap

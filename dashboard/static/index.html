@@ -65,6 +65,13 @@
   .line{font-size:12.5px;margin:2px 0} .line .en{color:var(--dim);font-style:italic}
   .line b{color:var(--warn)}
   video{max-height:460px;border-radius:8px;border:1px solid var(--line)}
+  .slots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .slot{background:var(--panel2);border:1px dashed var(--line);border-radius:6px;padding:10px 4px;text-align:center;
+        cursor:pointer;font:600 15px ui-monospace,monospace;color:var(--dim)}
+  .slot:hover{border-color:var(--accent)}
+  .slot span{display:block;font-size:10px;font-weight:400;margin-top:2px}
+  .slot.has{border-style:solid;border-color:var(--ok);color:var(--ok)}
+  button:disabled{opacity:.4;cursor:not-allowed}
   #newrun{display:flex;gap:8px;align-items:center;margin-left:auto}
   dialog{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:20px;min-width:420px}
   dialog::backdrop{background:#000a}
@@ -75,6 +82,7 @@
 <header>
   <h1>⬢ COMMAND CENTER <span>· Stereotypical German</span></h1>
   <span class="pill" id="clock"></span>
+  <span class="pill" id="stats">…</span>
   <span class="pill">ledger: Supabase · live</span>
   <div id="newrun"><button onclick="dlg.showModal()">▶ New Run</button></div>
 </header>
@@ -168,7 +176,7 @@ async function refresh(){
       <div><b>Choice</b>${run.chosen_option??"—"}${run.choice_note?` · “${run.choice_note}”`:""}</div>
     </div></div>
     <div class="card"><div id="tabs">
-      ${["screenplay","options","story","prompts","episode","video"].map(t=>
+      ${["screenplay","options","story","prompts","episode","caption","post"].map(t=>
         `<button class="${tab===t?'on':''}" onclick="tab='${t}';render()">${t}</button>`).join("")}
     </div><div id="tabbody"></div></div>
     <div class="card"><div class="h2" style="padding:0 0 6px">Ledger events</div>
@@ -192,15 +200,54 @@ function render(){
           `<button class="ghost" onclick="showPrompt('${f}')">${f.replace('.json','')}</button>`).join("")}</div><pre id="pbody">click a file…</pre>`
       : `<pre>— not yet —</pre>`;
   } else if(tab==="episode"){ b.innerHTML=`<pre>${esc(art.episode_md||"— not yet —")}</pre>`;
-  } else if(tab==="video"){
-    b.innerHTML=art.final_video
-      ? `<video controls src="/api/runs/${sel}/video"></video>`
-      : `<pre>— no final.mp4 yet — clips present: ${(art.clips||[]).length}/10 (run "pipeline assemble" after generation) —</pre>`;
+  } else if(tab==="caption"){
+    b.innerHTML=`${art.caption_md?`<pre>${esc(art.caption_md)}</pre>`:`<pre class="muted">— no caption yet —</pre>`}
+      <button onclick="genCaption()" style="margin-top:8px">${art.caption_md?"↻ Regenerate":"✍ Generate"} caption</button>`;
+  } else if(tab==="post"){
+    const clips=art.clips||[], have=new Set(clips.map(c=>c.replace('scene_','').replace('.mp4','').replace(/^0/,'')));
+    const nsc=(art.screenplay?.scenes||[]).length||10;
+    let grid="";
+    for(let i=1;i<=nsc;i++){const has=clips.includes(`scene_${String(i).padStart(2,'0')}.mp4`);
+      grid+=`<div class="slot ${has?'has':''}" onclick="document.getElementById('up${i}').click()">
+        ${has?'✓':'+'} <span>scene ${i}</span>
+        <input type="file" id="up${i}" accept="video/*" style="display:none" onchange="uploadClip(${i},this)"></div>`;}
+    b.innerHTML=`
+      <div class="h2" style="padding:0 0 6px">1 · CLIPS (${clips.length}/${nsc}) — click a slot to upload scene_NN.mp4</div>
+      <div class="slots">${grid}</div>
+      <div class="h2" style="padding:12px 0 6px">2 · ASSEMBLE</div>
+      <button onclick="doAssemble()" ${clips.length?'':'disabled'}>▶ Stitch + subtitles → final.mp4</button>
+      <div class="h2" style="padding:12px 0 6px">3 · FINAL VIDEO ${art.final_video?'✓':''}</div>
+      ${art.final_video?`<video controls src="/api/runs/${sel}/video?t=${Date.now()}"></video>`:`<pre class="muted">— assemble to produce it —</pre>`}
+      <div class="h2" style="padding:12px 0 6px">4 · POST COPY ${art.caption_md?'✓':''}</div>
+      ${art.caption_md?`<pre>${esc(art.caption_md)}</pre>`:`<button onclick="genCaption()">✍ Generate caption</button>`}`;
   } else { b.innerHTML=`<pre>— not yet —</pre>`; }
 }
 
 async function showPrompt(f){ const d=await j(`/api/runs/${sel}/prompt/${f}`); $("#pbody").textContent=JSON.stringify(d,null,2); }
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+async function loadStats(){
+  try{const s=await j("/api/stats");
+    $("#stats").textContent=`${s.runs} runs · ${s.completed} done · ${s.awaiting} at gate · $${(s.cost_cents/100).toFixed(2)}`;
+  }catch(e){}
+}
+async function genCaption(){
+  try{await j(`/api/runs/${sel}/caption`,{method:"POST"});
+    alert("Caption generating (~$0.02) — refreshes in a few seconds."); setTimeout(refresh,4000);
+  }catch(e){alert("Caption failed: "+e.message)}
+}
+async function doAssemble(){
+  try{const r=await j(`/api/runs/${sel}/assemble`,{method:"POST"});
+    alert(`Assembling ${r.clips} clips → subtitled final.mp4. Refreshes shortly.`); setTimeout(refresh,6000);
+  }catch(e){alert("Assemble failed: "+e.message)}
+}
+async function uploadClip(scene,inp){
+  const f=inp.files[0]; if(!f)return;
+  const fd=new FormData(); fd.append("file",f);
+  try{await fetch(`/api/runs/${sel}/clips/${scene}`,{method:"POST",body:fd}).then(r=>{if(!r.ok)throw new Error(r.status)});
+    refresh();
+  }catch(e){alert("Upload failed: "+e.message)}
+}
 
 async function choose(n){
   const note=$("#gate-note")?.value||"";
@@ -219,7 +266,7 @@ async function startRun(){
   }catch(e){alert("Start failed: "+e.message)}
 }
 
-loadRuns(); setInterval(()=>{loadRuns(); if(sel)refresh()},6000);
+loadRuns(); loadStats(); setInterval(()=>{loadRuns(); loadStats(); if(sel)refresh()},6000);
 </script>
 </body>
 </html>

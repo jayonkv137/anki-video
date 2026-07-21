@@ -13,7 +13,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 
@@ -86,6 +86,7 @@ def get_artifacts(run_id: str):
     out["story"] = read("story.json", as_json=True)
     out["screenplay"] = read("screenplay.json", as_json=True)
     out["episode_md"] = read("episode.md")
+    out["caption_md"] = read("caption.md")
     pdir = ep / "prompts"
     out["prompt_files"] = sorted(p.name for p in pdir.glob("*.json")) if pdir.exists() else []
     out["refs_manifest"] = (json.loads((pdir / "refs_manifest.json").read_text(encoding="utf-8"))
@@ -121,6 +122,17 @@ def get_video(run_id: str):
 @app.get("/api/episodes")
 def list_episodes():
     return ledger._get("episodes", {"select": "*", "order": "created_at.desc", "limit": "50"})
+
+
+@app.get("/api/stats")
+def stats():
+    runs = ledger._get("runs", {"select": "status,cost_cents", "limit": "500"})
+    return {
+        "runs": len(runs),
+        "completed": sum(1 for r in runs if r.get("status") == "completed"),
+        "awaiting": sum(1 for r in runs if r.get("status") == "awaiting_choice"),
+        "cost_cents": sum(r.get("cost_cents") or 0 for r in runs),
+    }
 
 
 # ── Control API ──────────────────────────────────────────────────
@@ -168,6 +180,47 @@ def choose(run_id: str, body: Choice):
         args += ["--note", body.note.strip()]
     _spawn(args, "choose")
     return {"status": "started", "choice": body.choice}
+
+
+@app.post("/api/runs/{run_id}/caption")
+def gen_caption(run_id: str):
+    run = ledger.get_run(run_id)
+    if not run:
+        raise HTTPException(404, "run not found")
+    ep = _ep_dir(run)
+    if not ep or not (ep / "story.json").exists():
+        raise HTTPException(409, "no story yet — pass Gate A first")
+    _spawn(["caption", run_id], "caption")
+    return {"status": "started"}
+
+
+@app.post("/api/runs/{run_id}/assemble")
+def assemble(run_id: str):
+    run = ledger.get_run(run_id)
+    ep = _ep_dir(run) if run else None
+    if not ep:
+        raise HTTPException(404, "run not found")
+    clips = ep / "clips"
+    n = len(list(clips.glob("*.mp4"))) if clips.exists() else 0
+    if n == 0:
+        raise HTTPException(409, "no clips uploaded yet")
+    _spawn(["assemble", ep.name], "assemble")
+    return {"status": "started", "clips": n}
+
+
+@app.post("/api/runs/{run_id}/clips/{scene}")
+async def upload_clip(run_id: str, scene: int, file: UploadFile = File(...)):
+    run = ledger.get_run(run_id)
+    ep = _ep_dir(run) if run else None
+    if not ep:
+        raise HTTPException(404, "run not found")
+    if not 1 <= scene <= 20:
+        raise HTTPException(400, "scene out of range")
+    clips = ep / "clips"
+    clips.mkdir(parents=True, exist_ok=True)
+    dest = clips / f"scene_{scene:02d}.mp4"
+    dest.write_bytes(await file.read())
+    return {"status": "saved", "file": dest.name}
 
 
 @app.get("/")
