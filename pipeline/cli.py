@@ -50,7 +50,9 @@ def cmd_run(args):
 
     try:
         # Stage 1: Words
-        words = stages.stage_words(run_id, args.start, args.random)
+        positions_arg = ([int(p) for p in args.positions.split(",")]
+                         if getattr(args, "positions", None) else None)
+        words = stages.stage_words(run_id, args.start, args.random, positions=positions_arg)
         positions = [w["position"] for w in words]
         ep_dir = _ep_dir_for_positions(positions)
         print()
@@ -236,6 +238,7 @@ def main():
     p_run = sub.add_parser("run", help="Start a new pipeline run")
     p_run.add_argument("--start", type=int, help="Start at word position N")
     p_run.add_argument("--random", action="store_true", help="Pick 10 random words")
+    p_run.add_argument("--positions", help="Comma-separated exact positions (golden-batch/regression)")
     p_run.add_argument("--note", default="", help="Director's note for story generation")
 
     # choose

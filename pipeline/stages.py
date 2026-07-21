@@ -111,8 +111,8 @@ def _call(client: Anthropic, system: str, user: str, label: str,
     text = next(b.text for b in resp.content if b.type == "text")
     result = json.loads(text)
 
-    # Track cost
-    ledger.add_cost(run_id, t_in, t_out)
+    # Track cost (priced at the model actually used for this call)
+    ledger.add_cost(run_id, t_in, t_out, model=model)
 
     return result, t_in, t_out
 
@@ -156,9 +156,11 @@ def fetch_words_by_positions(positions: list[int]) -> list[dict]:
 
 # ── Stage 1: Words ───────────────────────────────────────────────
 
-def stage_words(run_id: str, start: int | None, randomize: bool) -> list[dict]:
-    """Fetch words and record in ledger."""
-    words = fetch_words(start, randomize)
+def stage_words(run_id: str, start: int | None, randomize: bool,
+                positions: list[int] | None = None) -> list[dict]:
+    """Fetch words and record in ledger. `positions` pins an exact word set
+    (golden-batch / regression runs)."""
+    words = fetch_words_by_positions(positions) if positions else fetch_words(start, randomize)
     positions = [w["position"] for w in words]
     ledger.update_run(run_id, word_positions=positions, stage="words")
     ledger.log_event(run_id, "words", "completed",
@@ -291,9 +293,8 @@ def validate_screenplay(sp: dict, words: list[dict]) -> list[str]:
         text = " ".join(d.get("german", "") for d in sc.get("dialogue", [])).lower()
         if word_stem(by_pos[pos]["german"]) not in text:
             problems.append(f"scene {sc.get('scene_number')}: '{by_pos[pos]['german']}' not in its German dialogue")
-        for d in sc.get("dialogue", []):
-            if d.get("speaker", "").startswith("Müller") and len(d.get("german", "").split()) > 3:
-                problems.append(f"scene {sc.get('scene_number')}: Müller exceeds word budget: {d['german']!r}")
+        # (Müller word-budget check removed 2026-07-21 — bible v1.2 dialogue rule:
+        #  every character speaks real full sentences; brevity is style, not a cap.)
     missing = set(by_pos) - seen
     if missing:
         problems.append(f"words without scenes: {sorted(missing)}")
@@ -512,6 +513,7 @@ def stage_prompts(run_id: str, rcp: RunContextPack, sp: dict,
     prompts, t_in, t_out = _call(
         client, system, "Produce the dual Seedance/Omni prompt packages JSON now.",
         "skill-3 prompts", PROMPTS_SCHEMA, run_id, "prompts",
+        max_tokens=64000,  # 10 scenes x dual packages exceeds the 24k default (was truncating mid-JSON)
     )
     prompts = substitute_canon(prompts)
 

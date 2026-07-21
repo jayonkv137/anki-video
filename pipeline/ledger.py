@@ -128,10 +128,18 @@ def save_episode(run_id: str, title_de: str, scenario: str,
 
 # ── Cost tracking ────────────────────────────────────────────────
 
-def add_cost(run_id: str, tokens_in: int, tokens_out: int) -> int:
-    """Add token cost to the run total. Returns new total.
-    Approximate: Sonnet 5 = $3/M in, $15/M out → cents."""
-    cost = int((tokens_in * 0.3 + tokens_out * 1.5) / 100)  # cents
+# Per-token cents, by model tier. $X/M tokens = X*100 cents/M = X*0.0001 cents/token.
+PRICING_CENTS_PER_TOKEN = {
+    "claude-sonnet-5": {"in": 0.0003, "out": 0.0015},   # $3/M in, $15/M out
+    "claude-haiku-4-5": {"in": 0.0001, "out": 0.0005},  # $1/M in, $5/M out
+}
+
+
+def add_cost(run_id: str, tokens_in: int, tokens_out: int,
+             model: str = "claude-sonnet-5") -> int:
+    """Add token cost to the run total. Returns new total."""
+    rate = PRICING_CENTS_PER_TOKEN.get(model, PRICING_CENTS_PER_TOKEN["claude-sonnet-5"])
+    cost = int(tokens_in * rate["in"] + tokens_out * rate["out"])  # cents
     run = get_run(run_id)
     new_total = (run.get("cost_cents") or 0) + cost
     update_run(run_id, cost_cents=new_total)
