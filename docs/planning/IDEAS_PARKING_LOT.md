@@ -20,5 +20,6 @@
 | 14 | 2026-07-17 | MCP-based shared memory server for cross-session/pipeline context (hjarni/subrosa-style, from context research) | If file-based handoff system proves insufficient |
 | 15b | 2026-07-18 | n8n port of text pipeline v2 (webhook Gate A via Telegram/email) — deliberately deferred to C4 | E7 done + C3 model locked |
 | 15 | 2026-07-17 | Skill-ify more business rituals (episode QA review, weekly cost review, competitor scan) | After C7 when routines stabilize |
+| 16 | 2026-07-21 | Post-proof-run tuning pass: rebalance character-voice vs natural-sentence teachability, re-cost Seedance Mini+upscale vs Omni longer-clip structure (10×short scenes may be wrong shape), make word-count-per-episode flexible (not fixed at 10) | First full pipeline proof run completes (E6/E7) |
 
 **Rules:** one line per idea here; if an idea needs a page of thinking, it gets promoted to a RESEARCH doc first. Killed ideas move to the bottom with a one-line reason (never deleted).
