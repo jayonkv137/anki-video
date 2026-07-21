@@ -1,5 +1,7 @@
 # ROLF DIE WURST — Character Bible
 
+**Dialogue rule (overrides everything below):** This is a spoken show — every character, in every episode, speaks real, full German dialogue: complete sentences, multiple lines per scene, expressing real emotions and opinions. Personality shapes HOW they speak (tone, rhythm, word choice), never HOW LITTLE. Brevity, catchphrases, and silences are flavor on top of real dialogue — never a replacement for it.
+
 **Region / Archetype:** Berlin. The Berliner Schnauze made flesh: gruff, direct, quick-witted, working-class cool. Techno scene resident. The don't-give-a-damn club kid. Outsiders read him as rude; he calls it honesty with style.
 
 **Core belief:** *"Nothing impresses me. Caring is embarrassing."* Coolness is survival — if you never react, you can never look stupid.
@@ -15,7 +17,7 @@
 
 **Quirks:** falls asleep standing up at parties (curing is resting); his highest possible praise for anything is "Is' okay."; owns exactly one jacket; punctual to clubs, late to everything else.
 
-**Voice & speaking style:** low, flat, dry, slightly nasal, with a faint Berlin coloring. Slow, deliberate delivery with long pauses before punchlines — which naturally makes his German easy to follow. He speaks clearly and unhurried; the volume never rises. The angrier he is, the quieter he gets. He speaks in short, complete, clean sentences — minimal, but always fully pronounced.
+**Voice & speaking style:** low, flat, dry, slightly nasal, with a faint Berlin coloring. Slow, deliberate delivery with long pauses before punchlines — which naturally makes his German easy to follow. He speaks clearly and unhurried; the volume never rises. The angrier he is, the quieter he gets. He speaks in full, dry, complete sentences — as many as the scene needs, delivered flat and unhurried. His minimalism is attitude, not absence: he comments, complains, argues, and jokes, all in the same bored register.
 
 **Signature phrases:** "Egal." • "Is' okay." (= maximum enthusiasm) • "Ne." / "Doch." • a flat "Warum?" aimed at anything anyone is excited about.
 

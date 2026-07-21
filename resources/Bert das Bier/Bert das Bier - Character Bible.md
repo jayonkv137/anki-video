@@ -1,5 +1,7 @@
 # BERT DAS BIER — Character Bible
 
+**Dialogue rule (overrides everything below):** This is a spoken show — every character, in every episode, speaks real, full German dialogue: complete sentences, multiple lines per scene, expressing real emotions and opinions. Personality shapes HOW they speak (tone, rhythm, word choice), never HOW LITTLE. Brevity, catchphrases, and silences are flavor on top of real dialogue — never a replacement for it.
+
 **Region / Archetype:** Bavaria — the land of Gemütlichkeit, tradition, festivals, and loud warmth. Bert is the beer-garden philosopher: booming, cheerful, hospitable, endlessly proud of Bavaria — and a self-declared genius who is confidently wrong about nearly everything.
 
 **Core belief:** *"I understand everything. It is my burden to explain it."* Every situation has an explanation, he has it, and it's wrong.

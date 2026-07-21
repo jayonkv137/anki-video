@@ -1,5 +1,7 @@
 # KATI DIE KARTOFFEL — Character Bible
 
+**Dialogue rule (overrides everything below):** This is a spoken show — every character, in every episode, speaks real, full German dialogue: complete sentences, multiple lines per scene, expressing real emotions and opinions. Personality shapes HOW they speak (tone, rhythm, word choice), never HOW LITTLE. Brevity, catchphrases, and silences are flavor on top of real dialogue — never a replacement for it.
+
 **Region / Archetype:** the polished, put-together German woman: immaculate, punctual, direct, efficient — beauty run like an engineering project. Not tied to one city; she lives "wherever is currently the best place to be seen." Built-in joke: "Kartoffel" is affectionate German slang for a very-German German — she is literally the most German thing possible, and she wears it like a title.
 
 **Core belief:** *"Perfection is achievable. I am the proof."* Beauty and order are the same virtue: everything in its place, including every hair.

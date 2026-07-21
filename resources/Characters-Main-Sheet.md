@@ -1,4 +1,4 @@
-# DIE BROTZEIT-BANDE — CHARACTER BIBLE v1.1
+# DIE BROTZEIT-BANDE — CHARACTER BIBLE v1.2
 > **CANONICAL NAMES (FINAL — Jayon, 2026-07-15):** Rolf die Wurst · Bert das Bier · Kati die Kartoffel · Müller das Brot. One name per character everywhere — filenames use ASCII (Mueller→Muller). Grammar note: articles corrected to match noun gender (das Bier, die Wurst sing.) per the language-accuracy principle.
 ### Four puppet food characters for 60-second German-learning stories
 
@@ -7,6 +7,8 @@
 > **Story engine (the rule everything serves):** stories are about characters holding beliefs, and situations or other characters conspiring to challenge them. Every character below is built as a BELIEF plus a WOUND. The 60-second episode formula: a character's belief meets a small everyday situation that contradicts it → comedy → a tiny human moment. The German vocabulary rides on top of that engine, never instead of it.
 
 > **Language level (global rule):** all dialogue A1–A2. Short main clauses. Present tense dominant. Each character owns signature words and one grammatical habit (below) so learners associate structure with personality. No dialect *spelling* in learner-facing subtitles — dialect lives in the VOICE (accent, rhythm), the text stays standard Hochdeutsch with each character's simple signature phrases.
+
+> **Dialogue rule (overrides everything below):** This is a spoken show — every character, in every episode, speaks real, full German dialogue: complete sentences, multiple lines per scene, expressing real emotions and opinions. Personality shapes HOW they speak (tone, rhythm, word choice), never HOW LITTLE. Brevity, catchphrases, and silences are flavor on top of real dialogue — never a replacement for it.
 
 ---
 
@@ -41,7 +43,7 @@
 **Relationships:** finds the Professor exhausting but secretly likes that someone is always talking so he doesn't have to • Kati and he have a mutual unimpressed-off going; deep respect neither admits • Müller is the only one Rolf fully understands — they can stand in silence together for a whole scene (a recurring gag: their "conversations" are two words total).
 
 **DO:** deadpan reactions, minimal words, hidden warmth in actions not words, dry comebacks.
-**DON'T:** never enthusiastic exclamation marks, never explains his feelings, never more than two sentences in a row, never cruel — dry, not mean.
+**DON'T:** never enthusiastic exclamation marks, never explains his feelings, never cruel — dry, not mean.
 
 ---
 
@@ -120,12 +122,12 @@
 
 **Region/archetype:** the North — Hamburg direction, where people are famously reserved, not big talkers, cool as the North Sea wind, and warm only once you've earned it (but then: for life). The stare, the one-word answers, the beanie in all seasons. Football is his religion; Pfand collection is his economy.
 
-**CORE BELIEF:** *"Words are expensive. Spend them never."* Everything necessary can be said with a look, a nod, or at most "Moin." If you must talk, something has already gone wrong.
+**CORE BELIEF:** *"Words are expensive. Spend them carefully."* Everything necessary can be said with a look, a nod, or a short clear sentence. If you must give a speech, something has already gone wrong.
 
 **THE WOUND (his human depth):** he feels EVERYTHING and can express NOTHING. Generations of northern weather, wind, and history built people who ration emotion like coal in winter — the feelings are all there, fully formed, with no exit. His only leak: football. In the stadium (or watching the tiny screen), Müller transforms for 90 minutes into a roaring, weeping, hugging volcano — then the final whistle blows and he's silent again, as if it never happened. Nobody mentions it. Everybody knows. The recurring tender beat: he expresses care through *objects and actions* — silently leaving your favorite drink Pfand-free at your door, standing next to someone sad without a single word (which, from him, is a hug).
 
 **Personality:**
-- One-word answers as complete communication: "Moin." covers hello, goodbye, yes, congratulations, and I'm-sorry-for-your-loss, depending on eyebrow position.
+- Speaks in short, firm, complete sentences — several of them when he has something to say, delivered briskly and clearly. "Moin." is his greeting habit, not his vocabulary: in conversation he talks in full (if compact) German, states facts, gives opinions, asks direct questions. What makes him northern is the clipped delivery and zero decoration — not silence.
 - The stare: his default interface with reality. Not hostile — processing. (The German stare is famous precisely because it isn't rudeness; it's unembarrassed observation.)
 - Thrift + duty: the Pfand bag isn't shameful, it's CORRECT — a deposit system exists, therefore one uses it; money AND environment; the system works because everyone participates. Müller participates.
 - Reliable like tide tables. If Müller said (nodded) he'd come, he is already there.
@@ -140,13 +142,13 @@
 - "Jo." / "Nee." (his yes and no)
 - "Kalt." (his weather report, always accurate)
 - "TOOOOR!" (the one scream — match day only)
-- Grammar habit: single words + the shortest complete sentences in the show. Teaches: greetings, ja/nein/jo/nee, weather words (kalt, der Regen, der Wind), das ist gut/schlecht.
+- Grammar habit: the shortest complete sentences in the show — subject, verb, done. Teaches: greetings, ja/nein/jo/nee, weather words (kalt, der Regen, der Wind), das ist gut/schlecht.
 **Vocabulary domains he owns:** greetings, weather, football (der Ball, das Tor, das Spiel, gewinnen), money-and-bottle words (die Flasche, das Geld, sparen).
 
 **Relationships:** Rolf — soul brothers in silence; their two-word scenes are canon comedy • endures Bert's life-coaching with the patience of coastline enduring weather; secretly attends every one of Bert's "lectures" (he'd never say why: it's because nobody else always shows up for Bert) • Kati's improvement campaigns bounce off him entirely; he once said two words to her — "Schon gut." ("It's fine [as it is]") — and she has thought about it since.
 
-**DO:** silence as dialogue, one-word completeness, football transformation, care through action.
-**DON'T:** never chatty, never explains his feelings in words, never misses a match, never fails to return a Pfand bottle — and never, ever comment on his 90-minute emotional volcano afterwards.
+**DO:** economy as style — full dialogue, compactly delivered, with comfortable pauses between his statements (not instead of them); football transformation; care through action.
+**DON'T:** never chatty or rambling, never explains his feelings in words, never misses a match, never fails to return a Pfand bottle — and never, ever comment on his 90-minute emotional volcano afterwards.
 
 ---
 
@@ -169,10 +171,11 @@
 
 1. **One belief challenged per episode.** Pick a character, poke their belief with a tiny everyday situation (a delayed train for Kati; a compliment for Rolf; a question Bert can't answer; a phone call Müller must make).
 2. **The 10 target words get assigned to the character who OWNS that domain** (see per-character vocabulary domains) — the professor teaches food words wrongly-then-rightly, Müller teaches weather in one-word scenes, etc.
-3. **Voice check before render:** if a line could be swapped between two characters unchanged, rewrite it. Rolf max 2 sentences; Müller max 2 words (except match day); Bert never under 2 exclamations; Kati never imprecise.
+3. **Voice check before render:** if a line could be swapped between two characters unchanged, rewrite it. Voice flavors (HOW they speak, never how little — see the Dialogue rule): Müller short firm complete sentences, brisk and clipped; Rolf dry flat full sentences, bored register; Bert exclamatory, wrong-but-committed; Kati precise, never flustered.
 4. **Every episode ends on the human beat, not the joke:** one small unspoken moment of the wound or the warmth (Rolf almost caring, Bert being listened to, Kati un-smirking, Müller's silent gift). This is what builds the universe past the gag.
 5. **Stereotype safety rail:** stereotypes are played as *loving self-aware archetypes* (the way Germans joke about themselves), never as mockery of real people. The characters are IN on it. Punch at beliefs, never at origins.
 6. **Editability:** each character block is standalone. Version changes to beliefs/wounds get dated notes at the bottom of the block. The visual bible (sheets + master prompts) and this behavior bible together are the complete character definition.
 
 ---
+*v1.2 — 2026-07-21 (Jayon): Dialogue rule added (spoken show — character shapes HOW, never HOW LITTLE); Müller un-muted (belief "spend them carefully", full compact sentences, economy-as-style); Rolf's two-sentence cap removed; rule-3 word budgets → voice flavors. Fix for the observed "quiet characters became mute" story pattern.*
 *v1.0 — grounded in research on German cultural values (directness-as-respect, punctuality, Ordnung, Pfand/deposit culture, bread culture, regional divides), Berliner Schnauze linguistics and attitude, the north/south Gemütlichkeit-vs-reserve divide, and North German communication stereotypes. Names, catchphrases, and beats are proposals — the director edits, the bible obeys.*
