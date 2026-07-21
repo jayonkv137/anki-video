@@ -131,8 +131,8 @@ def cmd_choose(args):
             print(f"⚠ Screenplay has {len(problems)} issue(s) after retry")
         print()
 
-        # Stage 6: Quality check
-        passed, qc_problems = stages.stage_quality_check(run_id, sp, words)
+        # Stage 6: Quality check (code validators + skill-2q on Haiku 4.5)
+        passed, qc_problems = stages.stage_quality_check(run_id, rcp, sp, words, client)
         print()
 
         # Stage 7: Prompts

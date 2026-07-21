@@ -18,6 +18,7 @@ from . import ledger
 from .rcp import RunContextPack, REPO
 
 MODEL = "claude-sonnet-5"
+HAIKU = "claude-haiku-4-5"  # quality-check / chore tier — cheap, fast
 SKILLS = REPO / "prompts" / "skills"
 ARTICLES = ("der ", "die ", "das ")
 
@@ -37,6 +38,7 @@ def _arr(item):
 
 STR = {"type": "string"}
 INT = {"type": "integer"}
+BOOL = {"type": "boolean"}
 
 # ── Schemas ──────────────────────────────────────────────────────
 
@@ -81,14 +83,22 @@ PROMPTS_SCHEMA = _schema(
     )),
 )
 
+# Quality check: binary checklist + JSON verdict (skill-2q on Haiku 4.5)
+QC_SCHEMA = _schema(
+    passed=BOOL,
+    checks=_arr(_schema(name=STR, passed=BOOL, issue=STR)),
+    feedback=STR,
+)
+
 
 # ── LLM call helper ─────────────────────────────────────────────
 
 def _call(client: Anthropic, system: str, user: str, label: str,
-          schema: dict, run_id: str, stage: str) -> tuple[dict, int, int]:
+          schema: dict, run_id: str, stage: str,
+          model: str = MODEL, max_tokens: int = 24000) -> tuple[dict, int, int]:
     """Call Anthropic with structured output. Returns (parsed_json, tokens_in, tokens_out)."""
     with client.messages.stream(
-        model=MODEL, max_tokens=24000, system=system,
+        model=model, max_tokens=max_tokens, system=system,
         output_config={"format": {"type": "json_schema", "schema": schema}},
         messages=[{"role": "user", "content": user}],
     ) as stream:
@@ -145,26 +155,14 @@ def stage_words(run_id: str, start: int | None, randomize: bool) -> list[dict]:
 def stage_story_options(run_id: str, rcp: RunContextPack, words: list[dict],
                         note: str, ep_dir: Path, client: Anthropic) -> dict:
     """Generate 3 story premise options. Pipeline pauses after this for Gate A."""
-    skill = _load_skill("skill-1-story-selector.md")
+    skill = _load_skill("skill-1a-story-options.md")
     skill = (
         skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
         .replace("{{WORDS_JSON}}", json.dumps(words, ensure_ascii=False))
         .replace("{{EPISODE_LOG}}", json.dumps(rcp.episode_log_raw, ensure_ascii=False))
         .replace("{{JAYON_DIRECTIVE}}", note or "(none)")
     )
-
-    # Modify system prompt to request 3 options instead of 1 committed story
-    options_system = (
-        rcp.for_story_stage() + "\n\n" + skill + "\n\n"
-        "OVERRIDE: Instead of committing to ONE story, produce EXACTLY 3 premise options.\n"
-        "For each option: title_de, scenario (German), scenario_en (English translation), "
-        "environment (German), environment_en (English), mains, "
-        "hook_visual (German), hook_visual_en (English), "
-        "human_beat (German), human_beat_en (English), "
-        "four_beat_sketch (4 German strings), sketch_en (English summary of the 4 beats), "
-        "word_fit_notes (how the hard words fit — write in English), self_score (1-10).\n"
-        "Return JSON: {\"options\": [option1, option2, option3]}"
-    )
+    options_system = rcp.for_story_stage() + "\n\n" + skill
 
     options, t_in, t_out = _call(
         client, options_system,
@@ -217,22 +215,15 @@ def stage_story_expand(run_id: str, rcp: RunContextPack, words: list[dict],
                        chosen_option: dict, note: str, ep_dir: Path,
                        client: Anthropic) -> dict:
     """Expand chosen premise into a full 12-16 beat story."""
-    skill = _load_skill("skill-1-story-selector.md")
+    skill = _load_skill("skill-1b-story-expand.md")
     skill = (
         skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
         .replace("{{WORDS_JSON}}", json.dumps(words, ensure_ascii=False))
         .replace("{{EPISODE_LOG}}", json.dumps(rcp.episode_log_raw, ensure_ascii=False))
+        .replace("{{CHOSEN_PREMISE}}", json.dumps(chosen_option, ensure_ascii=False, indent=2))
         .replace("{{JAYON_DIRECTIVE}}", note or "(none)")
     )
-
-    expand_system = (
-        rcp.for_story_stage() + "\n\n" + skill + "\n\n"
-        "CONTEXT: Jayon chose the following premise. Expand it into the full story output "
-        "(the standard Skill 1 JSON schema with all fields including beats and word_plan).\n\n"
-        f"CHOSEN PREMISE:\n{json.dumps(chosen_option, ensure_ascii=False, indent=2)}\n"
-    )
-    if note:
-        expand_system += f"\nJAYON'S STEERING NOTE: {note}\n"
+    expand_system = rcp.for_story_stage() + "\n\n" + skill
 
     story, t_in, t_out = _call(
         client, expand_system,
@@ -334,21 +325,57 @@ def stage_screenplay(run_id: str, rcp: RunContextPack, words: list[dict],
     return sp, problems
 
 
-# ── Stage 6: Quality check (placeholder — E5 builds the real one) ──
+# ── Stage 6: Quality check (code validators + skill-2q LLM checklist) ──
 
-def stage_quality_check(run_id: str, sp: dict, words: list[dict]) -> tuple[bool, list[str]]:
-    """Code-based quality check (E5 adds LLM checklist)."""
-    problems = validate_screenplay(sp, words)
-    passed = len(problems) == 0
+def stage_quality_check(run_id: str, rcp: RunContextPack, sp: dict,
+                        words: list[dict], client: Anthropic) -> tuple[bool, list[str]]:
+    """Quality check = code validators + skill-2q LLM checklist (Haiku 4.5).
+
+    Returns (passed, problems). Acting on a failure (the ONE retry of stage 5)
+    is wired in E6 — this stage records the verdict truthfully in the ledger.
+    """
+    # 1. Code validators (scene count, word coverage, Müller budget)
+    code_problems = validate_screenplay(sp, words)
+
+    # 2. LLM checklist — skill-2q judged by Haiku 4.5 (cheap, strict)
+    skill = _load_skill("skill-2q-quality-check.md")
+    skill = (
+        skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
+        .replace("{{WORDS_JSON}}", json.dumps(words, ensure_ascii=False))
+        .replace("{{SCREENPLAY_JSON}}", json.dumps(sp, ensure_ascii=False))
+    )
+    system = rcp.for_screenplay_stage() + "\n\n" + skill
+
+    verdict, t_in, t_out = _call(
+        client, system,
+        "Judge this screenplay against the checklist. Return the JSON verdict now.",
+        "skill-2q quality", QC_SCHEMA, run_id, "quality_check",
+        model=HAIKU, max_tokens=4000,
+    )
+
+    # 3. Merge code + LLM verdicts — pass only if BOTH pass
+    llm_problems = [
+        f"{c.get('name')}: {c.get('issue')}"
+        for c in verdict.get("checks", [])
+        if not c.get("passed", True) and c.get("issue")
+    ]
+    problems = code_problems + llm_problems
+    passed = (not code_problems) and bool(verdict.get("passed", False))
+
     ledger.log_event(run_id, "quality_check", "completed" if passed else "failed",
-                     detail={"passed": passed, "problems": problems})
+                     tokens_in=t_in, tokens_out=t_out,
+                     detail={"passed": passed, "code_problems": code_problems,
+                             "llm_verdict": verdict})
     ledger.update_run(run_id, stage="quality_check")
+
     if passed:
-        print("✓ quality check passed")
+        print("✓ quality check passed (code + skill-2q)")
     else:
         print("⚠ quality check issues:")
         for p in problems:
             print(f"  - {p}")
+        if verdict.get("feedback"):
+            print(f"  → feedback for rewrite: {verdict['feedback']}")
     return passed, problems
 
 
@@ -379,7 +406,13 @@ def substitute_canon(prompts: dict) -> dict:
 
 def stage_prompts(run_id: str, rcp: RunContextPack, sp: dict,
                   ep_dir: Path, client: Anthropic) -> dict:
-    """Generate video prompts + apply canon substitution."""
+    """Generate video prompts + apply canon substitution.
+
+    NOTE (E5): skill-3 v2 now targets dual Seedance/Omni packages, but PROMPTS_SCHEMA
+    and substitute_canon() below still expect the old veo_flow/seedance shape. Rewiring
+    the schema → scene_NN.{seedance,omni}.json + refs_manifest.json is E6. Until then,
+    do not run a full pipeline through this stage expecting the new output shape.
+    """
     skill = _load_skill("skill-3-prompt-writer.md")
     skill = skill.replace("{{SCREENPLAY_JSON}}", json.dumps(sp, ensure_ascii=False))
     system = rcp.for_prompt_stage() + "\n\n" + skill
