@@ -1,6 +1,6 @@
-# DIE BROTZEIT-BANDE — CHARACTER BIBLE v1.2
+# DIE BROTZEIT-BANDE — CHARACTER BIBLE v1.3
 > **CANONICAL NAMES (FINAL — Jayon, 2026-07-15):** Rolf die Wurst · Bert das Bier · Kati die Kartoffel · Müller das Brot. One name per character everywhere — filenames use ASCII (Mueller→Muller). Grammar note: articles corrected to match noun gender (das Bier, die Wurst sing.) per the language-accuracy principle.
-### Four puppet food characters for 60-second German-learning stories
+### Four photorealistic CGI food characters for 60-second German-learning stories
 
 > **Purpose:** the canonical personality reference for automated story generation. Visual identity lives in the character sheets + master prompts (see project handoff doc); THIS document governs how each character **thinks, believes, speaks, and behaves.** Every generated story must be consistent with this bible. Structured for editing: every character section is self-contained; change a belief here and the pipeline inherits it.
 
@@ -177,5 +177,6 @@
 6. **Editability:** each character block is standalone. Version changes to beliefs/wounds get dated notes at the bottom of the block. The visual bible (sheets + master prompts) and this behavior bible together are the complete character definition.
 
 ---
+*v1.3 — 2026-07-21: "puppet" framing removed (photorealistic CGI pivot — visual identity now lives in canon_blocks v1.0 material laws).*
 *v1.2 — 2026-07-21 (Jayon): Dialogue rule added (spoken show — character shapes HOW, never HOW LITTLE); Müller un-muted (belief "spend them carefully", full compact sentences, economy-as-style); Rolf's two-sentence cap removed; rule-3 word budgets → voice flavors. Fix for the observed "quiet characters became mute" story pattern.*
 *v1.0 — grounded in research on German cultural values (directness-as-respect, punctuality, Ordnung, Pfand/deposit culture, bread culture, regional divides), Berliner Schnauze linguistics and attitude, the north/south Gemütlichkeit-vs-reserve divide, and North German communication stereotypes. Names, catchphrases, and beats are proposals — the director edits, the bible obeys.*

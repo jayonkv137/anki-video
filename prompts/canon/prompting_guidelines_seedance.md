@@ -1,6 +1,6 @@
 # Prompting Guidelines — Seedance 2.5
 
-> version: 1.0 · canon file
+> version: 2.0 · canon file · v2.0 (2026-07-21): Live-Action Integration Rule added (photorealistic CGI pivot)
 
 ## 1. Prompt structure (strict order)
 
@@ -39,7 +39,12 @@ Use @ImageX and @ImageY as the global stylistic reference for lighting, color pa
 
 Use the bound name **character-for-character identically** in every shot — this is called **prompt mirroring**. Even "dark jacket" → "dark jacket, slightly open" signals permission to alter the character's latent representation, causing visual drift.
 
-## 5. One-action rule & shot syntax
+## 5. The Live-Action Integration Rule
+
+- **Never** use terminology related to puppets, claymation, needle-felt, stop-motion, miniatures, or toys — these terms poison the latent space toward visible seams, stepped framerates, and tilt-shift miniature depth of field.
+- All generated scenes must be treated as **live-action visual effects integration**. The characters are physically real entities interacting with human-scale, real-world environments.
+
+## 6. One-action rule & shot syntax
 
 One atomic visual beat per shot. If the screenplay says "walks to table, picks up glass, turns, waves" → **split into separate shots** or distill to the single most important beat. Multi-action in one shot causes temporal morphing.
 
@@ -51,7 +56,7 @@ Shot 2: 5-10s. [subject + single action + camera].
 
 For transformations, use an escalation arc: Calm → Threat → Transform → Aftermath, each in a separate numbered shot.
 
-## 6. Camera syntax
+## 7. Camera syntax
 
 Formula: `Camera: [move] + [speed] + [stability]`
 
@@ -64,7 +69,7 @@ Formula: `Camera: [move] + [speed] + [stability]`
 
 **Zoom creep warning:** Seedance frequently confuses physical dolly movements with optical focal-length shifts, warping backgrounds. When using tracking or panning, always append `no zoom, maintain subject size in frame`.
 
-## 7. German dialogue — Audio-First workflow
+## 8. German dialogue — Audio-First workflow
 
 Native text-to-German audio generation is unreliable — the model was primarily trained on English/Mandarin, producing the "confused tourist" effect: distorted pronunciation, unnatural cadence, and drifting lip-sync.
 
@@ -76,8 +81,9 @@ Native text-to-German audio generation is unreliable — the model was primarily
 5. **Fallback** if audio attention fails: convert the German audio to a black-screen MP4 and upload as `@VideoN` instead (Seedance grips video timing more aggressively than standalone audio).
 6. Always append: `Audio Constraints: No background music, purely spoken dialogue` — prevents the model from hallucinating a musical score over your reference track.
 
-## 8. DON'Ts
+## 9. DON'Ts
 
+- ❌ **Puppet/miniature vocabulary** — puppets, claymation, felt-craft, stop-motion, miniatures, toys (see rule 5)
 - ❌ **Adjective stacking** — dilutes attention, wastes characters
 - ❌ **Omitting camera direction** — defaults to static medium shot, causes localized hallucinations
 - ❌ **Changing character description wording between shots** — causes identity drift

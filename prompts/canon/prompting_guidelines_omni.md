@@ -1,6 +1,11 @@
 # Prompting Guidelines — Gemini Omni Flash
 
-> version: 1.0 · canon file
+> version: 1.1 · canon file · v1.1 (2026-07-21): Live-Action Integration Rule added (photorealistic CGI pivot)
+
+## 0. The Live-Action Integration Rule
+
+- **Never** use terminology related to puppets, claymation, needle-felt, stop-motion, miniatures, or toys — these terms poison the latent space toward visible seams, stepped framerates, and tilt-shift miniature depth of field.
+- All generated scenes must be treated as **live-action visual effects integration**. The characters are physically real entities interacting with human-scale, real-world environments.
 
 ## 1. Prompt structure (narrative production brief — NOT bracketed formulas)
 

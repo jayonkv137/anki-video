@@ -425,38 +425,58 @@ def _norm(s: str) -> str:
             .replace("ä", "a").replace("ß", "ss").strip())
 
 
-def _character_ref_path(name: str) -> str | None:
-    """Resolve a canonical character name → its primary identity image (absolute path)."""
+def _character_ref_paths(name: str) -> list[dict]:
+    """Resolve a canonical character name → its identity images, SHEET FIRST.
+
+    Multi-angle character sheet = primary (structural map: keeps backs/sides/turns
+    consistent); main/master portrait = secondary (high-res close-up anchor).
+    """
     if not RESOURCES.exists():
-        return None
+        return []
     target = _norm(name)
     for d in sorted(RESOURCES.iterdir()):
-        if d.is_dir() and _norm(d.name) == target:
-            pngs = sorted(d.glob("*.png"))
-            for pref in ("main", "master", "sheet"):
+        if not (d.is_dir() and _norm(d.name) == target):
+            continue
+        pngs = sorted(d.glob("*.png"))
+
+        def pick(prefs):
+            for pref in prefs:
                 for p in pngs:
                     if pref in p.name.lower():
                         return str(p.resolve())
-            return str(pngs[0].resolve()) if pngs else None
-    return None
+            return None
+
+        out = []
+        sheet = pick(("sheet", "profiles"))
+        portrait = pick(("main", "master"))
+        if sheet:
+            out.append({"variant": "sheet", "path": sheet})
+        if portrait and portrait != sheet:
+            out.append({"variant": "portrait", "path": portrait})
+        if not out and pngs:
+            out.append({"variant": "portrait", "path": str(pngs[0].resolve())})
+        return out
+    return []
 
 
-def _resolve_binds(binds: str, role: str) -> dict:
-    """Resolve a ref 'binds' target → {path, status}. Character refs resolve to real
-    files; style/audio are pending until C1 (style-lock) / C3 (per-run audio)."""
+def _resolve_binds(binds: str, role: str) -> list[dict]:
+    """Resolve a ref 'binds' target → list of {[variant,] path, status} entries.
+    Character identities resolve to sheet+portrait; style/audio are pending until
+    C1 (style-lock) / C3 (per-run audio)."""
     if binds == "style" or role == "style":
-        return {"path": None, "status": "pending — C1 style-lock"}
+        return [{"path": None, "status": "pending — C1 style-lock"}]
     if binds in ("audio-master", "audio") or role == "audio":
-        return {"path": None, "status": "pending — per-run audio (C3)"}
-    path = _character_ref_path(binds)
-    if path:
-        return {"path": path, "status": "resolved"}
-    return {"path": None, "status": f"unresolved — no asset for '{binds}'"}
+        return [{"path": None, "status": "pending — per-run audio (C3)"}]
+    entries = _character_ref_paths(binds)
+    if entries:
+        return [{**e, "status": "resolved"} for e in entries]
+    return [{"path": None, "status": f"unresolved — no asset for '{binds}'"}]
 
 
 def build_refs_manifest(prompts: dict, run_id: str, ep_dir: Path) -> dict:
-    """scene → the unique reference assets it needs, each resolved to a file path
-    (or pending). Aggregated across both engine packages, deduped by (binds, role)."""
+    """scene → the unique reference assets it needs, each resolved to file path(s)
+    (or pending). Aggregated across both engine packages, deduped by (binds, role);
+    character identities expand to two rows (sheet + portrait)."""
     scenes = {}
     for sc in prompts.get("scenes", []):
         refs, seen = [], set()
@@ -467,7 +487,8 @@ def build_refs_manifest(prompts: dict, run_id: str, ep_dir: Path) -> dict:
             if (binds, role) in seen:
                 continue
             seen.add((binds, role))
-            refs.append({"binds": binds, "role": role, **_resolve_binds(binds, role)})
+            for entry in _resolve_binds(binds, role):
+                refs.append({"binds": binds, "role": role, **entry})
         scenes[str(sc.get("scene_number"))] = refs
     return {"run_id": run_id, "episode": ep_dir.name, "scenes": scenes}
 
@@ -517,6 +538,15 @@ def stage_prompts(run_id: str, rcp: RunContextPack, sp: dict,
     )
     prompts = substitute_canon(prompts)
 
+    # Seedance hard cap check (3000 chars post-substitution — engine limit)
+    over_cap = [(sc.get("scene_number"), len(sc.get("seedance", {}).get("prompt", "")))
+                for sc in prompts.get("scenes", [])
+                if len(sc.get("seedance", {}).get("prompt", "")) > 3000]
+    if over_cap:
+        print(f"⚠ Seedance 3000-char cap EXCEEDED in {len(over_cap)} scene(s): "
+              + ", ".join(f"scene {n} ({l} chars)" for n, l in over_cap))
+        print("  → prune scene text or /tune skill-3's character budget before generating video.")
+
     # Combined artifact (hashed in ledger)
     prompts_path = ep_dir / "prompts.json"
     prompts_path.write_text(json.dumps(prompts, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -540,7 +570,8 @@ def stage_prompts(run_id: str, rcp: RunContextPack, sp: dict,
                      artifact_path=str(prompts_path.relative_to(REPO)),
                      artifact_sha256=sha, tokens_in=t_in, tokens_out=t_out,
                      detail={"scenes": n_scenes,
-                             "refs_manifest": str(manifest_path.relative_to(REPO))})
+                             "refs_manifest": str(manifest_path.relative_to(REPO)),
+                             "seedance_over_cap": over_cap})
     ledger.update_run(run_id, stage="prompts")
 
     print(f"→ {n_scenes} scenes: seedance + omni packages + refs_manifest → {prompts_dir.relative_to(REPO)}/")

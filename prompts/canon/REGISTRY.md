@@ -1,6 +1,6 @@
 # Canon Registry
 
-> version: 1.1 · Updated: 2026-07-21
+> version: 1.2 · Updated: 2026-07-21 (photorealistic CGI pivot)
 >
 > Every canon file used by the pipeline is listed here with its version and SHA-256 hash.
 > The RCP builder verifies these at run start — if a hash doesn't match, the run aborts.
@@ -9,7 +9,7 @@
 | File | Version | SHA-256 |
 |---|---|---|
 | `prompts/canon/MISSION.md` | 1.0 | `98e53819367797ae7d658181e5dab7ca8ec8e323ac4c2ca3aa03a92b2411fcb3` |
-| `prompts/canon/canon_blocks.md` | 0 (interim) | `146ad4689e7db208775020b44b66a4c3eb724116c1784d19aaeed984fc72d608` |
-| `prompts/canon/prompting_guidelines_seedance.md` | 1.0 | `dabecb7e6bfd43a38add50c054933b7f83c6f4b7ef4162e5df424b7d9a49dd7a` |
-| `prompts/canon/prompting_guidelines_omni.md` | 1.0 | `2ab0f0694b386dc015de69cc678821528fa3e88fd2181616a59d6d091d2d8698` |
-| `resources/Characters-Main-Sheet.md` | 1.2 | `00010a48f82d6243f4dd6f050bde28b5e59877f68db66055bbe69efac8aba546` |
+| `prompts/canon/canon_blocks.md` | 1.0 | `4efd9f6b9e7373e3de372d5b8230e96317cef0a881d4f86c007e729c96c1e898` |
+| `prompts/canon/prompting_guidelines_seedance.md` | 2.0 | `cc906e0e436e70cd927ef03e1154755bf6715c9868ea2fb63e80078ab23e9560` |
+| `prompts/canon/prompting_guidelines_omni.md` | 1.1 | `c14c170f1cd9e48da724a2401fb2411c039a37ba9d57d32cf8e771764c09da61` |
+| `resources/Characters-Main-Sheet.md` | 1.3 | `d9b2f0ef6ad47dd34b13532dca1b4e2d1ef482a6d09ffdd11d39fdb157381b88` |
