@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Command Center — Stereotypical German</title>
+<style>
+  :root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2330;--line:#2b3442;--fg:#e6edf3;--dim:#8b949e;
+        --accent:#58a6ff;--ok:#3fb950;--warn:#d29922;--err:#f85149;--gate:#bc8cff;}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--fg);font:14px/1.5 -apple-system,'Segoe UI',sans-serif;height:100vh;display:flex;flex-direction:column}
+  header{display:flex;align-items:center;gap:16px;padding:10px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+  header h1{font:600 15px ui-monospace,monospace;letter-spacing:.5px}
+  header h1 span{color:var(--accent)}
+  .pill{font:11px ui-monospace,monospace;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}
+  #layout{display:flex;flex:1;min-height:0}
+  /* runs sidebar */
+  #side{width:270px;border-right:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column}
+  #side h2, .h2{font:600 11px ui-monospace,monospace;color:var(--dim);text-transform:uppercase;letter-spacing:1px;padding:10px 14px 6px}
+  #runs{overflow-y:auto;flex:1}
+  .run{padding:9px 14px;border-bottom:1px solid #1f2733;cursor:pointer}
+  .run:hover{background:var(--panel2)} .run.sel{background:var(--panel2);border-left:3px solid var(--accent);padding-left:11px}
+  .run .id{font:600 12px ui-monospace,monospace}
+  .run .meta{font-size:11px;color:var(--dim)}
+  .chip{display:inline-block;font:600 10px ui-monospace,monospace;padding:1px 7px;border-radius:999px;margin-left:6px}
+  .chip.completed{background:#12341c;color:var(--ok)} .chip.awaiting_choice{background:#2a1f3d;color:var(--gate)}
+  .chip.running{background:#1a2c47;color:var(--accent)} .chip.failed{background:#3d1418;color:var(--err)}
+  /* main */
+  #main{flex:1;overflow-y:auto;padding:16px 20px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+  /* stage pipeline */
+  #stages{display:flex;gap:6px;flex-wrap:wrap}
+  .stage{flex:1;min-width:86px;text-align:center;padding:8px 4px;border-radius:6px;background:var(--panel2);
+         border:1px solid var(--line);font:11px ui-monospace,monospace;color:var(--dim)}
+  .stage b{display:block;font-size:14px;margin-bottom:2px}
+  .stage.done{border-color:#1f5b2d;color:var(--ok)} .stage.fail{border-color:#6e2026;color:var(--err)}
+  .stage.now{border-color:var(--accent);color:var(--accent);animation:pulse 1.4s infinite}
+  .stage.gate{border-color:var(--gate);color:var(--gate)}
+  @keyframes pulse{50%{opacity:.45}}
+  /* gate A */
+  #gate .opts{display:flex;gap:12px;flex-wrap:wrap}
+  .opt{flex:1;min-width:230px;background:var(--panel2);border:1px solid var(--gate);border-radius:8px;padding:12px}
+  .opt h4{font-size:13px;margin-bottom:4px} .opt .score{color:var(--warn);font:600 11px ui-monospace,monospace}
+  .opt p{font-size:12px;color:var(--dim);margin:4px 0}
+  .opt button{margin-top:8px;width:100%}
+  button{background:var(--accent);color:#08131f;border:0;border-radius:6px;padding:7px 14px;font:600 12px inherit;cursor:pointer}
+  button:hover{filter:brightness(1.15)} button.ghost{background:var(--panel2);color:var(--fg);border:1px solid var(--line)}
+  input,select,textarea{background:var(--panel2);border:1px solid var(--line);color:var(--fg);border-radius:6px;padding:6px 9px;font:12px inherit}
+  textarea{width:100%;resize:vertical}
+  /* info + events */
+  .kv{display:flex;gap:26px;flex-wrap:wrap;font-size:12px}
+  .kv b{color:var(--dim);font-weight:500;display:block;font-size:10px;text-transform:uppercase;letter-spacing:.8px}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  td,th{padding:5px 8px;border-bottom:1px solid #1f2733;text-align:left}
+  th{color:var(--dim);font:600 10px ui-monospace,monospace;text-transform:uppercase}
+  .ok{color:var(--ok)} .err{color:var(--err)}
+  /* tabs */
+  #tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+  #tabs button{background:var(--panel2);color:var(--dim);border:1px solid var(--line)}
+  #tabs button.on{color:var(--fg);border-color:var(--accent)}
+  pre{background:#0a0e14;border:1px solid var(--line);border-radius:6px;padding:12px;font:11.5px ui-monospace,monospace;
+      overflow:auto;max-height:480px;white-space:pre-wrap}
+  .scene{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin-bottom:8px}
+  .scene h5{font:600 12px ui-monospace,monospace;color:var(--accent);margin-bottom:4px}
+  .line{font-size:12.5px;margin:2px 0} .line .en{color:var(--dim);font-style:italic}
+  .line b{color:var(--warn)}
+  video{max-height:460px;border-radius:8px;border:1px solid var(--line)}
+  #newrun{display:flex;gap:8px;align-items:center;margin-left:auto}
+  dialog{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:20px;min-width:420px}
+  dialog::backdrop{background:#000a}
+  .muted{color:var(--dim)}
+</style>
+</head>
+<body>
+<header>
+  <h1>⬢ COMMAND CENTER <span>· Stereotypical German</span></h1>
+  <span class="pill" id="clock"></span>
+  <span class="pill">ledger: Supabase · live</span>
+  <div id="newrun"><button onclick="dlg.showModal()">▶ New Run</button></div>
+</header>
+
+<dialog id="dlg">
+  <h3 style="margin-bottom:10px">Start a new episode run</h3>
+  <div style="display:flex;gap:8px;margin-bottom:8px">
+    <select id="nr-mode"><option value="random">Random 10 words</option>
+      <option value="start">From position…</option><option value="positions">Exact positions…</option></select>
+    <input id="nr-param" placeholder="e.g. 101  or  5,12,44,…" style="flex:1">
+  </div>
+  <label class="muted" style="font-size:11px">TODAY'S IDEA — director's note (steers the story)</label>
+  <textarea id="nr-note" rows="3" placeholder="e.g. I want a rainy-day story at the tram stop…"></textarea>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+    <button class="ghost" onclick="dlg.close()">Cancel</button>
+    <button onclick="startRun()">Start run</button>
+  </div>
+</dialog>
+
+<div id="layout">
+  <div id="side"><h2>Runs</h2><div id="runs"></div></div>
+  <div id="main"><div class="card muted">Select a run…</div></div>
+</div>
+
+<script>
+const $=q=>document.querySelector(q);
+const STAGES=["words","story_options","gate_a","story_expand","screenplay","quality_check","prompts","finalize"];
+const LABEL={words:"words",story_options:"options",gate_a:"GATE A",story_expand:"expand",screenplay:"screenplay",quality_check:"QC",prompts:"prompts",finalize:"finalize"};
+let sel=null, runsCache=[], art=null, tab="screenplay";
+
+setInterval(()=>{$("#clock").textContent=new Date().toLocaleTimeString()},1000);
+
+async function j(u,opt){const r=await fetch(u,opt); if(!r.ok) throw new Error((await r.json().catch(()=>({}))).detail||r.status); return r.json()}
+
+async function loadRuns(){
+  try{runsCache=await j("/api/runs")}catch(e){return}
+  $("#runs").innerHTML=runsCache.map(r=>`
+    <div class="run ${sel===r.id?'sel':''}" onclick="pick('${r.id}')">
+      <div class="id">${r.id.slice(0,8)}<span class="chip ${r.status}">${r.status}</span></div>
+      <div class="meta">words ${(r.word_positions||[])[0]??"?"}–${(r.word_positions||[]).slice(-1)[0]??"?"} ·
+        $${((r.cost_cents||0)/100).toFixed(2)} · ${new Date(r.started_at).toLocaleString([], {month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}</div>
+    </div>`).join("");
+}
+
+async function pick(id){sel=id; tab="screenplay"; await refresh(); }
+
+async function refresh(){
+  if(!sel) return;
+  let run,a;
+  try{[run,a]=await Promise.all([j(`/api/runs/${sel}`),j(`/api/runs/${sel}/artifacts`)])}catch(e){return}
+  art=a;
+  const evByStage={}; (run.events||[]).forEach(e=>{evByStage[e.stage]=e});
+  const totalTok=(run.events||[]).reduce((s,e)=>s+(e.tokens_in||0)+(e.tokens_out||0),0);
+
+  const stageHtml=STAGES.map(s=>{
+    const e=evByStage[s]; let cls="", icon="○";
+    if(e){cls=e.status==="failed"?"fail":"done"; icon=e.status==="failed"?"✗":"✓";}
+    if(run.status==="awaiting_choice"&&s==="gate_a"&&!e){cls="gate now";icon="⏸";}
+    else if(run.status==="running"&&run.stage===s){cls="now";icon="●";}
+    if(s==="gate_a"&&e){cls="gate";icon="✓";}
+    return `<div class="stage ${cls}"><b>${icon}</b>${LABEL[s]}</div>`;
+  }).join("");
+
+  let gate="";
+  if(run.status==="awaiting_choice"&&a.options){
+    gate=`<div class="card" id="gate" style="border-color:var(--gate)">
+      <div class="h2" style="padding:0 0 8px;color:var(--gate)">⏸ GATE A — choose today's story</div>
+      <div class="opts">${(a.options.options||[]).map((o,i)=>`
+        <div class="opt"><h4>${i+1}. ${o.title_de}</h4><span class="score">${o.self_score}/10</span>
+          <p>${o.scenario_en||""}</p><p><b style="color:var(--fg)">Hook:</b> ${o.hook_visual_en||""}</p>
+          <p class="muted">${(o.mains||[]).join(" · ")}</p>
+          <button onclick="choose(${i+1})">Choose ${i+1}</button></div>`).join("")}</div>
+      <div style="margin-top:10px"><label class="muted" style="font-size:11px">STEERING NOTE (optional)</label>
+      <textarea id="gate-note" rows="2" placeholder="e.g. lean into the argument, keep Bert louder…"></textarea></div>
+    </div>`;
+  }
+
+  const ev=(run.events||[]).map(e=>`<tr><td class="${e.status==='failed'?'err':'ok'}">${e.status==="failed"?"✗":"✓"}</td>
+    <td>${e.stage}</td><td>${e.tokens_in?`${e.tokens_in}+${e.tokens_out} tok`:""}</td>
+    <td class="muted">${e.artifact_path||""}</td></tr>`).join("");
+
+  $("#main").innerHTML=`
+    <div class="card"><div id="stages">${stageHtml}</div></div>
+    ${gate}
+    <div class="card"><div class="kv">
+      <div><b>Status</b><span class="chip ${run.status}">${run.status}</span></div>
+      <div><b>Episode</b>${a.episode_dir||"—"}</div>
+      <div><b>Words</b>${(run.word_positions||[]).join(", ")}</div>
+      <div><b>Cost</b>$${((run.cost_cents||0)/100).toFixed(2)}</div>
+      <div><b>Tokens</b>${totalTok.toLocaleString()}</div>
+      <div><b>Choice</b>${run.chosen_option??"—"}${run.choice_note?` · “${run.choice_note}”`:""}</div>
+    </div></div>
+    <div class="card"><div id="tabs">
+      ${["screenplay","options","story","prompts","episode","video"].map(t=>
+        `<button class="${tab===t?'on':''}" onclick="tab='${t}';render()">${t}</button>`).join("")}
+    </div><div id="tabbody"></div></div>
+    <div class="card"><div class="h2" style="padding:0 0 6px">Ledger events</div>
+      <table><tr><th></th><th>stage</th><th>tokens</th><th>artifact</th></tr>${ev}</table></div>`;
+  render(); loadRuns();
+}
+
+function render(){
+  const b=$("#tabbody"); if(!b||!art) return;
+  if(tab==="screenplay"&&art.screenplay){
+    b.innerHTML=(art.screenplay.scenes||[]).map(s=>`<div class="scene">
+      <h5>Scene ${s.scene_number} — ${s.german_word} (${s.duration_s}s)</h5>
+      <div class="muted" style="font-size:11.5px">${s.action_en||""}</div>
+      ${(s.dialogue||[]).map(d=>`<div class="line"><b>${d.speaker}:</b> „${d.german}“ <span class="en">(${d.english||""})</span></div>`).join("")}
+    </div>`).join("");
+  } else if(tab==="options"){ b.innerHTML=`<pre>${esc(art.options_md||"— not yet —")}</pre>`;
+  } else if(tab==="story"){ b.innerHTML=`<pre>${esc(JSON.stringify(art.story,null,2)||"— not yet —")}</pre>`;
+  } else if(tab==="prompts"){
+    b.innerHTML=(art.prompt_files||[]).length
+      ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">${art.prompt_files.map(f=>
+          `<button class="ghost" onclick="showPrompt('${f}')">${f.replace('.json','')}</button>`).join("")}</div><pre id="pbody">click a file…</pre>`
+      : `<pre>— not yet —</pre>`;
+  } else if(tab==="episode"){ b.innerHTML=`<pre>${esc(art.episode_md||"— not yet —")}</pre>`;
+  } else if(tab==="video"){
+    b.innerHTML=art.final_video
+      ? `<video controls src="/api/runs/${sel}/video"></video>`
+      : `<pre>— no final.mp4 yet — clips present: ${(art.clips||[]).length}/10 (run "pipeline assemble" after generation) —</pre>`;
+  } else { b.innerHTML=`<pre>— not yet —</pre>`; }
+}
+
+async function showPrompt(f){ const d=await j(`/api/runs/${sel}/prompt/${f}`); $("#pbody").textContent=JSON.stringify(d,null,2); }
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+async function choose(n){
+  const note=$("#gate-note")?.value||"";
+  try{await j(`/api/runs/${sel}/choose`,{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({choice:n,note})});
+    alert(`Choice ${n} sent — pipeline resuming. Watch the stages light up.`); refresh();
+  }catch(e){alert("Choose failed: "+e.message)}
+}
+
+async function startRun(){
+  const mode=$("#nr-mode").value, p=$("#nr-param").value.trim(), note=$("#nr-note").value;
+  const body={mode,note}; if(mode==="start")body.start=parseInt(p); if(mode==="positions")body.positions=p;
+  try{await j("/api/runs",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    dlg.close(); alert("Run started — it will appear in the list within seconds.");
+    setTimeout(loadRuns,3000);
+  }catch(e){alert("Start failed: "+e.message)}
+}
+
+loadRuns(); setInterval(()=>{loadRuns(); if(sel)refresh()},6000);
+</script>
+</body>
+</html>

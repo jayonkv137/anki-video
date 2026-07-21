@@ -2,6 +2,12 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-21 — M5 Assembly + M7 Command Center v1 SHIPPED
+
+- **M5 — `pipeline assemble <ep>`** (`pipeline/assemble.py`): scene clips → normalized (1080x1920@30, single audio track) → concat → subtitles burned from screenplay.json dialogue (DE + EN italic, distributed over real clip durations) → optional master-audio replacement → `final.mp4`. Verified with 10 dummy clips against the real ep_22-499 screenplay; frame-extract confirms burned subtitles. The moment real clips exist, the postable video is one command away.
+- **M7 — Command Center v1** (`dashboard/app.py` FastAPI + `dashboard/static/index.html`): the control screen over the existing Supabase ledger. Live-verified in browser: runs sidebar with status chips/costs; per-run stage pipeline visual (incl. honest red ✗ on failed QC); artifact tabs (screenplay as scene cards with DE/EN dialogue, options, story, per-scene prompt JSONs, episode.md, **final video playing in-page**); **Gate A in the UI** (3 option cards + Choose buttons + steering note); **New Run dialog with "TODAY'S IDEA" director-note injection**. Choose endpoint guards to the latest awaiting run (CLI constraint). Launch: `.venv/bin/python -m uvicorn dashboard.app:app --port 8787` from repo root.
+- Note: ledger costs stored before today's cost-fix display inflated (e.g. $13.59 shown vs true ~$1.86 for run 3baf6a40) — historical values; new runs record accurately.
+
 ## 2026-07-21 — MVP redefined + forward roadmap: the Command Center vision
 
 - **New roadmap doc `docs/planning/MVP_ROADMAP_command_center.md`** (supersedes the completed E-plan as the forward plan). Jayon's MVP end-state: prove the full loop through actual POSTING, then a **Command Center dashboard** — full observability + control over every run/stage/artifact/cost, human gates in the UI, "today's idea" injection — built over the EXISTING Supabase ledger (the backend already exists). M-phases M0–M9 with owners and win conditions; strategy locked: prove-first, redesign-after (with real cost/quality data). M9 = productization research: the system generalizes as a human-in-the-loop content production OS for any recurring template-shaped content business (anti-slop positioning).
