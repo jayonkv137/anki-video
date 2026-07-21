@@ -2,6 +2,10 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-21 — MVP redefined + forward roadmap: the Command Center vision
+
+- **New roadmap doc `docs/planning/MVP_ROADMAP_command_center.md`** (supersedes the completed E-plan as the forward plan). Jayon's MVP end-state: prove the full loop through actual POSTING, then a **Command Center dashboard** — full observability + control over every run/stage/artifact/cost, human gates in the UI, "today's idea" injection — built over the EXISTING Supabase ledger (the backend already exists). M-phases M0–M9 with owners and win conditions; strategy locked: prove-first, redesign-after (with real cost/quality data). M9 = productization research: the system generalizes as a human-in-the-loop content production OS for any recurring template-shaped content business (anti-slop positioning).
+
 ## 2026-07-21 — THE VISUAL PIVOT: puppet aesthetic → photorealistic CGI live-action integration
 
 - **Canon overhaul (Jayon's CGI Integration research + Lookbook + Pipeline Design docs).** `canon_blocks.md` v1.0 (finally out of "interim"): STYLE_BLOCK rewritten to "high-end cinematic live-action cinematography with photorealistic CGI characters" (35mm anamorphic, locked-off camera, lens halation, full AVOID list banning cartoon/Pixar/plastic-skin/stop-motion/felt/clay/puppetry); all four CHAR_BLOCKs rewritten as VFX **material laws** — Bert: IOR + caustics + volumetric foam · Kati: strictly matte albedo, zero specular · Rolf: subsurface scattering, embedded tattoos · Müller: displacement mapping + max ambient occlusion. Old canon literally commanded what the new AVOID list bans (felt/puppet/handcrafted).

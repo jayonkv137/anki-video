@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E4 Pipeline State-Breaker Visualizer</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --primary: #3b82f6;
+      --accent: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --code-bg: #090d16;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 0.5rem; }
+    p.subtitle { color: var(--muted); font-size: 0.95rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .badge-info { background: rgba(59, 130, 246, 0.2); color: var(--primary); }
+    .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--accent); }
+    .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+    .control-panel {
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    button:hover { opacity: 0.9; transform: translateY(-1px); }
+    button.btn-accent { background: var(--accent); color: #000; }
+    button.btn-danger { background: var(--danger); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    textarea, select, input {
+      width: 100%;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      color: #38bdf8;
+      padding: 0.6rem;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .terminal {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.85rem;
+      height: 250px;
+      overflow-y: auto;
+      color: #a7f3d0;
+      white-space: pre-wrap;
+    }
+
+    .log-err { color: #fca5a5; }
+    .log-warn { color: #fde047; }
+    .log-cmd { color: #38bdf8; font-weight: bold; }
+
+    .code-bridge {
+      margin-top: 1.5rem;
+      background: #020617;
+      border: 1px dashed var(--primary);
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .code-bridge h3 { font-size: 0.9rem; color: var(--primary); margin-bottom: 0.5rem; }
+    .code-snippet { font-family: monospace; font-size: 0.8rem; color: #e2e8f0; }
+    .highlight { color: #f43f5e; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>E4 Pipeline State-Breaker Visualizer</h1>
+    <p class="subtitle">Interactive Glass-Box Sandbox: Run the pipeline, break hard drive state or database records, and watch Python execution</p>
+  </header>
+
+  <div class="control-panel">
+    <button id="btnRun" onclick="runPipeline()">1. Run Pipeline (python -m pipeline run)</button>
+    <button id="btnChoose" class="btn-accent" onclick="chooseOption()" disabled>2. Resume (python -m pipeline choose 2)</button>
+    <button class="btn-danger" onclick="resetAll()">Reset State</button>
+  </div>
+
+  <div class="grid">
+    <!-- HARD DRIVE STATE -->
+    <div class="card">
+      <div class="card-title">
+        📁 Local Hard Drive (`output/episodes/ep_27-575/`)
+        <span id="fileBadge" class="badge badge-info">No Files</span>
+      </div>
+      <label style="font-size:0.8rem; color:var(--muted); margin-bottom:4px; display:block;">File: <code>options.json</code></label>
+      <textarea id="fileContent" rows="10" placeholder="(File does not exist yet)"></textarea>
+      <button onclick="saveFile()" style="font-size:0.8rem; padding:0.4rem 0.8rem;">Save Hard Drive Edits</button>
+      <button onclick="deleteFile()" class="btn-danger" style="font-size:0.8rem; padding:0.4rem 0.8rem;">Delete File</button>
+    </div>
+
+    <!-- DATABASE LEDGER STATE -->
+    <div class="card">
+      <div class="card-title">
+        🗄️ Supabase Ledger (`runs` table)
+        <span id="dbBadge" class="badge badge-info">Empty</span>
+      </div>
+      <label style="font-size:0.8rem; color:var(--muted);">run_id:</label>
+      <input type="text" id="dbRunId" value="e0c04e38-76d4-4fd0-a63d-982dd23f5c11" readonly>
+      
+      <label style="font-size:0.8rem; color:var(--muted);">status:</label>
+      <select id="dbStatus">
+        <option value="none">-- No Row --</option>
+        <option value="awaiting_choice">awaiting_choice (Normal Gate A)</option>
+        <option value="running">running</option>
+        <option value="completed">completed</option>
+        <option value="failed">failed</option>
+      </select>
+
+      <label style="font-size:0.8rem; color:var(--muted);">word_positions:</label>
+      <input type="text" id="dbPositions" value="[27, 44, 62, 80, 189, 290, 394, 474, 495, 575]">
+
+      <label style="font-size:0.8rem; color:var(--muted);">chosen_option:</label>
+      <input type="text" id="dbChosen" value="null">
+    </div>
+  </div>
+
+  <div style="margin-top: 1.5rem;" class="card">
+    <div class="card-title">🖥️ Terminal Console Output</div>
+    <div class="terminal" id="terminalLog">System ready. Click "1. Run Pipeline" to start.</div>
+  </div>
+
+  <div class="code-bridge">
+    <h3>🔍 Python Code Bridge (What cli.py is executing right now)</h3>
+    <div class="code-snippet" id="codeBridge">
+// Waiting for pipeline trigger...
+    </div>
+  </div>
+
+  <script>
+    let state = {
+      fileExists: false,
+      optionsData: null,
+    };
+
+    const initialOptions = {
+      "options": [
+        { "title_de": "Müller und die Gartenordnung", "scenario": "In seinem Kleingarten..." },
+        { "title_de": "Kati und der Spatz in der Bank", "scenario": "In der Sparkassen-Lobby..." },
+        { "title_de": "Bert und der Zentimeter-Fisch", "scenario": "Am Anglersteg..." }
+      ]
+    };
+
+    function log(msg, type = '') {
+      const term = document.getElementById('terminalLog');
+      const prefix = type === 'cmd' ? '$ ' : '';
+      const className = type === 'err' ? 'log-err' : type === 'warn' ? 'log-warn' : type === 'cmd' ? 'log-cmd' : '';
+      term.innerHTML += `<div class="${className}">${prefix}${msg}</div>`;
+      term.scrollTop = term.scrollHeight;
+    }
+
+    function runPipeline() {
+      log("python -m pipeline run --random", "cmd");
+      log("✓ Canon verified (5 files)");
+      log("✓ Series memory: 1 recent episode(s)");
+      log("Run e0c04e38... created");
+      log("words: 27:die Bank, 44:der Vogel, 62:der Bruder, ...");
+      log("Gate A: 3 options written to output/episodes/ep_27-575/options.md");
+      log("⏸ Run e0c04e38... paused at Gate A.\n", "warn");
+
+      // Update UI state
+      state.fileExists = true;
+      state.optionsData = JSON.parse(JSON.stringify(initialOptions));
+      document.getElementById('fileContent').value = JSON.stringify(state.optionsData, null, 2);
+      document.getElementById('fileBadge').textContent = "options.json";
+      document.getElementById('fileBadge').className = "badge badge-success";
+
+      document.getElementById('dbStatus').value = "awaiting_choice";
+      document.getElementById('dbBadge').textContent = "awaiting_choice";
+      document.getElementById('dbBadge').className = "badge badge-warning";
+
+      document.getElementById('btnChoose').disabled = false;
+
+      document.getElementById('codeBridge').innerHTML = `
+<span class="highlight"># cli.py (cmd_run):</span>
+words = stages.stage_words(run_id, args.start, args.random)
+stages.stage_story_options(run_id, rcp, words, args.note, ep_dir, client)
+<span class="highlight"># Python script exits completely here!</span>
+print(f"⏸ Run {run_id[:8]}... paused at Gate A.")
+// State is persisted in DB ('awaiting_choice') and file ('options.json')
+      `;
+    }
+
+    function chooseOption() {
+      log("python -m pipeline choose 2", "cmd");
+
+      // Simulate cli.py checks
+      const status = document.getElementById('dbStatus').value;
+      const fileContentStr = document.getElementById('fileContent').value;
+      
+      document.getElementById('codeBridge').innerHTML = `
+<span class="highlight"># cli.py (cmd_choose):</span>
+run = ledger.get_latest_run()
+if run["status"] != "awaiting_choice":
+    print(f"Error: latest run is '{run['status']}', not 'awaiting_choice'")
+    sys.exit(1)
+
+<span class="highlight"># Loading state from file:</span>
+options = json.loads((ep_dir / "options.json").read_text())
+chosen = options["options"][choice - 1]
+      `;
+
+      // Check DB State
+      if (status === "none") {
+        log("Error: no runs found in database!", "err");
+        return;
+      }
+
+      if (status !== "awaiting_choice") {
+        log(`Error: latest run e0c04e38... is '${status}', not 'awaiting_choice'`, "err");
+        log("CLI aborted execution because ledger status check failed.\n", "err");
+        return;
+      }
+
+      // Check File State
+      if (!state.fileExists || !fileContentStr.trim()) {
+        log("FileNotFoundError: [Errno 2] No such file or directory: 'output/episodes/ep_27-575/options.json'", "err");
+        log("CLI aborted execution because options.json is missing on hard drive.\n", "err");
+        return;
+      }
+
+      let parsedFile;
+      try {
+        parsedFile = JSON.parse(fileContentStr);
+      } catch (e) {
+        log("json.decoder.JSONDecodeError: Invalid JSON in options.json!", "err");
+        log("CLI aborted execution while attempting to read options.json.\n", "err");
+        return;
+      }
+
+      if (!parsedFile.options || !Array.isArray(parsedFile.options) || !parsedFile.options[1]) {
+        log("IndexError: list index out of range! (Option 2 does not exist in options.json)", "err");
+        log("CLI crashed because options.json does not contain expected 'options' array.\n", "err");
+        return;
+      }
+
+      // Successful Resume
+      const chosen = parsedFile.options[1];
+      log(`Resuming run e0c04e38... with choice 2`);
+      log(`Chosen premise: "${chosen.title_de}"`);
+      log(`Expanding story -> Screenplay -> Quality Check -> Prompts...`);
+      log(`✅ Run complete! Saved to output/episodes/ep_27-575/episode.md\n`, "success");
+
+      document.getElementById('dbStatus').value = "completed";
+      document.getElementById('dbChosen').value = "2";
+      document.getElementById('dbBadge').textContent = "completed";
+      document.getElementById('dbBadge').className = "badge badge-success";
+    }
+
+    function saveFile() {
+      state.fileExists = true;
+      document.getElementById('fileBadge').textContent = "options.json (edited)";
+      log("Hard drive edit saved to options.json", "warn");
+    }
+
+    function deleteFile() {
+      state.fileExists = false;
+      document.getElementById('fileContent').value = "";
+      document.getElementById('fileBadge').textContent = "DELETED";
+      document.getElementById('fileBadge').className = "badge badge-danger";
+      log("Deleted options.json from hard drive!", "err");
+    }
+
+    function resetAll() {
+      state.fileExists = false;
+      state.optionsData = null;
+      document.getElementById('fileContent').value = "";
+      document.getElementById('fileBadge').textContent = "No Files";
+      document.getElementById('fileBadge').className = "badge badge-info";
+
+      document.getElementById('dbStatus').value = "none";
+      document.getElementById('dbChosen').value = "null";
+      document.getElementById('dbBadge').textContent = "Empty";
+      document.getElementById('dbBadge').className = "badge badge-info";
+
+      document.getElementById('btnChoose').disabled = true;
+      document.getElementById('terminalLog').innerHTML = "System reset. Ready.";
+      document.getElementById('codeBridge').innerHTML = "// Waiting for pipeline trigger...";
+    }
+  </script>
+</body>
+</html>
