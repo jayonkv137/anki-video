@@ -27,17 +27,6 @@ def _ep_dir_for_positions(positions: list[int]) -> Path:
     return REPO / "output" / "episodes" / f"ep_{positions[0]}-{positions[-1]}"
 
 
-def _load_words_from_dir(ep_dir: Path) -> list[dict]:
-    """Reload words from options.json or story.json to recover state."""
-    # Words aren't stored in the artifact — refetch from Supabase using positions
-    run = None
-    for f in ["options.json", "story.json"]:
-        p = ep_dir / f
-        if p.exists():
-            return None  # caller will use run's word_positions to refetch
-    return None
-
-
 # ── RUN command ──────────────────────────────────────────────────
 
 def cmd_run(args):
@@ -115,10 +104,11 @@ def cmd_choose(args):
     chosen = options["options"][choice - 1]
     print(f"Chosen: {chosen.get('title_de')} — {chosen.get('scenario', '')[:80]}...\n")
 
-    # Rebuild context
+    # Rebuild context — reload the run's EXACT words (not a sequential re-fetch,
+    # which would return the wrong set for --random runs)
     rcp = RunContextPack()
     client = Anthropic()
-    words = stages.fetch_words(start=positions[0], randomize=False)
+    words = stages.fetch_words_by_positions(positions)
 
     try:
         # Stage 4: Expand chosen premise → full story
@@ -132,7 +122,22 @@ def cmd_choose(args):
         print()
 
         # Stage 6: Quality check (code validators + skill-2q on Haiku 4.5)
-        passed, qc_problems = stages.stage_quality_check(run_id, rcp, sp, words, client)
+        passed, qc_problems, qc_feedback = stages.stage_quality_check(run_id, rcp, sp, words, client)
+        if not passed:
+            # ONE retry of stage 5 with the judge's feedback, then re-judge once.
+            print("\n↻ Quality check failed — one screenplay rewrite with feedback:\n")
+            feedback_full = qc_feedback or ""
+            if qc_problems:
+                feedback_full += ("\n\nSpecific failed checks:\n- " + "\n- ".join(qc_problems))
+            sp, problems = stages.stage_screenplay(run_id, rcp, words, story, ep_dir, client,
+                                                   qc_feedback=feedback_full)
+            if problems:
+                print(f"⚠ Rewrite still has {len(problems)} validator issue(s)")
+            passed, qc_problems, qc_feedback = stages.stage_quality_check(run_id, rcp, sp, words, client)
+            if not passed:
+                print("\n⚠ Quality check STILL failing after the one allowed rewrite.")
+                print("  Proceeding to prompts — judge the episode yourself at the end")
+                print("  (verdicts are in the ledger; fix patterns via /tune, not by thrashing).")
         print()
 
         # Stage 7: Prompts

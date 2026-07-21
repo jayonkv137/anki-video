@@ -20,6 +20,7 @@ from .rcp import RunContextPack, REPO
 MODEL = "claude-sonnet-5"
 HAIKU = "claude-haiku-4-5"  # quality-check / chore tier — cheap, fast
 SKILLS = REPO / "prompts" / "skills"
+RESOURCES = REPO / "resources"
 ARTICLES = ("der ", "die ", "das ")
 
 
@@ -72,14 +73,14 @@ SCREENPLAY_SCHEMA = _schema(
     )),
 )
 
+REF_SCHEMA = _schema(slot=STR, binds=STR, role=STR)
+
 PROMPTS_SCHEMA = _schema(
     scenes=_arr(_schema(
-        scene_number=INT, characters_in_frame=_arr(STR),
-        veo_flow_prompt=STR, seedance_prompt=STR,
-        avoid_list=STR,
-        continuity=_schema(use_last_frame={"type": "boolean"}, reason=STR),
-        reference_images=_arr(STR),
-        dialogue_check=_arr(_schema(speaker=STR, german=STR)),
+        scene_number=INT,
+        characters_in_frame=_arr(STR),
+        seedance=_schema(prompt=STR, reference_assets=_arr(REF_SCHEMA)),
+        omni=_schema(base_prompt=STR, edit_turns=_arr(STR), reference_images=_arr(REF_SCHEMA)),
     )),
 )
 
@@ -133,6 +134,23 @@ def fetch_words(start: int | None, randomize: bool) -> list[dict]:
     r.raise_for_status()
     words = r.json()
     assert len(words) == 10, f"expected 10 words, got {len(words)}"
+    return words
+
+
+def fetch_words_by_positions(positions: list[int]) -> list[dict]:
+    """Fetch EXACTLY these word positions (choose/resume: reload a run's own words —
+    a gte+limit fetch would silently return the wrong set for --random runs)."""
+    url = os.environ["SUPABASE_URL"].rstrip("/") + "/rest/v1/words"
+    h = {"apikey": os.environ["SUPABASE_SECRET_KEY"],
+         "Authorization": f"Bearer {os.environ['SUPABASE_SECRET_KEY']}"}
+    sel = "position,german,english,sentence_de,sentence_en,word_type"
+    params = {"position": f"in.({','.join(map(str, positions))})",
+              "order": "position.asc", "select": sel}
+    r = requests.get(url, headers=h, params=params, timeout=15)
+    r.raise_for_status()
+    words = r.json()
+    assert len(words) == len(positions), \
+        f"expected {len(positions)} words for {positions}, got {len(words)}"
     return words
 
 
@@ -283,8 +301,13 @@ def validate_screenplay(sp: dict, words: list[dict]) -> list[str]:
 
 
 def stage_screenplay(run_id: str, rcp: RunContextPack, words: list[dict],
-                     story: dict, ep_dir: Path, client: Anthropic) -> tuple[dict, list[str]]:
-    """Generate screenplay with validate → one retry."""
+                     story: dict, ep_dir: Path, client: Anthropic,
+                     qc_feedback: str = "") -> tuple[dict, list[str]]:
+    """Generate screenplay with validate → one retry.
+
+    qc_feedback: when set (the ONE post-QC rewrite), the writer gets the
+    quality-check verdict and must address it — dialogue naturalness first.
+    """
     skill = _load_skill("skill-2-screenplay-writer.md")
     skill = (
         skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
@@ -293,9 +316,21 @@ def stage_screenplay(run_id: str, rcp: RunContextPack, words: list[dict],
     )
     system = rcp.for_screenplay_stage() + "\n\n" + skill
 
+    if qc_feedback:
+        user_msg = (
+            "A previous screenplay draft FAILED the quality check. "
+            "The judge's feedback:\n" + qc_feedback +
+            "\n\nWrite the screenplay again, fixing every issue named above. "
+            "Produce the corrected screenplay JSON now."
+        )
+        label = "skill-2 qc-rewrite"
+    else:
+        user_msg = "Produce the screenplay JSON now."
+        label = "skill-2 screenplay"
+
     sp, t_in, t_out = _call(
-        client, system, "Produce the screenplay JSON now.",
-        "skill-2 screenplay", SCREENPLAY_SCHEMA, run_id, "screenplay",
+        client, system, user_msg,
+        label, SCREENPLAY_SCHEMA, run_id, "screenplay",
     )
 
     problems = validate_screenplay(sp, words)
@@ -328,11 +363,12 @@ def stage_screenplay(run_id: str, rcp: RunContextPack, words: list[dict],
 # ── Stage 6: Quality check (code validators + skill-2q LLM checklist) ──
 
 def stage_quality_check(run_id: str, rcp: RunContextPack, sp: dict,
-                        words: list[dict], client: Anthropic) -> tuple[bool, list[str]]:
+                        words: list[dict], client: Anthropic) -> tuple[bool, list[str], str]:
     """Quality check = code validators + skill-2q LLM checklist (Haiku 4.5).
 
-    Returns (passed, problems). Acting on a failure (the ONE retry of stage 5)
-    is wired in E6 — this stage records the verdict truthfully in the ledger.
+    Returns (passed, problems, feedback). On failure the CLI feeds `feedback`
+    into ONE rewrite of stage 5, then re-judges once. The verdict is always
+    recorded truthfully in the ledger either way.
     """
     # 1. Code validators (scene count, word coverage, Müller budget)
     code_problems = validate_screenplay(sp, words)
@@ -368,21 +404,76 @@ def stage_quality_check(run_id: str, rcp: RunContextPack, sp: dict,
                              "llm_verdict": verdict})
     ledger.update_run(run_id, stage="quality_check")
 
+    feedback = verdict.get("feedback", "") or ""
     if passed:
         print("✓ quality check passed (code + skill-2q)")
     else:
         print("⚠ quality check issues:")
         for p in problems:
             print(f"  - {p}")
-        if verdict.get("feedback"):
-            print(f"  → feedback for rewrite: {verdict['feedback']}")
-    return passed, problems
+        if feedback:
+            print(f"  → feedback for rewrite: {feedback}")
+    return passed, problems, feedback
 
 
-# ── Stage 7: Prompt writer + canon substitution ──────────────────
+# ── Stage 7: Prompt writer + canon substitution + refs manifest ──────
+
+def _norm(s: str) -> str:
+    """Fold umlauts/ß so canonical names match resources/ folder names."""
+    return (s.lower().replace("ü", "u").replace("ö", "o")
+            .replace("ä", "a").replace("ß", "ss").strip())
+
+
+def _character_ref_path(name: str) -> str | None:
+    """Resolve a canonical character name → its primary identity image (absolute path)."""
+    if not RESOURCES.exists():
+        return None
+    target = _norm(name)
+    for d in sorted(RESOURCES.iterdir()):
+        if d.is_dir() and _norm(d.name) == target:
+            pngs = sorted(d.glob("*.png"))
+            for pref in ("main", "master", "sheet"):
+                for p in pngs:
+                    if pref in p.name.lower():
+                        return str(p.resolve())
+            return str(pngs[0].resolve()) if pngs else None
+    return None
+
+
+def _resolve_binds(binds: str, role: str) -> dict:
+    """Resolve a ref 'binds' target → {path, status}. Character refs resolve to real
+    files; style/audio are pending until C1 (style-lock) / C3 (per-run audio)."""
+    if binds == "style" or role == "style":
+        return {"path": None, "status": "pending — C1 style-lock"}
+    if binds in ("audio-master", "audio") or role == "audio":
+        return {"path": None, "status": "pending — per-run audio (C3)"}
+    path = _character_ref_path(binds)
+    if path:
+        return {"path": path, "status": "resolved"}
+    return {"path": None, "status": f"unresolved — no asset for '{binds}'"}
+
+
+def build_refs_manifest(prompts: dict, run_id: str, ep_dir: Path) -> dict:
+    """scene → the unique reference assets it needs, each resolved to a file path
+    (or pending). Aggregated across both engine packages, deduped by (binds, role)."""
+    scenes = {}
+    for sc in prompts.get("scenes", []):
+        refs, seen = [], set()
+        pooled = (sc.get("seedance", {}).get("reference_assets", [])
+                  + sc.get("omni", {}).get("reference_images", []))
+        for r in pooled:
+            binds, role = r.get("binds", ""), r.get("role", "")
+            if (binds, role) in seen:
+                continue
+            seen.add((binds, role))
+            refs.append({"binds": binds, "role": role, **_resolve_binds(binds, role)})
+        scenes[str(sc.get("scene_number"))] = refs
+    return {"run_id": run_id, "episode": ep_dir.name, "scenes": scenes}
+
 
 def substitute_canon(prompts: dict) -> dict:
-    """Mechanically substitute {{STYLE_BLOCK}} and {{CHAR_BLOCK:Name}} placeholders."""
+    """Mechanically substitute {{STYLE_BLOCK}} and {{CHAR_BLOCK:Name}} placeholders
+    in both engine packages (seedance.prompt, omni.base_prompt, omni.edit_turns)."""
     canon = (REPO / "prompts" / "canon" / "canon_blocks.md").read_text(encoding="utf-8")
 
     def block(header):
@@ -399,38 +490,58 @@ def substitute_canon(prompts: dict) -> dict:
         return re.sub(r"\{\{CHAR_BLOCK:([^}]+)\}\}", lambda m: block(f"CHAR_BLOCK: {m.group(1).strip()}"), text)
 
     for sc in prompts.get("scenes", []):
-        sc["veo_flow_prompt"] = sub(sc.get("veo_flow_prompt", ""))
-        sc["seedance_prompt"] = sub(sc.get("seedance_prompt", ""))
+        sd = sc.get("seedance", {})
+        if isinstance(sd, dict) and "prompt" in sd:
+            sd["prompt"] = sub(sd.get("prompt") or "")
+        om = sc.get("omni", {})
+        if isinstance(om, dict):
+            if "base_prompt" in om:
+                om["base_prompt"] = sub(om.get("base_prompt") or "")
+            if "edit_turns" in om:
+                om["edit_turns"] = [sub(t) for t in om.get("edit_turns", [])]
     return prompts
 
 
 def stage_prompts(run_id: str, rcp: RunContextPack, sp: dict,
                   ep_dir: Path, client: Anthropic) -> dict:
-    """Generate video prompts + apply canon substitution.
-
-    NOTE (E5): skill-3 v2 now targets dual Seedance/Omni packages, but PROMPTS_SCHEMA
-    and substitute_canon() below still expect the old veo_flow/seedance shape. Rewiring
-    the schema → scene_NN.{seedance,omni}.json + refs_manifest.json is E6. Until then,
-    do not run a full pipeline through this stage expecting the new output shape.
-    """
+    """Generate dual Seedance/Omni packages → canon substitution → per-scene split + refs manifest."""
     skill = _load_skill("skill-3-prompt-writer.md")
     skill = skill.replace("{{SCREENPLAY_JSON}}", json.dumps(sp, ensure_ascii=False))
     system = rcp.for_prompt_stage() + "\n\n" + skill
 
     prompts, t_in, t_out = _call(
-        client, system, "Produce the prompts JSON now.",
+        client, system, "Produce the dual Seedance/Omni prompt packages JSON now.",
         "skill-3 prompts", PROMPTS_SCHEMA, run_id, "prompts",
     )
     prompts = substitute_canon(prompts)
 
+    # Combined artifact (hashed in ledger)
     prompts_path = ep_dir / "prompts.json"
     prompts_path.write_text(json.dumps(prompts, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # Per-scene split into scene_NN.{seedance,omni}.json + refs_manifest.json
+    prompts_dir = ep_dir / "prompts"
+    prompts_dir.mkdir(parents=True, exist_ok=True)
+    for sc in prompts.get("scenes", []):
+        n = sc.get("scene_number")
+        (prompts_dir / f"scene_{n:02d}.seedance.json").write_text(
+            json.dumps(sc.get("seedance", {}), ensure_ascii=False, indent=2), encoding="utf-8")
+        (prompts_dir / f"scene_{n:02d}.omni.json").write_text(
+            json.dumps(sc.get("omni", {}), ensure_ascii=False, indent=2), encoding="utf-8")
+    manifest = build_refs_manifest(prompts, run_id, ep_dir)
+    manifest_path = prompts_dir / "refs_manifest.json"
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+
     sha = ledger.sha256_file(prompts_path)
+    n_scenes = len(prompts.get("scenes", []))
     ledger.log_event(run_id, "prompts", "completed",
                      artifact_path=str(prompts_path.relative_to(REPO)),
-                     artifact_sha256=sha, tokens_in=t_in, tokens_out=t_out)
+                     artifact_sha256=sha, tokens_in=t_in, tokens_out=t_out,
+                     detail={"scenes": n_scenes,
+                             "refs_manifest": str(manifest_path.relative_to(REPO))})
     ledger.update_run(run_id, stage="prompts")
 
+    print(f"→ {n_scenes} scenes: seedance + omni packages + refs_manifest → {prompts_dir.relative_to(REPO)}/")
     return prompts
 
 
@@ -455,8 +566,10 @@ def stage_finalize(run_id: str, story: dict, sp: dict, prompts: dict,
         md.append(f"\n> learns: {sc.get('learning_check', '')}")
         pr = next((p for p in prompts.get("scenes", []) if p.get("scene_number") == sc["scene_number"]), {})
         if pr:
-            veo_text = pr.get('veo_flow_prompt', '')
-            md.append(f'\n<details><summary>Veo/Flow prompt</summary>\n\n```\n{veo_text}\n```\n</details>')
+            sd_text = pr.get("seedance", {}).get("prompt", "")
+            om_text = pr.get("omni", {}).get("base_prompt", "")
+            md.append(f'\n<details><summary>Seedance prompt</summary>\n\n```\n{sd_text}\n```\n</details>')
+            md.append(f'\n<details><summary>Omni base prompt</summary>\n\n```\n{om_text}\n```\n</details>')
     (ep_dir / "episode.md").write_text("\n".join(md), encoding="utf-8")
 
     # Save to series memory
