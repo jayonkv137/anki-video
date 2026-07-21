@@ -2,6 +2,10 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-21 — M9 research: prior art + market applications (deep pass)
+
+- **`docs/planning/RESEARCH_market_and_prior_art.md`**: the screenplay->prompts->video pipeline SHAPE is now common (ViMax, 11.3k★ academic project; Open-AI-Micro-Drama-Generator; Wireflow; multiple n8n templates) — none of them have a versioned/hash-verified prompt canon, a cost/token ledger, or a pre-spend human gate. That governance combination is the actual differentiator, not the AI pipeline itself. **Duolingo's 2026 AI-content TikTok/IG backlash** (deleted everything after follower revolt) is the single strongest validating data point for the anti-slop, human-gated pitch — paired with hard stats (78% consumer skepticism of AI content, 26% vs 60% preference collapse). Validated generalization targets ranked by fit: white-label content agencies (proven $1-10K/mo retainer economics) and course creators (same pipeline shape) first; real estate + e-commerce second tier; recruiting/local news explicitly a poor fit (those markets want zero human gates, opposite of our positioning). Generative-AI-content market: $21-24B (2026) -> $77B (2030).
+
 ## 2026-07-21 — M4 video generation: provider system (mock + real Seedance) + autopilot
 
 - **Provider architecture** (`pipeline/providers/video.py`): one interface, two backends. `MockVideoProvider` renders real per-scene placeholder .mp4s locally (no key, no cost) so the WHOLE pipeline runs end-to-end today; `FalVideoProvider` calls real Seedance via fal.ai, activated by `FAL_KEY` in .env — one-key swap, no rewrite. Factory `get_video_provider(name)`.
