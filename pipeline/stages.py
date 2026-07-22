@@ -462,14 +462,31 @@ def _character_ref_paths(name: str) -> list[dict]:
     return []
 
 
+def _character_voice_path(name: str) -> str | None:
+    """Resolve a canonical character name → its voice-identity audio clip (.mp3)."""
+    if not RESOURCES.exists():
+        return None
+    target = _norm(name)
+    for d in sorted(RESOURCES.iterdir()):
+        if d.is_dir() and _norm(d.name) == target:
+            mp3s = sorted(d.glob("*.mp3"))
+            return str(mp3s[0].resolve()) if mp3s else None
+    return None
+
+
 def _resolve_binds(binds: str, role: str) -> list[dict]:
     """Resolve a ref 'binds' target → list of {[variant,] path, status} entries.
-    Character identities resolve to sheet+portrait; style/audio are pending until
-    C1 (style-lock) / C3 (per-run audio)."""
+    Character identities resolve to sheet+portrait images; `voice` to the character's
+    voice-identity clip; style is pending until C1; audio-master pending until C3."""
     if binds == "style" or role == "style":
         return [{"path": None, "status": "pending — C1 style-lock"}]
+    if role == "voice":
+        vp = _character_voice_path(binds)
+        if vp:
+            return [{"variant": "voice", "path": vp, "status": "resolved"}]
+        return [{"path": None, "status": f"unresolved — no voice clip for '{binds}'"}]
     if binds in ("audio-master", "audio") or role == "audio":
-        return [{"path": None, "status": "pending — per-run audio (C3)"}]
+        return [{"path": None, "status": "pending — per-run merged audio (C3)"}]
     entries = _character_ref_paths(binds)
     if entries:
         return [{**e, "status": "resolved"} for e in entries]

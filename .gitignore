@@ -20,6 +20,8 @@ output/
 *.mp4
 *.mp3
 *.webm
+# …but per-character voice-identity references ARE source canon assets — keep them
+!resources/**/*.mp3
 
 # Dashboard runtime logs
 dashboard/logs/

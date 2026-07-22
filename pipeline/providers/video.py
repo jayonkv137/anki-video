@@ -87,12 +87,19 @@ class FalVideoProvider:
     def generate(self, scene: dict, seedance_pkg: dict, refs: list, out_path: Path) -> Path:
         import fal_client
         prompt = seedance_pkg.get("prompt", "")
-        # Upload the resolved character/style reference images (fal wants URLs)
-        image_urls = []
+        # Upload resolved refs (fal wants URLs); split character/style IMAGES from
+        # per-character VOICE audio clips — Seedance uses images for identity, the
+        # voice clips for how each character sounds (@Audio bindings in the prompt).
+        image_urls, audio_urls = [], []
         for r in refs:
             p = r.get("path")
-            if p and Path(p).exists():
-                image_urls.append(fal_client.upload_file(p))
+            if not (p and Path(p).exists()):
+                continue
+            url = fal_client.upload_file(p)
+            if r.get("role") == "voice" or p.lower().endswith((".mp3", ".wav", ".m4a")):
+                audio_urls.append(url)
+            else:
+                image_urls.append(url)
 
         args = {
             "prompt": prompt[:3000],
@@ -102,6 +109,8 @@ class FalVideoProvider:
         }
         if image_urls:
             args["image_urls"] = image_urls  # ⚠ confirm key name in current fal schema
+        if audio_urls:
+            args["audio_urls"] = audio_urls  # ⚠ confirm key name in current fal schema
 
         result = fal_client.subscribe(self.MODEL, arguments=args, with_logs=False)
         url = (result.get("video") or {}).get("url") if isinstance(result.get("video"), dict) \

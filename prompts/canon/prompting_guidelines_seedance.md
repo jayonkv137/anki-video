@@ -1,6 +1,6 @@
 # Prompting Guidelines — Seedance 2.5
 
-> version: 2.0 · canon file · v2.0 (2026-07-21): Live-Action Integration Rule added (photorealistic CGI pivot)
+> version: 2.1 · canon file · v2.1 (2026-07-21): per-character voice-identity references (Path A)
 
 ## 1. Prompt structure (strict order)
 
@@ -69,17 +69,20 @@ Formula: `Camera: [move] + [speed] + [stability]`
 
 **Zoom creep warning:** Seedance frequently confuses physical dolly movements with optical focal-length shifts, warping backgrounds. When using tracking or panning, always append `no zoom, maintain subject size in frame`.
 
-## 8. German dialogue — Audio-First workflow
+## 8. German dialogue — voice references + Audio-First
 
-Native text-to-German audio generation is unreliable — the model was primarily trained on English/Mandarin, producing the "confused tourist" effect: distorted pronunciation, unnatural cadence, and drifting lip-sync.
+Native text-to-German audio generation is unreliable — the model was trained mostly on English/Mandarin, producing the "confused tourist" effect: distorted pronunciation, unnatural cadence, drifting lip-sync. We counter this by giving Seedance each character's **voice-identity reference**.
 
-**Mandatory workflow:**
-1. Pre-generate pristine German audio externally (ElevenLabs / Seed-Audio 1.0) with distinct per-character voice profiles.
-2. For 4+ characters: merge all dialogue tracks into **one master audio file** (Seedance accepts max 3 audio slots). Upload as `@Audio1`.
-3. Declare audio role: `Use @Audio1 as the absolute rhythmic foundation. Synchronize all character lip movements and camera transitions to the timing of @Audio1.`
-4. **Transcript Trick:** write the exact spoken German words in `{}` in the prompt alongside the `@Audio` reference — this locks phoneme-level lip-sync. State: `says in German {exact transcript}`.
-5. **Fallback** if audio attention fails: convert the German audio to a black-screen MP4 and upload as `@VideoN` instead (Seedance grips video timing more aggressively than standalone audio).
-6. Always append: `Audio Constraints: No background music, purely spoken dialogue` — prevents the model from hallucinating a musical score over your reference track.
+### 8a. Per-character voice references — CURRENT method (Path A)
+Every character carries a persistent **voice-identity clip** (a short sample of how they sound), stored beside their image sheet. It is attached to EVERY scene the character appears in, exactly like the image sheet.
+1. Bind each character's voice at the top, right after their image binding: `Use @AudioN as the voice of <CharacterName>.`
+2. **Transcript Trick:** write the exact spoken German in `{}` so the model locks phoneme-level lip-sync in that voice: `<CharacterName> says in German {exact transcript}.`
+3. State once: `Synchronize each character's lip movements to their spoken line; treat each @Audio as that character's voice identity.`
+4. **Max 3 audio slots** — so max 3 speaking characters per scene (our episodes cap at 2 mains, so this holds).
+5. Always append: `Audio Constraints: No background music, purely spoken dialogue.`
+
+### 8b. Merged master audio — FUTURE method (Path B, per-scene ElevenLabs dialogue)
+When we generate exact per-scene dialogue externally (ElevenLabs in each character's cloned voice), merge the scene's lines into **one master track**, upload as `@Audio1`, and declare: `Use @Audio1 as the absolute rhythmic foundation. Synchronize all lip movements and camera transitions to the timing of @Audio1.` This gives the tightest lip-sync but requires the audio-generation step to exist first. **Fallback** if audio attention fails: convert the master to a black-screen MP4 and upload as `@VideoN` (Seedance grips video timing more aggressively than standalone audio).
 
 ## 9. DON'Ts
 

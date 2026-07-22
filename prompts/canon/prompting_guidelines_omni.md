@@ -1,6 +1,6 @@
 # Prompting Guidelines — Gemini Omni Flash
 
-> version: 1.1 · canon file · v1.1 (2026-07-21): Live-Action Integration Rule added (photorealistic CGI pivot)
+> version: 1.2 · canon file · v1.2 (2026-07-21): per-character fixed voice identity
 
 ## 0. The Live-Action Integration Rule
 
@@ -82,6 +82,9 @@ Example:
 - Tags and spoken text must **alternate** — two adjacent tags with nothing between them = syntax error
 - Separate tags with text or punctuation
 - Common tags: `[whispers]`, `[panic]`, `[cautious]`, `[short pause]`, `[excited]`, `[stern]`, `[gentle]`
+
+### Fixed per-character voice identity
+Each character has a persistent voice identity (matching their voice-reference clip). Assign the SAME voice profile to a given character in every scene — never let it drift. Describe the voice consistently in prose (e.g. "deep, clipped northern German") and, where the API supports it, pin the same named voice profile (Zephyr/Charon/Kore/Puck) to that character across all calls.
 
 ### 2-speaker limit workaround
 
