@@ -2,6 +2,12 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-21 — Fresh test run 51cc85bb + Flashboard prompt export (no-style, dual-ref)
+
+- **Fresh end-to-end run** `51cc85bb` "Der fünfzigste Spieltag" (Müller×Rolf, heatwave garden matchday), ~$1.64. QC failed on dialogue-naturalness nits + proceeded per design; skill-3 emitted 4/10 Seedance prompts over the 3000-char cap (2-char scenes) — the standing skill-3 budget limitation on two-character scenes.
+- **Flashboard export for Jayon's manual Seedance visual test** → `output/episodes/ep_54-564/flashboard.md`: all 10 prompts made paste-ready — trimmed the `@Audio1` sync line (no audio track for a silent look-test) and, per Jayon's request, **removed the style reference entirely** (no style image yet) and **rebound each character to TWO slots — main portrait + character sheet** (upload order: main then sheet). All 10 now ≤3000 chars. Per-scene upload guide reads the real slot assignments. Scenes 1–6 = Müller solo (@Image1/2); 7–10 = two-char (@Image1/2 Müller, @Image3/4 Rolf).
+- Docs fully synced: project_status rewritten to current reality (machine half of MVP built + merged; M1 manual test is the critical path); phase checklist updated (C2 E1–E6, C3 provider system, C5 assembly, C6 caption+dashboard, M9 research all reflected).
+
 ## 2026-07-21 — M9 research: prior art + market applications (deep pass)
 
 - **`docs/planning/RESEARCH_market_and_prior_art.md`**: the screenplay->prompts->video pipeline SHAPE is now common (ViMax, 11.3k★ academic project; Open-AI-Micro-Drama-Generator; Wireflow; multiple n8n templates) — none of them have a versioned/hash-verified prompt canon, a cost/token ledger, or a pre-spend human gate. That governance combination is the actual differentiator, not the AI pipeline itself. **Duolingo's 2026 AI-content TikTok/IG backlash** (deleted everything after follower revolt) is the single strongest validating data point for the anti-slop, human-gated pitch — paired with hard stats (78% consumer skepticism of AI content, 26% vs 60% preference collapse). Validated generalization targets ranked by fit: white-label content agencies (proven $1-10K/mo retainer economics) and course creators (same pipeline shape) first; real estate + e-commerce second tier; recruiting/local news explicitly a poor fit (those markets want zero human gates, opposite of our positioning). Generative-AI-content market: $21-24B (2026) -> $77B (2030).
