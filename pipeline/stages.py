@@ -148,9 +148,18 @@ BRIEF_COMMIT_SCHEMA = _schema(
 
 REF_SCHEMA = _schema(slot=STR, binds=STR, role=STR)
 
-# V3 storyboard (skill-2b): per-shot image-generation prompts, compiled from the screenplay
-PANEL_PROMPT_SCHEMA = _schema(segment_number=INT, shot_number=INT, image_prompt=STR)
-STORYBOARD_SCHEMA = _schema(style_clause=STR, panels=_arr(PANEL_PROMPT_SCHEMA))
+# V3 storyboard (skill-2b v2.0): ONE multi-panel SHEET prompt per SEGMENT (not per shot).
+# The single generation locks identity+style across the segment's shots; the sheet is sliced
+# back into per-shot 9:16 panels downstream. See RESEARCH_storyboard_sheet_method.md.
+SHEET_PROMPT_SCHEMA = _schema(
+    segment_number=INT,
+    shot_numbers=_arr(INT),   # the shots this sheet contains, in reading order
+    layout=STR,               # grid law "<rows>x<cols>": 1x2 | 1x3 | 2x2 | 2x3 (cells stay 9:16)
+    sheet_aspect_ratio=STR,   # the SHEET's overall ratio "W:H" (cols·9 : rows·16); each CELL is 9:16
+    sheet_prompt=STR,         # the ONE prompt that renders the whole multi-panel sheet
+    continuity_ref=STR,       # "" for the first segment; else the prior sheet key "sheet_s<NN>"
+)
+STORYBOARD_SCHEMA = _schema(style_clause=STR, sheets=_arr(SHEET_PROMPT_SCHEMA))
 
 # V3 (2026-07-22): ONE Seedance prompt per 15s SEGMENT (Omni dropped, canon look-blocks
 # dropped — the panels + sheets carry the look). role ∈ identity | voice | style | panel.
@@ -717,66 +726,75 @@ def stage_quality_check(run_id: str, rcp: RunContextPack, sp: dict,
 
 # ── Stage 6.5: Storyboard (screenplay → per-shot image prompts → panels) ──
 
-def _find_shot(sp: dict, seg_n, shot_n) -> dict:
-    for seg in sp.get("segments", []):
-        if seg.get("segment_number") == seg_n:
-            for sh in seg.get("shots", []):
-                if sh.get("shot_number") == shot_n:
-                    return sh
-    return {}
-
-
 def stage_storyboard(run_id: str, rcp: RunContextPack, sp: dict, ep_dir: Path,
                      client: Anthropic, image_provider: str = "mock") -> tuple[dict, list]:
-    """V3 storyboard: screenplay → per-shot image prompts (skill-2b) → 9:16 panels via the
-    image provider (mock | gpt-image-2 | nano-banana-pro). Panels double as the Seedance
-    @Image anchors downstream (DESIGN_v3_data_flow.md §3–4)."""
+    """V3 storyboard v2 (2026-07-24): screenplay → ONE multi-panel SHEET prompt per SEGMENT
+    (skill-2b v2.0) → one image generation per segment → sliced into per-shot 9:16 panels.
+    The single generation locks character + style across the segment's shots (fixes the v1
+    per-shot drift); cross-segment continuity via a chaining ref (each segment's sheet is
+    attached when generating the next). Panels keep the SAME panel_s<seg>_<shot>.png contract
+    the Seedance step resolves (DESIGN_v3_data_flow.md §3–4)."""
     skill = _load_skill("skill-2b-storyboard.md")
     skill = (skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
              .replace("{{SCREENPLAY_JSON}}", json.dumps(sp, ensure_ascii=False)))
     system = rcp.for_prompt_stage() + "\n\n" + skill
     board, t_in, t_out = _call(
-        client, system, "Produce the per-shot storyboard image prompts JSON now.",
+        client, system, "Produce the per-segment storyboard SHEET prompts JSON now.",
         "skill-2b storyboard", STORYBOARD_SCHEMA, run_id, "storyboard", max_tokens=32000)
 
     ep_dir.mkdir(parents=True, exist_ok=True)
     bp = ep_dir / "storyboard.json"
     bp.write_text(json.dumps(board, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # Character identity refs (sheet + portrait) for every speaking character.
-    speakers = {d.get("speaker") for seg in sp.get("segments", []) for sh in seg.get("shots", [])
-                for d in sh.get("dialogue", []) if d.get("speaker")}
-    refs = []
-    for name in sorted(speakers):
-        for e in _character_ref_paths(name):
-            refs.append({"binds": name, "role": "character", **e})
-
     from .providers import get_image_provider
+    from .providers import image as _img
     provider = get_image_provider(image_provider)
     panels_dir = ep_dir / "storyboard"
     panels_dir.mkdir(parents=True, exist_ok=True)
-    out = []
-    for panel in board.get("panels", []):
-        seg_n, shot_n = panel.get("segment_number"), panel.get("shot_number")
-        shot = _find_shot(sp, seg_n, shot_n)
-        dest = panels_dir / f"panel_s{int(seg_n):02d}_{int(shot_n):02d}.png"
+
+    seg_by_n = {seg.get("segment_number"): seg for seg in sp.get("segments", [])}
+    sheets = sorted(board.get("sheets", []), key=lambda s: s.get("segment_number") or 0)
+    all_panels, sheet_files, prev_sheet = [], [], None
+    for sheet in sheets:
+        seg_n = sheet.get("segment_number")
+        seg = seg_by_n.get(seg_n, {})
+        shot_numbers = sheet.get("shot_numbers") or [sh.get("shot_number") for sh in seg.get("shots", [])]
+        rows, cols, _, _ = _img.sheet_grid(len(shot_numbers))
+
+        # Presence-based identity refs — every roster character present ANYWHERE in the
+        # segment (blocking/gaze/action + dialogue), NOT dialogue-speakers only (v1 bug).
+        refs = []
+        for name in _segment_characters(seg):
+            for e in _character_ref_paths(name):
+                refs.append({"binds": name, "role": "character", **e})
+        # Cross-segment chaining: attach the previous segment's sheet for continuity.
+        if prev_sheet is not None and sheet.get("continuity_ref"):
+            refs.append({"binds": sheet["continuity_ref"], "role": "continuity",
+                         "variant": "sheet", "path": str(prev_sheet.resolve())})
+
+        sheet_path = panels_dir / f"sheet_s{int(seg_n):02d}.png"
         try:
-            provider.generate(shot, panel.get("image_prompt", ""), refs, dest)
-            out.append(dest)
-            print(f"  ✓ panel seg {seg_n} shot {shot_n} → {dest.name}")
+            provider.generate_sheet(sheet, sheet.get("sheet_prompt", ""), refs, sheet_path)
+            panels = _img.slice_sheet(sheet_path, rows, cols, shot_numbers, panels_dir, seg_n)
+            all_panels.extend(panels)
+            sheet_files.append(sheet_path)
+            prev_sheet = sheet_path
+            print(f"  ✓ sheet seg {seg_n} ({rows}x{cols}) → {sheet_path.name} → {len(panels)} panels")
         except Exception as e:
-            print(f"  ✗ panel seg {seg_n} shot {shot_n}: {e}")
+            print(f"  ✗ sheet seg {seg_n}: {e}")
             ledger.log_event(run_id, "storyboard", "failed",
-                             detail={"panel": f"{seg_n}.{shot_n}", "error": str(e)})
+                             detail={"segment": seg_n, "error": str(e)})
             raise
 
     ledger.log_event(run_id, "storyboard", "completed",
                      artifact_path=str(bp.relative_to(REPO)), artifact_sha256=ledger.sha256_file(bp),
                      tokens_in=t_in, tokens_out=t_out,
-                     detail={"panels": len(out), "provider": provider.name})
+                     detail={"sheets": len(sheet_files), "panels": len(all_panels),
+                             "provider": provider.name})
     ledger.update_run(run_id, stage="storyboard")
-    print(f"✅ {len(out)} storyboard panels → {panels_dir.relative_to(REPO)}/  (provider: {provider.name})")
-    return board, out
+    print(f"✅ {len(sheet_files)} sheets → {len(all_panels)} panels → "
+          f"{panels_dir.relative_to(REPO)}/  (provider: {provider.name})")
+    return board, all_panels
 
 
 # ── Stage 7: Prompt writer + canon substitution + refs manifest ──────
@@ -819,6 +837,30 @@ def _character_ref_paths(name: str) -> list[dict]:
             out.append({"variant": "portrait", "path": str(pngs[0].resolve())})
         return out
     return []
+
+
+CANON_ROSTER = ["Rolf die Wurst", "Bert das Bier", "Kati die Kartoffel", "Müller das Brot"]
+
+
+def _segment_characters(seg: dict) -> list[str]:
+    """Canonical roster characters PRESENT anywhere in the segment — matched from blocking,
+    gaze, action AND dialogue, not dialogue speakers alone. A character can appear silently
+    (reaction/listener shots); the v1 storyboard resolved refs from `dialogue[].speaker` only,
+    so silent-but-present characters got NO identity reference → drift. This fixes that."""
+    parts, speakers = [], []
+    for sh in seg.get("shots", []):
+        for f in ("blocking", "gaze", "action", "expression"):
+            parts.append(sh.get(f) or "")
+        for d in sh.get("dialogue", []):
+            if d.get("speaker"):
+                speakers.append(d["speaker"])
+    blob = _norm(" ".join(parts + speakers))
+    present = []
+    for full in CANON_ROSTER:
+        first = _norm(full.split()[0])
+        if first and first in blob and full not in present:
+            present.append(full)
+    return present
 
 
 def _character_voice_path(name: str) -> str | None:

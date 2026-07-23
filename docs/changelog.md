@@ -2,6 +2,16 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-24 — Storyboard SHEET method (per-segment multi-panel → slice → chain)
+
+- **Root-cause fix for cross-shot drift.** v1 storyboard generated **one image per shot** via N independent provider calls → characters/style drifted between shots. Rebuilt as the **SHEET method**: **skill-2b → v2.0** emits ONE `sheet_prompt` per **segment** (all its shots as 9:16 panels, one generation), which locks identity+style in a single latent context. `STORYBOARD_SCHEMA` reshaped `panels[]` → `sheets[]` (`segment_number/shot_numbers/layout/sheet_aspect_ratio/sheet_prompt/continuity_ref`).
+- **Slice + chain.** `providers/image.py` gained `sheet_grid` (layout law: cells always 9:16 → 1×2/1×3 filmstrip, 2×2/2×3 grid), `slice_sheet` (deterministic crop → clean 720×1280 panels keeping the **same `panel_s<seg>_<shot>.png` contract**), and `generate_sheet` on mock + **Nano Banana Pro** (Jayon's chosen primary) + GPT Image 2. `stage_storyboard` v2 loops per-segment, attaching the **previous segment's sheet** as a continuity reference (cross-segment chaining).
+- **Presence-based char refs (2nd drift fix).** v1 gathered identity refs from `dialogue[].speaker` only → silent-but-present characters got none. New `_segment_characters` matches the roster across `blocking/gaze/action/dialogue`.
+- **UI** — Step 06 renders one **sheet card per segment** (layout · aspect · chaining) with an auto-slice upload; new `POST /api/v3/runs/{id}/sheet/{seg}` saves a sheet and slices it into per-shot panels.
+- **Verified:** layout law; presence detection (Müller in all 3 segments of `ep_95c24d43`, incl. silent shots); mock sheet → 3 clean 9:16 panels; **live Gemini skill-2b v2.0 = 3 sheets, correct layouts, chaining `sheet_s01`→`sheet_s02`** (this clears the 2026-07-23 "Gemini structured-output never run live" risk); UI renders it (screenshot); downstream `build_refs_manifest` resolves the sliced panels. ⚠ **NOT verified:** the real Nano Banana Pro call (no `FAL_KEY`; `aspect_ratio`/`image_urls` `⚠ confirm`) and the core visual hypothesis (needs Jayon's manual NBP test).
+- **Docs:** new `RESEARCH_storyboard_sheet_method.md`; `DESIGN_v3_data_flow.md` §3 + Time-split updated so spec matches code. Full detail + next steps: `docs/handoffs/HANDOFF_2026-07-24_storyboard-sheet-method.md`.
+- **Flagged NEXT (Jayon):** shots/segment is arbitrarily capped **1–5** (`stages.py:578`) → make story-driven; `/api/co-creation/chat` still **thin** (not skill-1-story-strategist); the **overseer agent** is designed-not-built.
+
 ## 2026-07-23 — Full pipeline wired into the Co-Creation Studio UI (+ Gemini)
 
 - **Studio UI integration** — `dashboard/app.py` gained **7 `/api/v3/*` endpoints** connecting the browser to the real V3 pipeline with **persistence**: `commit` (chat → full **Story Brief** via Gemini → creates a run + `brief.json` + `mark_covered`) · `screenplay` (brief → skill-2 → `screenplay.json` + validator) · `storyboard-prompts` (skill-2b → per-shot image prompts) · `video-prompts` (skill-3 → per-segment Seedance prompts + refs_manifest) · upload `panels/{seg}/{shot}` + `clips/{seg}` (manual-generation flow) · `GET /runs/{id}`. Each episode persists to `output/episodes/ep_<run_id[:8]>`.

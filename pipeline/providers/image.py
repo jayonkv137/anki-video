@@ -25,7 +25,8 @@ import urllib.request
 from pathlib import Path
 
 FONT = "/System/Library/Fonts/Supplemental/Arial.ttf"
-W, H = 720, 1280  # 9:16
+W, H = 720, 1280  # 9:16 — a single panel
+SHEET_CW, SHEET_CH = 360, 640  # 9:16 — one cell of a mock sheet
 PALETTE = ["0x1b2a4a", "0x3a1f2b", "0x1f3a2e", "0x3a301b", "0x2b1f3a", "0x1f2f3a"]
 
 
@@ -33,6 +34,63 @@ def _ff(cmd):
     p = subprocess.run(cmd, capture_output=True, text=True)
     if p.returncode != 0:
         raise RuntimeError("ffmpeg failed:\n" + p.stderr[-800:])
+
+
+def _gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+
+
+def sheet_grid(n_shots: int) -> tuple[int, int, str, str]:
+    """The layout law: shot count → (rows, cols, layout, sheet_aspect_ratio).
+    Every CELL is 9:16; the SHEET's overall ratio is cols·9 : rows·16.
+    1x2 filmstrip · 1x3 filmstrip (typical) · 2x2 · 2x3 — see skill-2b-storyboard.md."""
+    n = max(1, int(n_shots))
+    if n <= 3:
+        rows, cols = 1, n
+    elif n == 4:
+        rows, cols = 2, 2
+    else:                       # 5–6 (segments rarely exceed 3 shots)
+        rows, cols = 2, (n + 1) // 2
+    w, h = cols * 9, rows * 16
+    g = _gcd(w, h)
+    return rows, cols, f"{rows}x{cols}", f"{w // g}:{h // g}"
+
+
+def slice_sheet(sheet_path: Path, rows: int, cols: int, shot_numbers: list[int],
+                out_dir: Path, seg_n: int) -> list[Path]:
+    """Deterministic equal-division crop of a storyboard sheet into per-shot 9:16 panels.
+    Each cell is cropped (iw/cols × ih/rows) in reading order, then centre-cropped + scaled to
+    720×1280 so every panel is a clean 9:16 Seedance anchor. Writes panel_s<seg>_<shot>.png —
+    the SAME filename contract the downstream skill-3 refs_manifest resolves."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out = []
+    for idx, shot_n in enumerate(shot_numbers):
+        r, c = divmod(idx, cols)
+        if r >= rows:
+            break
+        dest = out_dir / f"panel_s{int(seg_n):02d}_{int(shot_n):02d}.png"
+        vf = (f"crop=iw/{cols}:ih/{rows}:iw/{cols}*{c}:ih/{rows}*{r},"
+              f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H}")
+        _ff(["ffmpeg", "-y", "-v", "error", "-i", str(sheet_path), "-vf", vf,
+             "-frames:v", "1", str(dest)])
+        out.append(dest)
+    return out
+
+
+def _fal_ratio(sheet_aspect_ratio: str, layout: str) -> str:
+    """Map a sheet's ideal ratio to the nearest aspect_ratio token fal's image models accept.
+    ⚠ confirm the exact supported tokens against fal's CURRENT nano-banana-pro / gpt-image-2
+    schema; the layout is ALSO stated in the prompt text, which is what actually drives the
+    panel arrangement — this only sets the output canvas shape."""
+    supported = {"9:16": 9 / 16, "3:4": 3 / 4, "1:1": 1.0, "4:3": 4 / 3, "16:9": 16 / 9}
+    try:
+        w, h = sheet_aspect_ratio.split(":")
+        target = int(w) / int(h)
+    except Exception:
+        return "9:16"
+    return min(supported, key=lambda k: abs(supported[k] - target))
 
 
 def _image_refs(refs: list) -> list:
@@ -49,6 +107,35 @@ def _image_refs(refs: list) -> list:
 
 class MockImageProvider:
     name = "mock"
+
+    def generate_sheet(self, sheet: dict, sheet_prompt: str, refs: list, out_path: Path) -> Path:
+        """Render a real multi-panel storyboard sheet (rows×cols of 9:16 cells) locally, so the
+        sheet→slice→panels plumbing runs end-to-end with no key/cost. Cells are exact 9:16, so
+        slicing is pixel-perfect."""
+        shots = sheet.get("shot_numbers") or [1]
+        rows, cols, _, _ = sheet_grid(len(shots))
+        seg = sheet.get("segment_number", 0)
+        cw, ch = SHEET_CW, SHEET_CH
+        sw, sh = cols * cw, rows * ch
+        bg = PALETTE[(int(seg) - 1) % len(PALETTE)]
+        with tempfile.TemporaryDirectory() as td:
+            # per-cell label textfiles, chained as drawtext filters at cell origins
+            draws = [f"drawgrid=w={cw}:h={ch}:t=3:c=0xffffffaa"]
+            for idx, shot_n in enumerate(shots):
+                r, c = divmod(idx, cols)
+                if r >= rows:
+                    break
+                tf = Path(td) / f"c{idx}.txt"
+                tf.write_text(f"[ MOCK SHEET ]\nSEG {seg}\nPanel {idx + 1}\nShot {shot_n}",
+                              encoding="utf-8")
+                draws.append(
+                    f"drawtext=fontfile={FONT}:textfile={tf}:fontcolor=white:fontsize=30:"
+                    f"line_spacing=10:x={c * cw}+({cw}-text_w)/2:y={r * ch}+({ch}-text_h)/2:text_align=C")
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            _ff(["ffmpeg", "-y", "-v", "error",
+                 "-f", "lavfi", "-i", f"color=c={bg}:s={sw}x{sh}:d=1",
+                 "-vf", ",".join(draws), "-frames:v", "1", str(out_path)])
+        return out_path
 
     def generate(self, shot: dict, image_prompt: str, refs: list, out_path: Path) -> Path:
         n = shot.get("shot_number", 0)
@@ -120,6 +207,17 @@ class FalGptImageProvider(_FalImageBase):
             args["image_urls"] = urls        # ⚠ confirm key name (edit endpoint)
         return self._run(args, out_path)
 
+    def generate_sheet(self, sheet: dict, sheet_prompt: str, refs: list, out_path: Path) -> Path:
+        ratio = _fal_ratio(sheet.get("sheet_aspect_ratio", ""), sheet.get("layout", ""))
+        size = {"9:16": "portrait_16_9", "3:4": "portrait_16_9", "1:1": "square",
+                "4:3": "landscape_16_9", "16:9": "landscape_16_9"}.get(ratio, "landscape_16_9")
+        args = {"prompt": sheet_prompt, "image_size": size,  # ⚠ confirm size tokens
+                "quality": "high", "output_format": "png"}
+        urls = self._upload(refs)              # incl. char sheets + prev-segment sheet (chaining)
+        if urls:
+            args["image_urls"] = urls
+        return self._run(args, out_path)
+
 
 class FalNanoBananaProvider(_FalImageBase):
     """Google Nano Banana Pro (gemini-3-pro-image) on fal — up to 14 refs, native umlauts."""
@@ -130,6 +228,21 @@ class FalNanoBananaProvider(_FalImageBase):
         args = {
             "prompt": image_prompt,
             "aspect_ratio": "9:16",           # ⚠ confirm arg name
+            "num_images": 1,
+        }
+        urls = self._upload(refs)
+        if urls:
+            args["image_urls"] = urls         # ⚠ confirm key name
+        return self._run(args, out_path)
+
+    def generate_sheet(self, sheet: dict, sheet_prompt: str, refs: list, out_path: Path) -> Path:
+        """Primary storyboard path (Jayon's choice). One generation → the whole multi-panel
+        sheet. The layout is stated in sheet_prompt; aspect_ratio sets the canvas shape. refs
+        carry char sheets/portraits + the prev-segment sheet (cross-segment chaining) — Nano
+        Banana Pro takes up to 14."""
+        args = {
+            "prompt": sheet_prompt,
+            "aspect_ratio": _fal_ratio(sheet.get("sheet_aspect_ratio", ""), sheet.get("layout", "")),
             "num_images": 1,
         }
         urls = self._upload(refs)

@@ -874,33 +874,39 @@ async function renderScreenplayView(container) {
       <button class="ghost" onclick="activeScreenplay=null; setStep(5)">↻ Regenerate</button></div></div>`;
 }
 
-/* STEP 6: STORYBOARD PANEL PROMPTS (fetches real per-shot image prompts) */
+/* STEP 6: STORYBOARD SHEET PROMPTS (one multi-panel sheet per segment → auto-sliced to panels) */
 async function renderStoryboardView(container) {
   if (!activeRunId) { container.innerHTML = briefFirst(); return; }
   if (!activeStoryboard) {
-    container.innerHTML = loaderCard('Compiling per-shot storyboard image prompts…');
+    container.innerHTML = loaderCard('Compiling per-segment storyboard sheet prompts…');
     try {
       const d = await api(`/api/v3/runs/${activeRunId}/storyboard-prompts`, { method: 'POST' });
       activeStoryboard = d.storyboard;
     } catch (err) { container.innerHTML = errCard('Storyboard prompts failed', err.message, () => { activeStoryboard = null; setStep(6); }); return; }
   }
-  const panels = (activeStoryboard.panels || []).map(p => {
-    const pid = `sb-${p.segment_number}-${p.shot_number}`;
-    const pad = n => String(n).padStart(2, '0');
+  const pad = n => String(n).padStart(2, '0');
+  const sheets = (activeStoryboard.sheets || []).map(s => {
+    const sid = `sb-${s.segment_number}`;
+    const shots = (s.shot_numbers || []).join(', ');
+    const nShots = (s.shot_numbers || []).length;
+    const chain = s.continuity_ref
+      ? `<span style="color:var(--purple)">⛓ chained to ${s.continuity_ref} — attach that sheet too</span>`
+      : `<span style="color:var(--dim)">first sheet — no chaining ref</span>`;
     return `<div class="prompt-card">
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <b style="color:var(--accent)">Panel — Segment ${p.segment_number}, Shot ${p.shot_number} (9:16)</b>
-        <button class="ghost" onclick="copyText('${pid}')">📋 Copy Image Prompt</button></div>
-      <pre id="${pid}">${escapeHtml(p.image_prompt)}</pre>
-      <label class="dropzone" id="dz-${pid}">+ Upload generated panel (panel_s${pad(p.segment_number)}_${pad(p.shot_number)}.png)
-        <input type="file" accept="image/*" style="display:none" onchange="uploadPanel(${p.segment_number},${p.shot_number},this,'dz-${pid}')"></label>
+        <b style="color:var(--accent)">Sheet — Segment ${s.segment_number} · ${s.layout || ''} · shots ${shots}</b>
+        <button class="ghost" onclick="copyText('${sid}')">📋 Copy Sheet Prompt</button></div>
+      <p style="font-size:11px;color:var(--dim);margin-bottom:8px;">Each cell 9:16 · sheet ${s.sheet_aspect_ratio || ''} · ${chain}</p>
+      <pre id="${sid}">${escapeHtml(s.sheet_prompt)}</pre>
+      <label class="dropzone" id="dz-${sid}">+ Upload generated sheet (sheet_s${pad(s.segment_number)}.png) — auto-sliced into ${nShots} × 9:16 panels
+        <input type="file" accept="image/*" style="display:none" onchange="uploadSheet(${s.segment_number},this,'dz-${sid}')"></label>
     </div>`;
   }).join('');
   container.innerHTML = `<div class="card">
-    <div class="card-title"><span>Step 06 · Storyboard Image Prompts</span>
+    <div class="card-title"><span>Step 06 · Storyboard Sheet Prompts</span>
       <button class="ok" onclick="setStep(7)">Proceed to Video ➔</button></div>
-    <p style="color:var(--dim);font-size:12.5px;margin-bottom:12px;">Mirrored style (every panel): <i>${escapeHtml(activeStoryboard.style_clause || '')}</i>. Copy each prompt into GPT Image 2 / Nano Banana Pro <b>with your character sheets attached</b>, generate the 9:16 panel, then upload it back.</p>
-    ${panels}
+    <p style="color:var(--dim);font-size:12.5px;margin-bottom:12px;">One <b>multi-panel sheet per segment</b> — a single Nano Banana Pro generation locks the characters + style across all its shots (no per-shot drift). Mirrored style: <i>${escapeHtml(activeStoryboard.style_clause || '')}</i>. Paste each sheet prompt into <b>Nano Banana Pro with your character sheets attached</b> (plus the previous segment's sheet where chained), generate the sheet, then upload it — it's auto-sliced into the per-shot 9:16 panels the video step needs.</p>
+    ${sheets || '<p style="color:var(--warn)">No sheets in this storyboard — hit ↻ Regenerate Prompts.</p>'}
     <div style="display:flex;justify-content:space-between;">
       <button class="ghost" onclick="setStep(5)">← Screenplay</button>
       <button class="ghost" onclick="activeStoryboard=null; setStep(6)">↻ Regenerate Prompts</button></div></div>`;
@@ -951,6 +957,17 @@ async function uploadPanel(seg, shot, input, dzId) {
   try { await fetch(`/api/v3/runs/${activeRunId}/panels/${seg}/${shot}`, { method: 'POST', body: fd });
     const dz = document.getElementById(dzId); if (dz) { dz.classList.add('filled'); dz.childNodes[0].nodeValue = '✓ Panel uploaded — '; } }
   catch (e) { alert('Upload failed: ' + e); }
+}
+async function uploadSheet(seg, input, dzId) {
+  const f = input.files[0]; if (!f) return;
+  const fd = new FormData(); fd.append('file', f);
+  const dz = document.getElementById(dzId);
+  if (dz) dz.childNodes[0].nodeValue = '⏳ Slicing sheet into panels… ';
+  try {
+    const r = await fetch(`/api/v3/runs/${activeRunId}/sheet/${seg}`, { method: 'POST', body: fd });
+    const d = await r.json();
+    if (dz) { dz.classList.add('filled'); dz.childNodes[0].nodeValue = `✓ Sheet uploaded — sliced into ${(d.panels || []).length} × 9:16 panels `; }
+  } catch (e) { alert('Upload failed: ' + e); if (dz) dz.childNodes[0].nodeValue = '+ Upload generated sheet '; }
 }
 async function uploadClip(seg, input, dzId) {
   const f = input.files[0]; if (!f) return;

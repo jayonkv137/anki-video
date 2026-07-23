@@ -848,6 +848,38 @@ def v3_storyboard(run_id: str):
     return {"storyboard": board}
 
 
+@app.post("/api/v3/runs/{run_id}/sheet/{seg}")
+async def v3_upload_sheet(run_id: str, seg: int, file: UploadFile = File(...)):
+    """Human uploads ONE storyboard SHEET for a segment (the multi-panel image generated from
+    the skill-2b sheet prompt); we save it and slice it into the per-shot
+    panel_s<seg>_<shot>.png files the Seedance step resolves."""
+    from pipeline.providers import image as _img
+    ep = _v3_ep(run_id)
+    sb = ep / "storyboard"
+    sb.mkdir(parents=True, exist_ok=True)
+    sheet_path = sb / f"sheet_s{seg:02d}.png"
+    sheet_path.write_bytes(await file.read())
+
+    # resolve this segment's shot list (storyboard.json first, else the screenplay)
+    shot_numbers = []
+    if (ep / "storyboard.json").exists():
+        board = json.loads((ep / "storyboard.json").read_text(encoding="utf-8"))
+        for s in board.get("sheets", []):
+            if s.get("segment_number") == seg:
+                shot_numbers = s.get("shot_numbers") or []
+                break
+    if not shot_numbers and (ep / "screenplay.json").exists():
+        sp = json.loads((ep / "screenplay.json").read_text(encoding="utf-8"))
+        for sg in sp.get("segments", []):
+            if sg.get("segment_number") == seg:
+                shot_numbers = [sh.get("shot_number") for sh in sg.get("shots", [])]
+                break
+    shot_numbers = shot_numbers or [1]
+    rows, cols, _, _ = _img.sheet_grid(len(shot_numbers))
+    panels = _img.slice_sheet(sheet_path, rows, cols, shot_numbers, sb, seg)
+    return {"status": "saved", "sheet": sheet_path.name, "panels": [p.name for p in panels]}
+
+
 @app.post("/api/v3/runs/{run_id}/panels/{seg}/{shot}")
 async def v3_upload_panel(run_id: str, seg: int, shot: int, file: UploadFile = File(...)):
     ep = _v3_ep(run_id)

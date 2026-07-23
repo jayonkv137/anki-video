@@ -17,12 +17,13 @@ Brief → episode → segments (2–3 × ~15s) → shots (~3/segment). Each shot
 - **MUST NOT:** prompt-engineering, `@Image` bindings, style codes (compilers' job); **no on-screen / diegetic text**.
 - **Language-learning:** realizes the brief's `lesson` naturally; CEFR caps; skill-2q hard-checks it is actually taught + shown-not-explained.
 
-### 3 · STORYBOARD skill  (skill-2b — NET-NEW) · image-prompt compiler
-Enriched shot → ONE image-gen prompt:
-`[style ref] + [environment & lighting] + [character identity @Image] + [framing & composition ← shot fields] + [negative constraints]`
-- **MAY add:** style-ref code, `@Image` identity bindings, negatives, a terse restatement of the shot's own fields.
-- **MUST NOT:** invent new creative decisions; render subtitles; add narrative.
-- **Density:** 3 panels / 15s segment → 6–9 panels per episode (a shot change ~every 5s).
+### 3 · STORYBOARD skill  (skill-2b **v2.0** — SHEET method) · image-prompt compiler
+**One multi-panel SHEET prompt per SEGMENT** (not per shot). All of a segment's shots are drawn as 9:16 panels in **one generation** — that single pass is what locks identity + style across the shots (per-shot generation drifted). The sheet is then **sliced** back into per-shot 9:16 panels. Segment → ONE sheet prompt:
+`[sheet format: N×M of 9:16 cells] + [mirrored style clause] + [character identity ← presence] + [environment] + [per-panel lines ← shot fields] + [consistency lock] + [gutter-label rule] + [negatives] + [chaining ref for seg 2+]`
+- **MAY add:** the sheet-layout description, the mirrored style clause, `@Image` identity bindings, negatives, a terse restatement of each shot's own fields, a continuity ref to the prior segment's sheet.
+- **MUST NOT:** invent new creative decisions; render subtitles or ANY text inside a panel (shot numbers live in the gutter, cropped out on slice); add narrative.
+- **Layout law:** cells stay 9:16; 1×2 / 1×3 filmstrip (≤3 shots) or 2×2 / 2×3 grid (4–6). One sheet per 15s segment → sliced into 2–3 panels. See `RESEARCH_storyboard_sheet_method.md`.
+- **Consistency mechanics:** single-generation sheet (in-context) + mirrored style clause + presence-based identity refs + **cross-segment chaining** (prior sheet attached to the next).
 
 ### 4 · IMAGE PROVIDER  (providers/image.py — NET-NEW)
 `mock | gpt-image-2 | nano-banana-pro` — both real models selectable (Jayon: "have both, try either"). 9:16 native. Consistency: **seed-lock** (lock the first approved panel's seed for the segment) + **prompt-mirror** (identical style clause every panel) + **reference re-injection** (reuse the background plate). Single-panel fix = edit endpoint + mask.
@@ -82,9 +83,9 @@ No look-blocks, no on-screen text, no subtitles — but every canon-required ele
 ## Phase 4+5 build order (status)
 1. ✅ **`SHOT_SCHEMA` director layer** + per-shot `duration_s` (the 15s time-split) + `skill-2` **v2.2**.
 2. ✅ **`providers/image.py`** (mock + GPT Image 2 + Nano Banana Pro, selectable).
-3. ✅ **`skill-2b-storyboard`** + `stage_storyboard` + `pipeline storyboard` (mock-proven).
+3. ✅ **`skill-2b-storyboard` v2.0 (SHEET method)** + `stage_storyboard` v2 (per-segment sheet → slice → chain, presence-based refs) + `providers/image.py` (`sheet_grid`/`generate_sheet`/`slice_sheet`) + UI Step 06 + `/sheet/{seg}` auto-slice. Mock-proven + **live-Gemini-proven** (2026-07-24). Real NBP path FAL_KEY-gated (`⚠ confirm`). See `RESEARCH_storyboard_sheet_method.md`.
 4. ✅ **`skill-3` v4** thin per-15s-segment Seedance compiler + per-segment `PROMPTS_SCHEMA` / `stage_prompts` / `build_refs_manifest` (resolves panels; Omni + canon-blocks dropped).
 5. ⏭ *(Phase 6)* reshape `stage_generate`/`assemble` per-segment (one Seedance call per clip) + the subtitle post step; then the storyboard **review-and-propagate gate** in the UI (Phase 7).
 
 ## Time-split (the 15s logic)
-Each **segment = one 15s Seedance clip**. The screenplay divides time explicitly: every shot has `duration_s`, and a segment's shots **sum to ~15s** (validator-enforced). A segment can be **1 shot (15s) or several** (e.g. 6+7+2). 30s = 2 segments, 45s = 3. The storyboard makes **one 9:16 panel per shot**; those panels are the Seedance anchors for that clip's cuts.
+Each **segment = one 15s Seedance clip**. The screenplay divides time explicitly: every shot has `duration_s`, and a segment's shots **sum to ~15s** (validator-enforced). A segment can be **1 shot (15s) or several** (e.g. 6+7+2). 30s = 2 segments, 45s = 3. The storyboard makes **one multi-panel sheet per segment**, generated in a single pass and **sliced into one 9:16 panel per shot**; those sliced panels are the Seedance anchors for that clip's cuts.
