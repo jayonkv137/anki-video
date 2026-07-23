@@ -22,7 +22,7 @@ Brief → episode → segments (2–3 × ~15s) → shots (~3/segment). Each shot
 `[sheet format: N×M of 9:16 cells] + [mirrored style clause] + [character identity ← presence] + [environment] + [per-panel lines ← shot fields] + [consistency lock] + [gutter-label rule] + [negatives] + [chaining ref for seg 2+]`
 - **MAY add:** the sheet-layout description, the mirrored style clause, `@Image` identity bindings, negatives, a terse restatement of each shot's own fields, a continuity ref to the prior segment's sheet.
 - **MUST NOT:** invent new creative decisions; render subtitles or ANY text inside a panel (shot numbers live in the gutter, cropped out on slice); add narrative.
-- **Layout law:** cells stay 9:16; 1×2 / 1×3 filmstrip (≤3 shots) or 2×2 / 2×3 grid (4–6). One sheet per 15s segment → sliced into 2–3 panels. See `RESEARCH_storyboard_sheet_method.md`.
+- **Layout law:** cells stay 9:16; ≤3 shots = a 1-row filmstrip (1×2, 1×3), 4+ = a balanced grid with columns capped at 3 (2×2, 2×3, 3×3…). **Shot count is story-driven — NO fixed cap; the sheet scales to any N** (all a segment's shots share ONE generation, so more shots no longer blow the Seedance 9-ref budget). One sheet per 15s segment → sliced into one panel per shot. See `RESEARCH_storyboard_sheet_method.md`.
 - **Consistency mechanics:** single-generation sheet (in-context) + mirrored style clause + presence-based identity refs + **cross-segment chaining** (prior sheet attached to the next).
 
 ### 4 · IMAGE PROVIDER  (providers/image.py — NET-NEW)

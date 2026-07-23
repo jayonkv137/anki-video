@@ -317,67 +317,52 @@ class ChatReq(BaseModel):
 
 @app.post("/api/co-creation/chat")
 def api_chat(req: ChatReq):
+    """The co-creation chat — now driven by **skill-1-story-strategist** (the disciplined Socratic
+    partner) instead of the old thin inline 'Co-Director' prompt. Full context (mission, stereotype,
+    cast, bible, seed, CEFR, series memory) is server-injected each turn (invisible in the bubbles);
+    the skill enforces the pipeline constraints + pedagogy, moves through the Hook→Arc→Beats→Verify
+    phase spine, and signals `ready_to_commit`. The human's 'Lock Brief' click still runs
+    /api/v3/commit (the deterministic extraction). See DESIGN_story_ideation_and_overseer.md Part A."""
     google_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    _empty_widget = {"type": "none", "title": "", "options": []}
     if not google_key:
-        return {"reply": "API Key missing for Live Chat."}
-
+        return {"reply_text": "API Key missing for Live Chat.", "phase": "hook",
+                "ready_to_commit": False, "widget": _empty_widget}
     try:
-        from google import genai
-        from google.genai import types
-        import json
-        
-        client = genai.Client(api_key=google_key)
-        model_name = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
-        
-        main_char = req.cast.get("main", "Rolf")
-        side_char = req.cast.get("side", "")
-        st_name = req.stereotype.get("name_de", "Stereotype")
-        st_desc = req.stereotype.get("description", "")
-        seed_text = f" (Your seed: '{req.seed}')" if req.seed else ""
-        
-        from pipeline.stages import _call_gemini, _schema, _arr, STR
-        
+        from pipeline.stages import _call_gemini, _load_skill, _schema, _arr, STR, BOOL
+        rcp = _get_rcp()
+
         OPTION_ITEM_SCHEMA = _schema(id=STR, label=STR, title=STR, desc=STR)
         WIDGET_SCHEMA = _schema(type=STR, title=STR, options=_arr(OPTION_ITEM_SCHEMA))
-        CHAT_RESPONSE_SCHEMA = _schema(reply_text=STR, widget=WIDGET_SCHEMA)
+        CHAT_RESPONSE_SCHEMA = _schema(reply_text=STR, phase=STR, ready_to_commit=BOOL,
+                                       widget=WIDGET_SCHEMA)
 
-        system = (
-            f"You are an enthusiastic collaborative Co-Director for 'Stereotypical German'.\n"
-            f"The user is designing an episode based on the stereotype '{st_name}' ({st_desc}).\n"
-            f"Cast: Main = {main_char}" + (f", Side = {side_char}" if side_char else "") + f".{seed_text}\n"
-            f"Your job is to have a structured, conversational co-creation session in the chat.\n"
-            f"GUIDELINES:\n"
-            f"1) Provide conversational `reply_text` in Markdown with clear paragraphs, bold text, and bullet points. Never output raw squished text.\n"
-            f"2) Whenever you pitch options (Locations, Lessons, or Comedic Angles), YOU MUST ALWAYS ALSO emit a structured `widget` in the JSON response!\n"
-            f"   - For location pitches: `widget.type = 'location_options'`, `widget.title = 'Location Options'`, `widget.options = [{{ 'id': 'loc_a', 'label': 'Option A', 'title': 'EXT. BERLIN...', 'desc': '...' }}]`.\n"
-            f"   - For lesson pitches: `widget.type = 'lesson_options'`, `widget.title = 'Pedagogical Lesson Targets'`, `widget.options = [{{ 'id': 'les_a', 'label': 'Particle', 'title': 'doch', 'desc': '...' }}]`.\n"
-            f"   - For angle pitches: `widget.type = 'comedic_angles'`, `widget.title = 'Comedic Angles'`, `widget.options = [{{ 'id': 'ang_a', 'label': 'Angle A', 'title': 'Premise...', 'desc': '...' }}]`.\n"
-            f"   - If no interactive options are offered in this turn, set `widget.type = 'none'`, `widget.title = ''`, `widget.options = []`.\n"
-            f"Do not output raw JSON text in `reply_text`. Keep `reply_text` strictly conversational."
-        )
+        skill = _load_skill("skill-1-story-strategist.md")
+        skill = (skill
+                 .replace("{{STEREOTYPE_JSON}}", json.dumps(req.stereotype, ensure_ascii=False))
+                 .replace("{{CAST_JSON}}", json.dumps(req.cast, ensure_ascii=False))
+                 .replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
+                 .replace("{{SEED}}", req.seed or "(none yet — draw the spark out of the human)")
+                 .replace("{{CEFR_LEVEL}}", req.cefr)
+                 .replace("{{EPISODE_LOG}}", rcp.series_digest or "(no prior episodes)"))
+        system = rcp.for_story_stage() + "\n\n" + skill
 
-        user_prompt = ""
         if not req.messages:
-            user_prompt = (
-                f"Action! Introduce our session for the '{st_name}' stereotype video. "
-                f"Mention that we're featuring {main_char}" + (f" and {side_char}" if side_char else "") + f"{seed_text}. "
-                f"Set the scene and pitch 2 script-formatted location options to start co-creating!"
-            )
+            user_prompt = ("Open the co-creation session: warmly set the creative frame for this "
+                           "stereotype + cast, then start the HOOK phase — end with your one "
+                           "targeted question (offer an option-widget if it helps).")
         else:
-            # Build full dialogue prompt for _call_gemini
-            history_lines = []
-            for m in req.messages:
-                role_label = "User" if m.role == "user" else "AI Co-Director"
-                history_lines.append(f"{role_label}: {m.content}")
-            user_prompt = "\n".join(history_lines)
+            user_prompt = "\n".join(
+                f"{'Human' if m.role == 'user' else 'Strategist'}: {m.content}" for m in req.messages)
 
-        parsed, _, _ = _call_gemini(system, user_prompt, CHAT_RESPONSE_SCHEMA, temperature=0.7)
+        parsed, _, _ = _call_gemini(system, user_prompt, CHAT_RESPONSE_SCHEMA, temperature=0.8)
+        parsed.setdefault("phase", "hook")
+        parsed.setdefault("ready_to_commit", False)
+        parsed.setdefault("widget", _empty_widget)
         return parsed
     except Exception as e:
-        return {
-            "reply_text": f"⚠️ Error: {e}",
-            "widget": { "type": "none", "title": "", "options": [] }
-        }
+        return {"reply_text": f"⚠️ Error: {e}", "phase": "hook",
+                "ready_to_commit": False, "widget": _empty_widget}
 
 class ChatExtractReq(BaseModel):
     messages: list[ChatMessage]

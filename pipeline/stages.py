@@ -575,11 +575,23 @@ def validate_screenplay(sp: dict) -> list[str]:
         if d > 15:
             problems.append(f"segment {s.get('segment_number')}: {d}s over the 15s Seedance clip cap")
         shots = s.get("shots", [])
-        if not (1 <= len(shots) <= 5):
-            problems.append(f"segment {s.get('segment_number')}: {len(shots)} shots (expect 1–5 per 15s)")
+        if len(shots) < 1:
+            problems.append(f"segment {s.get('segment_number')}: no shots")
         shot_sum = sum(int(sh.get("duration_s", 0) or 0) for sh in shots)
         if shots and abs(shot_sum - d) > 2:
             problems.append(f"segment {s.get('segment_number')}: shot durations sum {shot_sum}s ≠ segment {d}s")
+        # Shot COUNT is story-driven — NO arbitrary cap. The real bound is readability: every
+        # shot needs enough time on screen to read, and a shot that carries a spoken line needs
+        # enough to deliver + lip-sync it (~2s). Warn only on that (the sheet storyboard puts all
+        # a segment's shots in ONE image, so many shots no longer blow the Seedance ref budget).
+        for sh in shots:
+            dur = int(sh.get("duration_s", 0) or 0)
+            has_line = bool(sh.get("dialogue"))
+            floor = 2 if has_line else 1
+            if dur and dur < floor:
+                what = "deliver its spoken line" if has_line else "read on screen"
+                problems.append(f"segment {s.get('segment_number')} shot {sh.get('shot_number')}: "
+                                f"{dur}s too short to {what} (min ~{floor}s)")
 
     lines = [d for s in segs for sh in s.get("shots", []) for d in sh.get("dialogue", [])]
     level = (sp.get("cefr_level") or "").upper()

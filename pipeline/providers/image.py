@@ -43,16 +43,20 @@ def _gcd(a, b):
 
 
 def sheet_grid(n_shots: int) -> tuple[int, int, str, str]:
-    """The layout law: shot count → (rows, cols, layout, sheet_aspect_ratio).
-    Every CELL is 9:16; the SHEET's overall ratio is cols·9 : rows·16.
-    1x2 filmstrip · 1x3 filmstrip (typical) · 2x2 · 2x3 — see skill-2b-storyboard.md."""
+    """The layout law: shot count → (rows, cols, layout, sheet_aspect_ratio). **Story-driven —
+    NO fixed shot cap.** Every CELL is 9:16; the SHEET's overall ratio is cols·9 : rows·16.
+    ≤3 shots = a single-row filmstrip (1x2, 1x3); 4+ = a balanced grid with columns capped at
+    3 so each panel stays large enough to slice cleanly (2x2, 2x3, 3x3, 3x4…). Scales to any N.
+    See skill-2b-storyboard.md."""
     n = max(1, int(n_shots))
     if n <= 3:
-        rows, cols = 1, n
-    elif n == 4:
-        rows, cols = 2, 2
-    else:                       # 5–6 (segments rarely exceed 3 shots)
-        rows, cols = 2, (n + 1) // 2
+        rows, cols = 1, n                 # filmstrip
+    else:
+        cols = 1
+        while cols * cols < n:            # ceil(sqrt(n)) → a balanced grid
+            cols += 1
+        cols = min(3, cols)               # cap columns so panels stay large enough to slice
+        rows = -(-n // cols)              # ceil(n / cols)
     w, h = cols * 9, rows * 16
     g = _gcd(w, h)
     return rows, cols, f"{rows}x{cols}", f"{w // g}:{h // g}"

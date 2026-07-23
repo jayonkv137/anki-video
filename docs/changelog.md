@@ -2,6 +2,11 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-24 (later) — Strategist chat wired + shots-per-segment cap removed
+
+- **Story Strategist wired into the studio chat.** `/api/co-creation/chat` now runs **skill-1-story-strategist** (the disciplined Socratic partner) instead of the thin inline "Co-Director" prompt. Full context (mission · stereotype · cast · bible · seed · CEFR · series memory) is server-injected each turn and invisible in the bubbles; the skill enforces the pipeline constraints + pedagogy, moves through a **Hook→Arc→Beats→Verify** phase spine, offers option-widgets, and signals **`ready_to_commit`**. The human's "Lock Brief" click still runs the deterministic `/api/v3/commit` extraction. Frontend now shows the **phase spine** + a Strategist-driven Lock Brief button. **Verified live** (2-turn Gemini test: hook→arc, option-widgets; + in the UI). Closes the fork flagged since 2026-07-23. See `DESIGN_story_ideation_and_overseer.md` Part A. (Prerequisite for the overseer agent — still not built.)
+- **Shots-per-segment cap removed (story-driven).** The arbitrary caps (skill-2 "1–4", `validate_screenplay` "1–5", layout "≤6") are gone. Shot count is now whatever the story/pacing needs; `validate_screenplay` keeps only the *real* constraints (shots sum to the segment's ~15s; a per-shot **readability floor** — a shot carrying a spoken line needs ~2s+). `sheet_grid` now **scales to any N** (≤3 = filmstrip; 4+ = balanced grid, columns capped at 3 so panels stay sliceable — 2×2, 2×3, 3×3…). This is cheap precisely because the sheet method puts all a segment's shots in ONE generation instead of eating separate Seedance ref slots. Verified (7-shot segment accepted; 1s-with-line flagged).
+
 ## 2026-07-24 — Storyboard SHEET method (per-segment multi-panel → slice → chain)
 
 - **Root-cause fix for cross-shot drift.** v1 storyboard generated **one image per shot** via N independent provider calls → characters/style drifted between shots. Rebuilt as the **SHEET method**: **skill-2b → v2.0** emits ONE `sheet_prompt` per **segment** (all its shots as 9:16 panels, one generation), which locks identity+style in a single latent context. `STORYBOARD_SCHEMA` reshaped `panels[]` → `sheets[]` (`segment_number/shot_numbers/layout/sheet_aspect_ratio/sheet_prompt/continuity_ref`).

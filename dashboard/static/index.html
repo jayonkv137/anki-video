@@ -593,6 +593,8 @@ async function submitCastAndSeed() {
 let chatMessages = [];
 let activeChatSessionKey = null;
 let isChatExtracting = false;
+let chatStrategistPhase = 'hook';   // Strategist phase spine: hook → arc → beats → verify
+let chatReadyToCommit = false;      // Strategist signals the concept is ready to lock
 
 async function initChat(force = false) {
   const currentKey = `${selectedStereotype?.name_de}_${selectedCast?.main}`;
@@ -602,6 +604,8 @@ async function initChat(force = false) {
   }
   activeChatSessionKey = currentKey;
   chatMessages = [];
+  chatStrategistPhase = 'hook';
+  chatReadyToCommit = false;
   renderChatUI();
   await sendChatMessage("", true); // trigger initial AI message
 }
@@ -643,6 +647,8 @@ async function sendChatMessage(text, isInitial = false) {
 
     const replyText = chatData.reply_text || chatData.reply || "";
     const widgetData = chatData.widget || null;
+    if (chatData.phase) chatStrategistPhase = chatData.phase;
+    chatReadyToCommit = !!chatData.ready_to_commit;
 
     chatMessages.push({ role: "assistant", content: replyText, widget: widgetData });
     renderChatUI();
@@ -661,6 +667,10 @@ function selectGenerativeOption(title) {
 function renderChatUI() {
   const container = $('#align-studio-body');
   if (!container) return;
+
+  const phaseOrder = ['hook', 'arc', 'beats', 'verify'];
+  const phaseChip = 'Phase: ' + phaseOrder.map(p => p === chatStrategistPhase
+    ? `<b style="color:var(--gate)">${p}</b>` : `<span style="opacity:.45">${p}</span>`).join(' › ');
 
   const messagesHtml = chatMessages.map(m => {
     let formattedText = "";
@@ -718,9 +728,10 @@ function renderChatUI() {
       </div>
     </div>
     
-    <div style="display:flex; justify-content:space-between; margin-top:14px;">
-      <button class="ghost" onclick="setStep(2)" ${isChatExtracting ? 'disabled' : ''}>← Back to Cast & Seed</button>
-      <button class="ok" onclick="extractAndCommitBrief()" ${isChatExtracting ? 'disabled' : ''}>${isChatExtracting ? 'Extracting...' : 'Lock Brief & Proceed to Summary ➔'}</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; gap:12px;">
+      <button class="ghost" onclick="setStep(2)" ${isChatExtracting ? 'disabled' : ''}>← Back</button>
+      <div style="font-size:11px; color:var(--dim); letter-spacing:.3px;">${phaseChip}</div>
+      <button class="ok" onclick="extractAndCommitBrief()" ${isChatExtracting ? 'disabled' : ''} style="${chatReadyToCommit ? 'box-shadow:0 0 14px var(--gate-glow);' : ''}">${isChatExtracting ? 'Extracting...' : (chatReadyToCommit ? '✅ Strategist ready — Lock Brief ➔' : 'Lock Brief & Proceed ➔')}</button>
     </div>
   `;
 
