@@ -27,6 +27,11 @@ def _ep_dir_for_positions(positions: list[int]) -> Path:
     return REPO / "output" / "episodes" / f"ep_{positions[0]}-{positions[-1]}"
 
 
+def _ep_dir_for_brief(run_id: str) -> Path:
+    """V3 co-creation runs are stereotype-driven (no word positions) → name by run id."""
+    return REPO / "output" / "episodes" / f"ep_{run_id[:8]}"
+
+
 # ── RUN command ──────────────────────────────────────────────────
 
 def cmd_run(args):
@@ -294,6 +299,122 @@ def cmd_resume(args):
     # TODO: E6 adds full resume logic based on ledger stage
 
 
+# ── STORYBOARD command (V3: screenplay → panels) ─────────────────
+
+def cmd_storyboard(args):
+    """Screenplay → storyboard panels via an image provider (mock | gpt-image-2 | nano-banana-pro)."""
+    run = ledger.get_run(args.run_id) if args.run_id else ledger.get_latest_run()
+    if not run:
+        print("No run found."); sys.exit(1)
+    run_id = run["id"]
+    positions = run.get("word_positions", [])
+    ep_dir = _ep_dir_for_positions(positions) if positions else _ep_dir_for_brief(run_id)
+    sp_path = ep_dir / "screenplay.json"
+    if not sp_path.exists():
+        print(f"No screenplay at {ep_dir.relative_to(REPO)} — run must reach the screenplay stage first.")
+        sys.exit(1)
+    sp = json.loads(sp_path.read_text(encoding="utf-8"))
+    rcp = RunContextPack()
+    client = Anthropic()
+    stages.stage_storyboard(run_id, rcp, sp, ep_dir, client, image_provider=args.image_provider)
+
+
+# ── BRIEF commands (V3 co-creation: stereotype → Story Brief) ────
+
+def cmd_brief_start(args):
+    """Co-creation step 1: a stereotype → align (location & lesson options)."""
+    from . import stereotypes as stlib
+    st = stlib.get(args.stereotype_id)
+    if not st:
+        print(f"Stereotype '{args.stereotype_id}' not in the library.")
+        sys.exit(1)
+    if not args.main:
+        print("Error: --main is required (at least one main character).")
+        sys.exit(1)
+    cast = {"main": args.main, "side": args.side or "",
+            "guest": args.guest or "", "background": args.background or ""}
+
+    rcp = RunContextPack()
+    run = ledger.create_run(word_positions=[], canon_versions=rcp.canon_versions)
+    run_id = run["id"]
+    ep_dir = _ep_dir_for_brief(run_id)
+    client = Anthropic()
+    print(f"Run {run_id[:8]}… · stereotype {st['id']} — {st.get('name_de') or st.get('name')}\n")
+
+    aligned = stages.stage_align(run_id, rcp, st, args.seed, cast, args.cefr, ep_dir, client)
+    (ep_dir / "seed.txt").write_text(args.seed or "", encoding="utf-8")
+
+    print("\nLOCATION OPTIONS:")
+    for i, o in enumerate(aligned.get("location_options", [])):
+        print(f"  [{i}] {o.get('location')} — {o.get('why', '')}")
+    print("\nLESSON OPTIONS (both kinds offered):")
+    for i, o in enumerate(aligned.get("lesson_options", [])):
+        print(f"  [{i}] ({o.get('kind')}) {o.get('lesson')} — {o.get('pragmatic_function', '')}")
+    print(f"\nangle suggestion: {aligned.get('comedic_angle_suggestion', '')}")
+    print(f"\n→ Next: python -m pipeline brief-diverge {run_id} --location-index L --lesson-index K")
+
+
+def cmd_brief_diverge(args):
+    """Co-creation step 2: pick a location + lesson → 3–5 comedic angles."""
+    run = ledger.get_run(args.run_id) if args.run_id else ledger.get_latest_run()
+    if not run:
+        print("No run found."); sys.exit(1)
+    run_id = run["id"]
+    ep_dir = _ep_dir_for_brief(run_id)
+    align_p = ep_dir / "align.json"
+    if not align_p.exists():
+        print(f"No align.json for run {run_id[:8]} — run brief-start first."); sys.exit(1)
+    aligned = json.loads(align_p.read_text(encoding="utf-8"))
+    locs, lessons = aligned.get("location_options", []), aligned.get("lesson_options", [])
+    if not (0 <= args.location_index < len(locs)):
+        print(f"--location-index out of range (0..{len(locs) - 1})"); sys.exit(1)
+    if not (0 <= args.lesson_index < len(lessons)):
+        print(f"--lesson-index out of range (0..{len(lessons) - 1})"); sys.exit(1)
+
+    chosen = {k: aligned.get(k) for k in ("stereotype_id", "stereotype_name", "cefr_level", "cast")}
+    chosen["location"] = locs[args.location_index].get("location")
+    chosen["lesson"] = lessons[args.lesson_index]
+    chosen["comedic_angle_suggestion"] = aligned.get("comedic_angle_suggestion", "")
+    (ep_dir / "aligned_chosen.json").write_text(
+        json.dumps(chosen, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    rcp = RunContextPack()
+    client = Anthropic()
+    diverge = stages.stage_diverge(run_id, rcp, chosen, args.oblique, ep_dir, client)
+    print("\nCOMEDIC ANGLES:")
+    for i, o in enumerate(diverge.get("options", [])):
+        print(f"  [{i}] {o.get('label')} ({o.get('operator')})")
+        print(f"       {o.get('premise', '')}")
+    print(f"\n→ Next: python -m pipeline brief-commit {run_id} --angle-index A")
+
+
+def cmd_brief_commit(args):
+    """Co-creation step 3: pick an angle → critique → locked Story Brief."""
+    run = ledger.get_run(args.run_id) if args.run_id else ledger.get_latest_run()
+    if not run:
+        print("No run found."); sys.exit(1)
+    run_id = run["id"]
+    ep_dir = _ep_dir_for_brief(run_id)
+    ac_p, dv_p = ep_dir / "aligned_chosen.json", ep_dir / "diverge.json"
+    if not (ac_p.exists() and dv_p.exists()):
+        print("Run brief-start + brief-diverge first."); sys.exit(1)
+    aligned_chosen = json.loads(ac_p.read_text(encoding="utf-8"))
+    angles = json.loads(dv_p.read_text(encoding="utf-8")).get("options", [])
+    if not (0 <= args.angle_index < len(angles)):
+        print(f"--angle-index out of range (0..{len(angles) - 1})"); sys.exit(1)
+    seed = (ep_dir / "seed.txt").read_text(encoding="utf-8") if (ep_dir / "seed.txt").exists() else ""
+
+    rcp = RunContextPack()
+    client = Anthropic()
+    brief, problems = stages.stage_commit(run_id, rcp, aligned_chosen,
+                                          angles[args.angle_index], seed, ep_dir, client)
+    print(f"\n✅ Story Brief committed → {ep_dir.relative_to(REPO)}/brief.json")
+    print(f"   {brief.get('title_de', '')} · {brief.get('location', '')} · lesson: {brief.get('lesson', {})}")
+    if problems:
+        print(f"   ⚠ brief validator: {problems}")
+    print(f"   → feeds skill-2 (screenplay); stereotype {brief.get('stereotype_id')} marked covered.")
+
+
 # ── CLI entry point ──────────────────────────────────────────────
 
 def main():
@@ -341,6 +462,31 @@ def main():
     p_asm.add_argument("--audio", help="Master audio file replacing clip audio")
     p_asm.add_argument("--out", help="Output file (default <ep_dir>/final.mp4)")
 
+    # storyboard (V3): screenplay → storyboard panels via an image provider
+    p_sb = sub.add_parser("storyboard", help="Screenplay → storyboard panels (mock|gpt-image-2|nano-banana-pro)")
+    p_sb.add_argument("run_id", nargs="?", help="Run id (default: latest)")
+    p_sb.add_argument("--image-provider", default="mock", help="mock | gpt-image-2 | nano-banana-pro")
+
+    # brief-start / brief-diverge / brief-commit (V3 co-creation → Story Brief)
+    p_bs = sub.add_parser("brief-start", help="Co-creation 1: stereotype → align (location & lesson options)")
+    p_bs.add_argument("stereotype_id", help="Stereotype id from the library (e.g. 002)")
+    p_bs.add_argument("--seed", default="", help="Your creative seed / real anecdote (anti-slop anchor)")
+    p_bs.add_argument("--main", required=True, help="Main character, canonical name (required)")
+    p_bs.add_argument("--side", help="Side character")
+    p_bs.add_argument("--guest", help="Guest character")
+    p_bs.add_argument("--background", help="Background character")
+    p_bs.add_argument("--cefr", default="A2", help="Target CEFR level A1|A2|B1 (default A2)")
+
+    p_bd = sub.add_parser("brief-diverge", help="Co-creation 2: pick location+lesson → comedic angles")
+    p_bd.add_argument("run_id", nargs="?", help="Run id (default: latest)")
+    p_bd.add_argument("--location-index", type=int, required=True)
+    p_bd.add_argument("--lesson-index", type=int, required=True)
+    p_bd.add_argument("--oblique", default=None, help="Override the random oblique constraint")
+
+    p_bc = sub.add_parser("brief-commit", help="Co-creation 3: pick angle → locked Story Brief")
+    p_bc.add_argument("run_id", nargs="?", help="Run id (default: latest)")
+    p_bc.add_argument("--angle-index", type=int, required=True)
+
     args = parser.parse_args()
 
     if args.command == "run":
@@ -357,6 +503,14 @@ def main():
         cmd_autopilot(args)
     elif args.command == "caption":
         cmd_caption(args)
+    elif args.command == "storyboard":
+        cmd_storyboard(args)
+    elif args.command == "brief-start":
+        cmd_brief_start(args)
+    elif args.command == "brief-diverge":
+        cmd_brief_diverge(args)
+    elif args.command == "brief-commit":
+        cmd_brief_commit(args)
     elif args.command == "assemble":
         from .assemble import assemble_episode
         ep_dir = REPO / "output" / "episodes" / args.episode

@@ -2,6 +2,8 @@
 
 > **Created 2026-07-21 · Status: ACTIVE — this supersedes the E-plan as the forward roadmap** (EXECUTION_PLAN_text_pipeline.md is complete: E1–E6 done, E7 reframed into M-phases below).
 > **Owner of vision: Jayon.** This document captures the full definition of the MVP end-state and every step to reach it.
+>
+> **⚠ 2026-07-22 — SUPERSEDED IN PART BY V3.** Jayon pulled the post-M6 redesign (idea #16) forward. Episode shape is now **2–3 Seedance multi-shot clips (30–45s)**, a serialized universe, a new storyboard stage, and the Command Center becomes a full co-creation studio. The M-phase **infrastructure still stands and is reused** (ledger, gates, providers, assembly, dashboard); the **episode shape + sequence** are now governed by **`VISION_v3_universe_and_studio.md`** + **`BUILD_PLAN_v3.md`**. §3's "parked until after M6" no longer applies to idea #16.
 
 ---
 

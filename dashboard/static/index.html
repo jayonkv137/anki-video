@@ -3,289 +3,1027 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Command Center — Stereotypical German</title>
+<title>Co-Creation Studio — Stereotypical German</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
-  :root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2330;--line:#2b3442;--fg:#e6edf3;--dim:#8b949e;
-        --accent:#58a6ff;--ok:#3fb950;--warn:#d29922;--err:#f85149;--gate:#bc8cff;}
-  *{box-sizing:border-box;margin:0}
-  body{background:var(--bg);color:var(--fg);font:14px/1.5 -apple-system,'Segoe UI',sans-serif;height:100vh;display:flex;flex-direction:column}
-  header{display:flex;align-items:center;gap:16px;padding:10px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
-  header h1{font:600 15px ui-monospace,monospace;letter-spacing:.5px}
-  header h1 span{color:var(--accent)}
-  .pill{font:11px ui-monospace,monospace;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}
-  #layout{display:flex;flex:1;min-height:0}
-  /* runs sidebar */
-  #side{width:270px;border-right:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column}
-  #side h2, .h2{font:600 11px ui-monospace,monospace;color:var(--dim);text-transform:uppercase;letter-spacing:1px;padding:10px 14px 6px}
-  #runs{overflow-y:auto;flex:1}
-  .run{padding:9px 14px;border-bottom:1px solid #1f2733;cursor:pointer}
-  .run:hover{background:var(--panel2)} .run.sel{background:var(--panel2);border-left:3px solid var(--accent);padding-left:11px}
-  .run .id{font:600 12px ui-monospace,monospace}
-  .run .meta{font-size:11px;color:var(--dim)}
-  .chip{display:inline-block;font:600 10px ui-monospace,monospace;padding:1px 7px;border-radius:999px;margin-left:6px}
-  .chip.completed{background:#12341c;color:var(--ok)} .chip.awaiting_choice{background:#2a1f3d;color:var(--gate)}
-  .chip.running{background:#1a2c47;color:var(--accent)} .chip.failed{background:#3d1418;color:var(--err)}
-  /* main */
-  #main{flex:1;overflow-y:auto;padding:16px 20px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:14px}
-  /* stage pipeline */
-  #stages{display:flex;gap:6px;flex-wrap:wrap}
-  .stage{flex:1;min-width:86px;text-align:center;padding:8px 4px;border-radius:6px;background:var(--panel2);
-         border:1px solid var(--line);font:11px ui-monospace,monospace;color:var(--dim)}
-  .stage b{display:block;font-size:14px;margin-bottom:2px}
-  .stage.done{border-color:#1f5b2d;color:var(--ok)} .stage.fail{border-color:#6e2026;color:var(--err)}
-  .stage.now{border-color:var(--accent);color:var(--accent);animation:pulse 1.4s infinite}
-  .stage.gate{border-color:var(--gate);color:var(--gate)}
-  @keyframes pulse{50%{opacity:.45}}
-  /* gate A */
-  #gate .opts{display:flex;gap:12px;flex-wrap:wrap}
-  .opt{flex:1;min-width:230px;background:var(--panel2);border:1px solid var(--gate);border-radius:8px;padding:12px}
-  .opt h4{font-size:13px;margin-bottom:4px} .opt .score{color:var(--warn);font:600 11px ui-monospace,monospace}
-  .opt p{font-size:12px;color:var(--dim);margin:4px 0}
-  .opt button{margin-top:8px;width:100%}
-  button{background:var(--accent);color:#08131f;border:0;border-radius:6px;padding:7px 14px;font:600 12px inherit;cursor:pointer}
-  button:hover{filter:brightness(1.15)} button.ghost{background:var(--panel2);color:var(--fg);border:1px solid var(--line)}
-  input,select,textarea{background:var(--panel2);border:1px solid var(--line);color:var(--fg);border-radius:6px;padding:6px 9px;font:12px inherit}
-  textarea{width:100%;resize:vertical}
-  /* info + events */
-  .kv{display:flex;gap:26px;flex-wrap:wrap;font-size:12px}
-  .kv b{color:var(--dim);font-weight:500;display:block;font-size:10px;text-transform:uppercase;letter-spacing:.8px}
-  table{width:100%;border-collapse:collapse;font-size:12px}
-  td,th{padding:5px 8px;border-bottom:1px solid #1f2733;text-align:left}
-  th{color:var(--dim);font:600 10px ui-monospace,monospace;text-transform:uppercase}
-  .ok{color:var(--ok)} .err{color:var(--err)}
-  /* tabs */
-  #tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
-  #tabs button{background:var(--panel2);color:var(--dim);border:1px solid var(--line)}
-  #tabs button.on{color:var(--fg);border-color:var(--accent)}
-  pre{background:#0a0e14;border:1px solid var(--line);border-radius:6px;padding:12px;font:11.5px ui-monospace,monospace;
-      overflow:auto;max-height:480px;white-space:pre-wrap}
-  .scene{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin-bottom:8px}
-  .scene h5{font:600 12px ui-monospace,monospace;color:var(--accent);margin-bottom:4px}
-  .line{font-size:12.5px;margin:2px 0} .line .en{color:var(--dim);font-style:italic}
-  .line b{color:var(--warn)}
-  video{max-height:460px;border-radius:8px;border:1px solid var(--line)}
-  .slots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-  .slot{background:var(--panel2);border:1px dashed var(--line);border-radius:6px;padding:10px 4px;text-align:center;
-        cursor:pointer;font:600 15px ui-monospace,monospace;color:var(--dim)}
-  .slot:hover{border-color:var(--accent)}
-  .slot span{display:block;font-size:10px;font-weight:400;margin-top:2px}
-  .slot.has{border-style:solid;border-color:var(--ok);color:var(--ok)}
-  button:disabled{opacity:.4;cursor:not-allowed}
-  #newrun{display:flex;gap:8px;align-items:center;margin-left:auto}
-  dialog{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:20px;min-width:420px}
-  dialog::backdrop{background:#000a}
-  .muted{color:var(--dim)}
+  :root {
+    --bg: #090d16;
+    --panel: #111827;
+    --panel2: #1e293b;
+    --line: #334155;
+    --fg: #f8fafc;
+    --dim: #94a3b8;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.15);
+    --gate: #c084fc;
+    --gate-glow: rgba(192, 132, 252, 0.2);
+    --ok: #4ade80;
+    --warn: #fbbf24;
+    --purple: #a855f7;
+    --der: #60a5fa;
+    --die: #f87171;
+    --das: #34d399;
+    --grammar: #fbbf24;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+
+  header { background: var(--panel); border-bottom: 1px solid var(--line); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand h1 { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; color: var(--fg); }
+  .brand h1 span { color: var(--dim); font-weight: 400; font-size: 14px; }
+  .pill { font: 700 10px ui-monospace, monospace; padding: 3px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .pill.live { background: rgba(74, 222, 128, 0.15); color: var(--ok); border: 1px solid var(--ok); }
+  .pill.gate { background: rgba(192, 132, 252, 0.15); color: var(--gate); border: 1px solid var(--gate); }
+
+  /* Main Split Layout */
+  #main-layout { display: grid; grid-template-columns: 340px 1fr; gap: 24px; max-width: 1680px; margin: 0 auto; padding: 24px; }
+  @media (max-width: 1100px) {
+    #main-layout { grid-template-columns: 1fr; }
+  }
+
+  /* Left Sidebar: Episode Decisions & Blueprint */
+  aside#decisions-sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .sidebar-card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; position: sticky; top: 80px; }
+  .sidebar-title { font: 700 11px ui-monospace, monospace; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+  .decision-block { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 14px; margin-bottom: 12px; transition: all 0.2s ease; }
+  .decision-block.active { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+  .decision-label { font: 700 10px ui-monospace, monospace; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .decision-val { font-size: 13.5px; font-weight: 600; color: var(--fg); }
+  .decision-sub { font-size: 12px; color: var(--dim); margin-top: 4px; line-height: 1.4; }
+
+  /* Right Workspace */
+  main#studio-workspace { display: flex; flex-direction: column; gap: 20px; }
+
+  /* 7-Stage Wizard Progress Bar */
+  #wizard-bar { display: flex; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 6px; overflow-x: auto; gap: 4px; }
+  .wiz-step { flex: 1; min-width: 110px; padding: 10px 12px; border-radius: 8px; text-align: center; font-size: 12px; font-weight: 600; color: var(--dim); cursor: pointer; transition: all 0.15s ease; display: flex; flex-direction: column; gap: 2px; align-items: center; }
+  .wiz-step:hover { background: var(--panel2); color: var(--fg); }
+  .wiz-step.active { background: var(--accent); color: #041329; font-weight: 700; }
+  .wiz-step.done { color: var(--ok); }
+  .wiz-step .num { font: 700 10px ui-monospace, monospace; opacity: 0.7; }
+
+  /* Cards & Sections */
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 22px; margin-bottom: 18px; }
+  .card-title { font-size: 16px; font-weight: 700; color: var(--fg); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+
+  button { background: var(--accent); color: #041329; border: 0; border-radius: 8px; padding: 10px 18px; font: 600 13px/1 inherit; cursor: pointer; transition: all 0.15s ease; display: inline-flex; align-items: center; gap: 8px; }
+  button:hover { filter: brightness(1.15); transform: translateY(-1px); }
+  button.ghost { background: var(--panel2); color: var(--fg); border: 1px solid var(--line); }
+  button.ghost:hover { border-color: var(--accent); color: var(--accent); }
+  button.purple { background: var(--gate); color: #110520; }
+  button.ok { background: var(--ok); color: #041a0b; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; filter: none; }
+  input, select, textarea { background: var(--panel2); border: 1px solid var(--line); color: var(--fg); border-radius: 8px; padding: 10px 14px; font: 13px inherit; width: 100%; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); outline: none; }
+  
+  /* Stereotype Cards Grid */
+  .st-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 14px; }
+  .st-card { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: all 0.2s ease; cursor: pointer; }
+  .st-card:hover { border-color: var(--gate); transform: translateY(-2px); box-shadow: 0 6px 20px var(--gate-glow); }
+  .st-card.selected { border: 2px solid var(--gate); background: var(--panel2); }
+  .st-cat { font: 700 10px ui-monospace, monospace; padding: 3px 10px; border-radius: 999px; background: rgba(192, 132, 252, 0.15); color: var(--gate); border: 1px solid var(--gate); align-self: flex-start; }
+  .st-title-de { font-size: 17px; font-weight: 700; color: var(--fg); }
+  .st-title-en { font-size: 13px; color: var(--dim); font-style: italic; }
+  .st-desc { font-size: 13px; color: var(--dim); line-height: 1.5; }
+
+  /* Character Boards */
+  .char-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 14px; }
+  .char-card { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.2s ease; cursor: pointer; position: relative; }
+  .char-card:hover { border-color: var(--gate); transform: translateY(-2px); box-shadow: 0 6px 20px var(--gate-glow); }
+  .char-card.primary { border: 2px solid var(--gate); background: var(--panel2); box-shadow: 0 0 15px var(--gate-glow); }
+  .char-card.secondary { border: 2px solid var(--ok); }
+  .char-card.guest { border: 2px solid var(--accent); }
+  .char-card.bg { border: 2px solid var(--dim); opacity: 0.8; }
+  .char-card.unassigned { opacity: 0.7; }
+  .char-card.unassigned:hover { opacity: 1; }
+  .char-img { width: 100%; height: 170px; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); }
+  .char-info { padding: 14px; flex-grow: 1; display: flex; flex-direction: column; gap: 6px; }
+  .char-name { font-size: 15px; font-weight: 700; color: var(--fg); }
+  .char-desc { font-size: 12px; color: var(--dim); line-height: 1.4; font-style: italic; }
+  
+  .char-roles { position: absolute; bottom: -110px; left: 0; right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); padding: 12px; display: flex; flex-direction: column; gap: 6px; transition: bottom 0.2s ease; border-top: 1px solid var(--line); z-index: 10; }
+  .char-card:hover .char-roles, .char-roles.active { bottom: 0; }
+  .role-chip { font: 600 11px ui-monospace, monospace; padding: 6px 10px; border-radius: 6px; cursor: pointer; text-align: center; border: 1px solid transparent; transition: all 0.15s; background: var(--panel); color: var(--fg); }
+  .role-chip:hover { filter: brightness(1.2); }
+  .role-chip[data-role="main"] { border-color: var(--gate); color: var(--gate); }
+  .role-chip[data-role="main"].selected { background: var(--gate); color: #000; }
+  .role-chip[data-role="side"] { border-color: var(--ok); color: var(--ok); }
+  .role-chip[data-role="side"].selected { background: var(--ok); color: #000; }
+  .role-chip[data-role="guest"] { border-color: var(--accent); color: var(--accent); }
+  .role-chip[data-role="guest"].selected { background: var(--accent); color: #000; }
+  .role-chip[data-role="bg"] { border-color: var(--dim); color: var(--dim); }
+  .role-chip[data-role="bg"].selected { background: var(--dim); color: #fff; }
+  .role-chip[data-role="none"] { font-size: 10px; border-color: var(--line); }
+
+  /* Option Cards for Align & Diverge */
+  .opt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 10px; }
+  .opt-card { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 16px; transition: all 0.2s ease; cursor: pointer; display: flex; flex-direction: column; gap: 8px; }
+  .opt-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .opt-card.selected { border: 2px solid var(--accent); background: rgba(56, 189, 248, 0.08); box-shadow: 0 0 15px var(--accent-glow); }
+  .opt-tag { font: 700 10px ui-monospace, monospace; padding: 2px 8px; border-radius: 999px; background: rgba(56, 189, 248, 0.15); color: var(--accent); align-self: flex-start; }
+
+  /* AI Reasoning UI (ChatGPT/Gemini Style) */
+  .ai-reasoning-card { background: rgba(15, 23, 42, 0.8); border: 1px solid var(--gate); border-radius: 12px; padding: 24px; box-shadow: 0 0 25px var(--gate-glow); display: flex; flex-direction: column; gap: 16px; margin: 20px 0; }
+  .reasoning-header { display: flex; align-items: center; gap: 12px; }
+  .pulsing-dots { display: flex; gap: 6px; }
+  .pulsing-dots span { width: 8px; height: 8px; background: var(--gate); border-radius: 50%; animation: pulse 1.4s infinite ease-in-out both; }
+  .pulsing-dots span:nth-child(1) { animation-delay: -0.32s; }
+  .pulsing-dots span:nth-child(2) { animation-delay: -0.16s; }
+  @keyframes pulse { 0%, 80%, 100% { transform: scale(0.4); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+  .reasoning-title { font: 700 14px ui-monospace, monospace; color: var(--gate); letter-spacing: 0.5px; }
+  .reasoning-steps { display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--fg); background: rgba(0,0,0,0.3); padding: 14px; border-radius: 8px; border: 1px solid var(--line); }
+  .step-line { opacity: 0.5; transition: all 0.3s; display: flex; align-items: center; gap: 8px; }
+  .step-line.active { opacity: 1; color: var(--accent); font-weight: 600; }
+  .error-card { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 10px; padding: 20px; color: #fca5a5; display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+
+  /* Chat UI & Generative UI Cards */
+  .chat-container { display: flex; flex-direction: column; height: 520px; background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-top: 14px; }
+  .chat-history { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .chat-bubble { max-width: 85%; padding: 14px 18px; border-radius: 12px; font-size: 13.5px; line-height: 1.6; }
+  .chat-bubble.ai { align-self: flex-start; background: var(--bg); border: 1px solid var(--line); color: var(--fg); border-top-left-radius: 4px; }
+  .chat-bubble.user { align-self: flex-end; background: rgba(56, 189, 248, 0.15); border: 1px solid var(--accent); color: var(--fg); border-top-right-radius: 4px; }
+  
+  /* Markdown styling inside AI bubbles */
+  .chat-bubble.ai p { margin-bottom: 10px; }
+  .chat-bubble.ai p:last-child { margin-bottom: 0; }
+  .chat-bubble.ai h3, .chat-bubble.ai h4 { color: var(--accent); margin: 12px 0 6px 0; font-size: 14px; }
+  .chat-bubble.ai ul, .chat-bubble.ai ol { margin-left: 18px; margin-bottom: 10px; }
+  .chat-bubble.ai blockquote { border-left: 3px solid var(--gate); padding-left: 10px; color: var(--dim); margin: 8px 0; font-style: italic; }
+
+  /* Generative UI Widgets */
+  .gen-widget-container { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; border: 1px solid var(--gate-glow); }
+  .gen-widget-title { font-size: 11px; font-weight: 700; color: var(--gate); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+  .gen-widget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 6px; }
+  .gen-card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; gap: 6px; }
+  .gen-card:hover { border-color: var(--accent); transform: translateY(-2px); background: rgba(56, 189, 248, 0.08); box-shadow: 0 0 12px var(--accent-glow); }
+  .gen-card-tag { font-size: 10px; font-weight: 700; color: var(--accent); font-family: monospace; }
+  .gen-card-title { font-size: 13px; font-weight: 700; color: var(--fg); }
+  .gen-card-desc { font-size: 11.5px; color: var(--dim); line-height: 1.35; }
+  .gen-card-btn { margin-top: 6px; padding: 6px 10px; background: rgba(56, 189, 248, 0.15); border: 1px solid var(--accent); color: var(--accent); border-radius: 6px; font-size: 11px; font-weight: 700; text-align: center; }
+  .gen-card:hover .gen-card-btn { background: var(--accent); color: #000; }
+
+  .chat-input-area { padding: 14px; background: var(--panel); border-top: 1px solid var(--line); display: flex; gap: 10px; }
+  .chat-input-area input { flex-grow: 1; }
+
+  /* V3 stage views (brief / screenplay / storyboard / video) */
+  .brief-section { margin: 16px 0; }
+  .brief-section h4 { font: 700 11px ui-monospace, monospace; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+  .kv > div { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 10px; font-size: 13px; }
+  .kv b { display: block; font: 700 10px ui-monospace, monospace; color: var(--dim); text-transform: uppercase; margin-bottom: 4px; }
+  .segment-card { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+  .shot-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .shot-table th { text-align: left; font: 700 10px ui-monospace, monospace; color: var(--dim); text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  .shot-table td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--fg); }
+  .dialogue-box { margin-top: 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .dialogue-line { font-size: 13.5px; } .dialogue-line .speaker { font-weight: 700; color: var(--gate); margin-right: 6px; }
+  .prompt-card { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+  .prompt-card pre { white-space: pre-wrap; word-break: break-word; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px; font: 12px/1.5 ui-monospace, monospace; color: var(--fg); margin: 8px 0; max-height: 300px; overflow: auto; }
+  .dropzone { display: block; border: 1.5px dashed var(--line); border-radius: 8px; padding: 14px; text-align: center; color: var(--dim); font-size: 12px; cursor: pointer; }
+  .dropzone:hover { border-color: var(--accent); color: var(--accent); }
+  .dropzone.filled { border-color: var(--ok); color: var(--ok); }
+  .loader-inline { display: flex; align-items: center; gap: 12px; color: var(--dim); padding: 24px; font-size: 13px; }
 </style>
 </head>
 <body>
+
 <header>
-  <h1>⬢ COMMAND CENTER <span>· Stereotypical German</span></h1>
-  <span class="pill" id="clock"></span>
-  <span class="pill" id="stats">…</span>
-  <span class="pill">ledger: Supabase · live</span>
-  <div id="newrun"><button onclick="dlg.showModal()">▶ New Run</button></div>
+  <div class="brand">
+    <h1>⬢ CO-CREATION STUDIO <span>· Stereotypical German</span></h1>
+    <span class="pill live">v3 universe · active generation</span>
+  </div>
+  <div style="display: flex; gap: 12px; align-items: center;">
+    <select id="saved-episodes-select" style="background:var(--panel2); color:var(--fg); border:1px solid var(--accent); padding:6px 12px; border-radius:6px; font-size:12px; cursor:pointer;" onchange="if(this.value) loadSavedEpisode(this.value)">
+      <option value="">📂 Resume Saved Episode...</option>
+    </select>
+    <button class="purple" onclick="restartFreshEpisode()">✨ Start Fresh Episode (Pick Stereotype)</button>
+  </div>
 </header>
 
-<dialog id="dlg">
-  <h3 style="margin-bottom:10px">Start a new episode run</h3>
-  <div style="display:flex;gap:8px;margin-bottom:8px">
-    <select id="nr-mode"><option value="random">Random 10 words</option>
-      <option value="start">From position…</option><option value="positions">Exact positions…</option></select>
-    <input id="nr-param" placeholder="e.g. 101  or  5,12,44,…" style="flex:1">
-  </div>
-  <label class="muted" style="font-size:11px">TODAY'S IDEA — director's note (steers the story)</label>
-  <textarea id="nr-note" rows="3" placeholder="e.g. I want a rainy-day story at the tram stop…"></textarea>
-  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
-    <button class="ghost" onclick="dlg.close()">Cancel</button>
-    <button onclick="startRun()">Start run</button>
-  </div>
-</dialog>
+<div id="main-layout">
+  <!-- Left Sidebar: Episode Decisions & Blueprint -->
+  <aside id="decisions-sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-title">
+        <span>📋 Episode Blueprint</span>
+        <span class="pill live">v3</span>
+      </div>
 
-<div id="layout">
-  <div id="side"><h2>Runs</h2><div id="runs"></div></div>
-  <div id="main"><div class="card muted">Select a run…</div></div>
+      <!-- Step 01 Decision Block -->
+      <div id="sidebar-step-1" class="decision-block">
+        <div class="decision-label">01. GERMAN STEREOTYPE</div>
+        <div id="sidebar-st-content">
+          <span style="color: var(--dim); font-size: 12px; font-style: italic;">Not selected yet (Step 01)</span>
+        </div>
+      </div>
+
+      <!-- Step 02 Decision Block -->
+      <div id="sidebar-step-2" class="decision-block">
+        <div class="decision-label">02. CAST & SEED ANCHOR</div>
+        <div id="sidebar-cast-content">
+          <span style="color: var(--dim); font-size: 12px; font-style: italic;">Pending Step 02...</span>
+        </div>
+      </div>
+
+      <!-- Step 03 Decision Block -->
+      <div id="sidebar-step-3" class="decision-block">
+        <div class="decision-label">03. LOCATION & ANGLES</div>
+        <div id="sidebar-align-content">
+          <span style="color: var(--dim); font-size: 12px; font-style: italic;">Pending Step 03...</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Studio Workspace -->
+  <main id="studio-workspace">
+    <!-- 7-Stage Wizard Progress Bar -->
+    <div id="wizard-bar">
+      <div class="wiz-step active" onclick="setStep(1)"><span class="num">01</span><span>Stereotype (Pick)</span></div>
+      <div class="wiz-step" onclick="setStep(2)"><span class="num">02</span><span>Cast & Seed</span></div>
+      <div class="wiz-step" onclick="setStep(3)"><span class="num">03</span><span>Align & Diverge</span></div>
+      <div class="wiz-step" onclick="setStep(4)"><span class="num">04</span><span>Story Brief</span></div>
+      <div class="wiz-step" onclick="setStep(5)"><span class="num">05</span><span>Screenplay</span></div>
+      <div class="wiz-step" onclick="setStep(6)"><span class="num">06</span><span>Storyboard</span></div>
+      <div class="wiz-step" onclick="setStep(7)"><span class="num">07</span><span>Video & Assembly</span></div>
+    </div>
+
+    <!-- Active Stage View Container -->
+    <div id="stage-view"></div>
+  </main>
 </div>
 
 <script>
-const $=q=>document.querySelector(q);
-const STAGES=["words","story_options","gate_a","story_expand","screenplay","quality_check","prompts","finalize"];
-const LABEL={words:"words",story_options:"options",gate_a:"GATE A",story_expand:"expand",screenplay:"screenplay",quality_check:"QC",prompts:"prompts",finalize:"finalize"};
-let sel=null, runsCache=[], art=null, tab="screenplay";
+const $ = q => document.querySelector(q);
 
-setInterval(()=>{$("#clock").textContent=new Date().toLocaleTimeString()},1000);
+// Pure local active state
+let currentStep = 1;
+let candidateStereotypes = [];
+let selectedStereotype = null;
+let selectedCast = { main: 'Rolf die Wurst', side: '', guest: '', bg: '' };
+let episodeSeed = '';
+let episodeCefr = 'A1';
 
-async function j(u,opt){const r=await fetch(u,opt); if(!r.ok) throw new Error((await r.json().catch(()=>({}))).detail||r.status); return r.json()}
+// V3 run state (persisted pipeline)
+let activeRunId = null;
+let activeBrief = null;
+let activeScreenplay = null;
+let activeStoryboard = null;
+let activeVideoPrompts = null;
 
-async function loadRuns(){
-  try{runsCache=await j("/api/runs")}catch(e){return}
-  $("#runs").innerHTML=runsCache.map(r=>`
-    <div class="run ${sel===r.id?'sel':''}" onclick="pick('${r.id}')">
-      <div class="id">${r.id.slice(0,8)}<span class="chip ${r.status}">${r.status}</span></div>
-      <div class="meta">words ${(r.word_positions||[])[0]??"?"}–${(r.word_positions||[]).slice(-1)[0]??"?"} ·
-        $${((r.cost_cents||0)/100).toFixed(2)} · ${new Date(r.started_at).toLocaleString([], {month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}</div>
-    </div>`).join("");
+// Align & Diverge State
+let alignData = null;
+let divergeData = null;
+let selectedLocation = null;
+let selectedLesson = null;
+let selectedAngle = null;
+let customLocationText = '';
+const apiProviderLabel = 'Gemini 2.5 Flash';
+
+let castRoles = {
+  'Kati die Kartoffel': 'none',
+  'Professor Bert das Bier': 'none',
+  'Rolf die Wurst': 'main',
+  'Müller das Brot': 'none'
+};
+
+const CHAR_DEFS = {
+  'Kati die Kartoffel': { desc: 'Perfection is achievable. I am the proof.', img: '/resources/Kati%20die%20Kartoffel/Kati-Close.png' },
+  'Professor Bert das Bier': { desc: 'I understand everything. It is my burden to explain it.', img: '/resources/Bert%20das%20Bier/Bert%20Close.png' },
+  'Rolf die Wurst': { desc: 'Nothing impresses me. Caring is embarrassing.', img: '/resources/Rolf%20die%20Wurst/Rolf%20Main.png' },
+  'Müller das Brot': { desc: 'Words are expensive. Spend them carefully.', img: '/resources/Muller%20das%20Brot/Muller-close.png' }
+};
+
+async function api(url, opts) {
+  const r = await fetch(url, opts);
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({}));
+    throw new Error(err.detail || r.statusText);
+  }
+  return r.json();
 }
 
-async function pick(id){sel=id; tab="screenplay"; await refresh(); }
+function setStep(step) {
+  currentStep = step;
+  updateWizardUI();
+  updateSidebarDecisions();
+  renderStepView();
+}
 
-async function refresh(){
-  if(!sel) return;
-  let run,a;
-  try{[run,a]=await Promise.all([j(`/api/runs/${sel}`),j(`/api/runs/${sel}/artifacts`)])}catch(e){return}
-  art=a;
-  const evByStage={}; (run.events||[]).forEach(e=>{evByStage[e.stage]=e});
-  const totalTok=(run.events||[]).reduce((s,e)=>s+(e.tokens_in||0)+(e.tokens_out||0),0);
+function updateWizardUI() {
+  const steps = document.querySelectorAll('.wiz-step');
+  steps.forEach((el, idx) => {
+    const sNum = idx + 1;
+    el.classList.remove('active', 'done');
+    if (sNum === currentStep) el.classList.add('active');
+    else if (sNum < currentStep) el.classList.add('done');
+  });
+}
 
-  const stageHtml=STAGES.map(s=>{
-    const e=evByStage[s]; let cls="", icon="○";
-    if(e){cls=e.status==="failed"?"fail":"done"; icon=e.status==="failed"?"✗":"✓";}
-    if(run.status==="awaiting_choice"&&s==="gate_a"&&!e){cls="gate now";icon="⏸";}
-    else if(run.status==="running"&&run.stage===s){cls="now";icon="●";}
-    if(s==="gate_a"&&e){cls="gate";icon="✓";}
-    return `<div class="stage ${cls}"><b>${icon}</b>${LABEL[s]}</div>`;
-  }).join("");
-
-  let gate="";
-  if(run.status==="awaiting_choice"&&a.options){
-    gate=`<div class="card" id="gate" style="border-color:var(--gate)">
-      <div class="h2" style="padding:0 0 8px;color:var(--gate)">⏸ GATE A — choose today's story</div>
-      <div class="opts">${(a.options.options||[]).map((o,i)=>`
-        <div class="opt"><h4>${i+1}. ${o.title_de}</h4><span class="score">${o.self_score}/10</span>
-          <p>${o.scenario_en||""}</p><p><b style="color:var(--fg)">Hook:</b> ${o.hook_visual_en||""}</p>
-          <p class="muted">${(o.mains||[]).join(" · ")}</p>
-          <button onclick="choose(${i+1})">Choose ${i+1}</button></div>`).join("")}</div>
-      <div style="margin-top:10px"><label class="muted" style="font-size:11px">STEERING NOTE (optional)</label>
-      <textarea id="gate-note" rows="2" placeholder="e.g. lean into the argument, keep Bert louder…"></textarea></div>
-    </div>`;
+function updateSidebarDecisions() {
+  // 01. Stereotype
+  const stEl = $('#sidebar-st-content');
+  if (selectedStereotype) {
+    stEl.innerHTML = `
+      <div class="st-cat" style="margin-bottom:6px;">${selectedStereotype.category || 'General'}</div>
+      <div class="decision-val">${selectedStereotype.name_de}</div>
+      <div class="decision-sub">${selectedStereotype.name_en || selectedStereotype.name || ''}</div>
+    `;
+    $('#sidebar-step-1').classList.add('active');
+  } else {
+    stEl.innerHTML = `<span style="color: var(--dim); font-size: 12px; font-style: italic;">Not selected yet (Step 01)</span>`;
+    $('#sidebar-step-1').classList.remove('active');
   }
 
-  const ev=(run.events||[]).map(e=>`<tr><td class="${e.status==='failed'?'err':'ok'}">${e.status==="failed"?"✗":"✓"}</td>
-    <td>${e.stage}</td><td>${e.tokens_in?`${e.tokens_in}+${e.tokens_out} tok`:""}</td>
-    <td class="muted">${e.artifact_path||""}</td></tr>`).join("");
+  // 02. Cast & Seed
+  const castEl = $('#sidebar-cast-content');
+  const main = Object.keys(castRoles).find(k => castRoles[k] === 'main');
+  if (main || selectedCast.main) {
+    const side = Object.keys(castRoles).find(k => castRoles[k] === 'side');
+    castEl.innerHTML = `
+      <div class="decision-val">Primary: <span style="color:var(--gate)">${main || selectedCast.main}</span></div>
+      ${side ? `<div class="decision-sub">Side: ${side}</div>` : ''}
+      <div class="decision-sub">CEFR: <b>${episodeCefr}</b></div>
+    `;
+    if (currentStep >= 2) $('#sidebar-step-2').classList.add('active');
+  } else {
+    castEl.innerHTML = `<span style="color: var(--dim); font-size: 12px; font-style: italic;">Pending Step 02...</span>`;
+    $('#sidebar-step-2').classList.remove('active');
+  }
 
-  $("#main").innerHTML=`
-    <div class="card"><div id="stages">${stageHtml}</div></div>
-    ${gate}
-    <div class="card"><div class="kv">
-      <div><b>Status</b><span class="chip ${run.status}">${run.status}</span></div>
-      <div><b>Episode</b>${a.episode_dir||"—"}</div>
-      <div><b>Words</b>${(run.word_positions||[]).join(", ")}</div>
-      <div><b>Cost</b>$${((run.cost_cents||0)/100).toFixed(2)}</div>
-      <div><b>Tokens</b>${totalTok.toLocaleString()}</div>
-      <div><b>Choice</b>${run.chosen_option??"—"}${run.choice_note?` · “${run.choice_note}”`:""}</div>
-    </div></div>
-    <div class="card"><div id="tabs">
-      ${["screenplay","options","story","prompts","episode","caption","post"].map(t=>
-        `<button class="${tab===t?'on':''}" onclick="tab='${t}';render()">${t}</button>`).join("")}
-    </div><div id="tabbody"></div></div>
-    <div class="card"><div class="h2" style="padding:0 0 6px">Ledger events</div>
-      <table><tr><th></th><th>stage</th><th>tokens</th><th>artifact</th></tr>${ev}</table></div>`;
-  render(); loadRuns();
+  // 03. Align & Diverge
+  const alignEl = $('#sidebar-align-content');
+  if (selectedLocation || selectedAngle) {
+    alignEl.innerHTML = `
+      <div class="decision-val">📍 ${selectedLocation?.location || customLocationText || 'Location'}</div>
+      <div class="decision-sub">📖 ${selectedLesson?.lesson || 'Lesson Target'}</div>
+      ${selectedAngle ? `<div class="decision-sub" style="color:var(--ok); margin-top:4px;">⚡ ${selectedAngle.label}</div>` : ''}
+    `;
+    if (currentStep >= 3) $('#sidebar-step-3').classList.add('active');
+  } else {
+    alignEl.innerHTML = `<span style="color: var(--dim); font-size: 12px; font-style: italic;">Pending Step 03...</span>`;
+    $('#sidebar-step-3').classList.remove('active');
+  }
 }
 
-function render(){
-  const b=$("#tabbody"); if(!b||!art) return;
-  if(tab==="screenplay"&&art.screenplay){
-    b.innerHTML=(art.screenplay.scenes||[]).map(s=>`<div class="scene">
-      <h5>Scene ${s.scene_number} — ${s.german_word} (${s.duration_s}s)</h5>
-      <div class="muted" style="font-size:11.5px">${s.action_en||""}</div>
-      ${(s.dialogue||[]).map(d=>`<div class="line"><b>${d.speaker}:</b> „${d.german}“ <span class="en">(${d.english||""})</span></div>`).join("")}
-    </div>`).join("");
-  } else if(tab==="options"){ b.innerHTML=`<pre>${esc(art.options_md||"— not yet —")}</pre>`;
-  } else if(tab==="story"){ b.innerHTML=`<pre>${esc(JSON.stringify(art.story,null,2)||"— not yet —")}</pre>`;
-  } else if(tab==="prompts"){
-    b.innerHTML=(art.prompt_files||[]).length
-      ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">${art.prompt_files.map(f=>
-          `<button class="ghost" onclick="showPrompt('${f}')">${f.replace('.json','')}</button>`).join("")}</div><pre id="pbody">click a file…</pre>`
-      : `<pre>— not yet —</pre>`;
-  } else if(tab==="episode"){ b.innerHTML=`<pre>${esc(art.episode_md||"— not yet —")}</pre>`;
-  } else if(tab==="caption"){
-    b.innerHTML=`${art.caption_md?`<pre>${esc(art.caption_md)}</pre>`:`<pre class="muted">— no caption yet —</pre>`}
-      <button onclick="genCaption()" style="margin-top:8px">${art.caption_md?"↻ Regenerate":"✍ Generate"} caption</button>`;
-  } else if(tab==="post"){
-    const clips=art.clips||[], have=new Set(clips.map(c=>c.replace('scene_','').replace('.mp4','').replace(/^0/,'')));
-    const nsc=(art.screenplay?.scenes||[]).length||10;
-    let grid="";
-    for(let i=1;i<=nsc;i++){const has=clips.includes(`scene_${String(i).padStart(2,'0')}.mp4`);
-      grid+=`<div class="slot ${has?'has':''}" onclick="document.getElementById('up${i}').click()">
-        ${has?'✓':'+'} <span>scene ${i}</span>
-        <input type="file" id="up${i}" accept="video/*" style="display:none" onchange="uploadClip(${i},this)"></div>`;}
-    b.innerHTML=`
-      <div style="background:#111a26;border:1px solid var(--accent);border-radius:8px;padding:12px;margin-bottom:12px">
-        <div style="font:600 12px ui-monospace,monospace;color:var(--accent);margin-bottom:6px">⚡ AUTOPILOT — hands-off, background</div>
-        <div class="muted" style="font-size:12px;margin-bottom:8px">generate clips → stitch + subtitles → caption, in one run.</div>
-        <button onclick="autopilot('mock')">▶ Run autopilot (mock — free)</button>
-        <button class="ghost" onclick="autopilot('fal')" title="needs FAL_KEY in .env">▶ real Seedance (fal)</button>
+function restartFreshEpisode() {
+  selectedStereotype = null;
+  selectedCast = { main: 'Rolf die Wurst', side: '', guest: '', bg: '' };
+  castRoles = { 'Kati die Kartoffel': 'none', 'Professor Bert das Bier': 'none', 'Rolf die Wurst': 'main', 'Müller das Brot': 'none' };
+  episodeSeed = '';
+  alignData = null;
+  divergeData = null;
+  selectedLocation = null;
+  selectedLesson = null;
+  selectedAngle = null;
+  candidateStereotypes = [];
+  setStep(1);
+  fetchStereotypes();
+}
+
+function renderStepView() {
+  const view = $('#stage-view');
+
+  switch (currentStep) {
+    case 1: renderStereotypesView(view); break;
+    case 2: renderCastAndSeedView(view); break;
+    case 3: renderAlignDivergeView(view); break;
+    case 4: renderStoryBriefView(view); break;
+    case 5: renderScreenplayView(view); break;
+    case 6: renderStoryboardView(view); break;
+    case 7: renderVideoAssemblyView(view); break;
+  }
+}
+
+/* STEP 1: STEREOTYPE PICKER */
+function renderStereotypesView(container) {
+  const cardsHtml = candidateStereotypes.map((st, i) => `
+    <div class="st-card" onclick="pickStereotype(${i})">
+      <span class="st-cat">${st.category}</span>
+      <div>
+        <div class="st-title-de">${st.name_de}</div>
+        <div class="st-title-en">${st.name_en || st.name || ''}</div>
       </div>
-      <div class="h2" style="padding:0 0 6px">1 · CLIPS (${clips.length}/${nsc}) — click a slot to upload, or generate below</div>
-      <div class="slots">${grid}</div>
-      <div style="margin-top:8px"><button class="ghost" onclick="genClips('mock')">⟳ Generate all (mock)</button>
-        <button class="ghost" onclick="genClips('fal')" title="needs FAL_KEY">⟳ Generate all (real Seedance)</button></div>
-      <div class="h2" style="padding:12px 0 6px">2 · ASSEMBLE</div>
-      <button onclick="doAssemble()" ${clips.length?'':'disabled'}>▶ Stitch + subtitles → final.mp4</button>
-      <div class="h2" style="padding:12px 0 6px">3 · FINAL VIDEO ${art.final_video?'✓':''}</div>
-      ${art.final_video?`<video controls src="/api/runs/${sel}/video?t=${Date.now()}"></video>`:`<pre class="muted">— assemble to produce it —</pre>`}
-      <div class="h2" style="padding:12px 0 6px">4 · POST COPY ${art.caption_md?'✓':''}</div>
-      ${art.caption_md?`<pre>${esc(art.caption_md)}</pre>`:`<button onclick="genCaption()">✍ Generate caption</button>`}`;
-  } else { b.innerHTML=`<pre>— not yet —</pre>`; }
+      <div class="st-desc">${st.description}</div>
+      <div class="brief-section" style="margin-top:auto; padding:10px; font-size:11px; color:var(--dim);">
+        <b>Cultural Context:</b> ${st.cultural_context}
+      </div>
+      <button class="purple" style="margin-top: 12px; width: 100%;" onclick="event.stopPropagation(); pickStereotype(${i});">
+        Select "${st.name_de}" ➔
+      </button>
+    </div>
+  `).join('');
+
+  let lockedBannerHtml = '';
+  if (selectedStereotype) {
+    lockedBannerHtml = `
+      <div class="ai-reasoning-card" style="margin-bottom:16px; border-color:var(--accent); background:rgba(56,189,248,0.05);">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:11px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.5px;">🔒 ACTIVE EPISODE SESSION LOCKED</div>
+            <div style="font-size:14px; font-weight:700; color:var(--fg); margin-top:4px;">${selectedStereotype.name_de} (${selectedCast?.main || 'No Cast'})</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="primary" onclick="setStep(3)">Resume Co-Creation Chat ➔</button>
+            <button class="ghost" style="color:#ef4444; border-color:rgba(239,68,68,0.3);" onclick="discardActiveSession()">Discard & Start Fresh</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  container.innerHTML = `
+    <div class="card">
+      ${lockedBannerHtml}
+      <div class="card-title">
+        <span>Step 01 · Pick Today's German Stereotype</span>
+        <button class="ghost" onclick="fetchStereotypes()">🔀 Shuffle 3 New Stereotypes</button>
+      </div>
+      <p style="color: var(--dim); font-size: 13.5px; margin-bottom: 14px;">
+        Choose one of the 3 German micro-behaviors below to drive today's episode comedy.
+      </p>
+      <div class="st-grid">
+        ${cardsHtml || '<p style="color:var(--dim)">Loading stereotypes...</p>'}
+      </div>
+    </div>
+  `;
 }
 
-async function showPrompt(f){ const d=await j(`/api/runs/${sel}/prompt/${f}`); $("#pbody").textContent=JSON.stringify(d,null,2); }
-function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;")}
-
-async function loadStats(){
-  try{const s=await j("/api/stats");
-    $("#stats").textContent=`${s.runs} runs · ${s.completed} done · ${s.awaiting} at gate · $${(s.cost_cents/100).toFixed(2)}`;
-  }catch(e){}
-}
-async function genCaption(){
-  try{await j(`/api/runs/${sel}/caption`,{method:"POST"});
-    alert("Caption generating (~$0.02) — refreshes in a few seconds."); setTimeout(refresh,4000);
-  }catch(e){alert("Caption failed: "+e.message)}
-}
-async function autopilot(provider){
-  try{await j(`/api/runs/${sel}/autopilot`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider})});
-    alert(`Autopilot started (${provider}): generate → assemble → caption, in the background. Watch it fill in.`);
-    setTimeout(refresh,8000);
-  }catch(e){alert("Autopilot failed: "+e.message)}
-}
-async function genClips(provider){
-  try{await j(`/api/runs/${sel}/generate`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider})});
-    alert(`Generating clips (${provider}) in the background…`); setTimeout(refresh,8000);
-  }catch(e){alert("Generate failed: "+e.message)}
-}
-async function doAssemble(){
-  try{const r=await j(`/api/runs/${sel}/assemble`,{method:"POST"});
-    alert(`Assembling ${r.clips} clips → subtitled final.mp4. Refreshes shortly.`); setTimeout(refresh,6000);
-  }catch(e){alert("Assemble failed: "+e.message)}
-}
-async function uploadClip(scene,inp){
-  const f=inp.files[0]; if(!f)return;
-  const fd=new FormData(); fd.append("file",f);
-  try{await fetch(`/api/runs/${sel}/clips/${scene}`,{method:"POST",body:fd}).then(r=>{if(!r.ok)throw new Error(r.status)});
-    refresh();
-  }catch(e){alert("Upload failed: "+e.message)}
+function discardActiveSession() {
+  if (confirm("Are you sure you want to discard your current active episode session and start fresh?")) {
+    selectedStereotype = null;
+    selectedCast = null;
+    chatMessages = [];
+    activeChatSessionKey = null;
+    selectedLocation = null;
+    selectedLesson = null;
+    selectedAngle = null;
+    activeBriefData = null;
+    activeBrief = null;
+    updateSidebarDecisions();
+    renderStepView();
+  }
 }
 
-async function choose(n){
-  const note=$("#gate-note")?.value||"";
-  try{await j(`/api/runs/${sel}/choose`,{method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({choice:n,note})});
-    alert(`Choice ${n} sent — pipeline resuming. Watch the stages light up.`); refresh();
-  }catch(e){alert("Choose failed: "+e.message)}
+async function fetchStereotypes() {
+  candidateStereotypes = await api('/api/stereotypes/options?n=3');
+  renderStepView();
 }
 
-async function startRun(){
-  const mode=$("#nr-mode").value, p=$("#nr-param").value.trim(), note=$("#nr-note").value;
-  const body={mode,note}; if(mode==="start")body.start=parseInt(p); if(mode==="positions")body.positions=p;
-  try{await j("/api/runs",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-    dlg.close(); alert("Run started — it will appear in the list within seconds.");
-    setTimeout(loadRuns,3000);
-  }catch(e){alert("Start failed: "+e.message)}
+function pickStereotype(idx) {
+  selectedStereotype = candidateStereotypes[idx];
+  setStep(2);
 }
 
-loadRuns(); loadStats(); setInterval(()=>{loadRuns(); loadStats(); if(sel)refresh()},6000);
+/* STEP 2: CAST & SEED */
+function assignRole(charName, role) {
+  if (role === 'main') {
+    Object.keys(castRoles).forEach(k => { if(castRoles[k] === 'main') castRoles[k] = 'none'; });
+  }
+  castRoles[charName] = role;
+  
+  const grid = document.getElementById('char-board-grid');
+  if (grid) { grid.innerHTML = buildCharGridHtml(); }
+  updateSidebarDecisions();
+}
+
+function buildCharGridHtml() {
+  return Object.keys(CHAR_DEFS).map(name => {
+    const def = CHAR_DEFS[name];
+    const role = castRoles[name];
+    let cardClass = '';
+    if (role === 'main') cardClass = 'primary';
+    else if (role === 'side') cardClass = 'secondary';
+    else if (role === 'guest') cardClass = 'guest';
+    else if (role === 'bg') cardClass = 'bg';
+    else cardClass = 'unassigned';
+
+    return `
+      <div class="char-card ${cardClass}" onclick="this.querySelector('.char-roles').classList.toggle('active')">
+        <img src="${def.img}" class="char-img" alt="${name}" />
+        <div class="char-info">
+          <div class="char-name">${name}</div>
+          <div class="char-desc">"${def.desc}"</div>
+        </div>
+        <div class="char-roles" onclick="event.stopPropagation()">
+          <span style="font-size:10px; color:var(--dim); font-weight:700; text-transform:uppercase;">Assign Role:</span>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            <div class="role-chip ${role === 'main' ? 'selected' : ''}" data-role="main" onclick="assignRole('${name}', 'main')">Primary</div>
+            <div class="role-chip ${role === 'side' ? 'selected' : ''}" data-role="side" onclick="assignRole('${name}', 'side')">Secondary</div>
+            <div class="role-chip ${role === 'guest' ? 'selected' : ''}" data-role="guest" onclick="assignRole('${name}', 'guest')">Guest</div>
+            <div class="role-chip ${role === 'bg' ? 'selected' : ''}" data-role="bg" onclick="assignRole('${name}', 'bg')">Background</div>
+            <div class="role-chip ${role === 'none' ? 'selected' : ''}" data-role="none" onclick="assignRole('${name}', 'none')">None</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderCastAndSeedView(container) {
+  if (!selectedStereotype) {
+    container.innerHTML = `<div class="card"><p style="color:var(--dim)">Please pick a stereotype in Step 01 first.</p></div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="card">
+      <div class="card-title">
+        <span>Step 02 · Assemble Cast & Seed</span>
+      </div>
+      <p style="color: var(--dim); font-size: 13px; margin-bottom: 18px;">
+        Pick the <b>Primary Character</b> (mandatory) and optional supporting cast by clicking on their cards below.
+      </p>
+
+      <div class="brief-section">
+        <h4>1. CAST SELECTION BOARDS</h4>
+        <div id="char-board-grid" class="char-grid">
+          ${buildCharGridHtml()}
+        </div>
+      </div>
+
+      <div class="brief-section">
+        <h4>2. CEFR LEVEL & DURATION</h4>
+        <select id="cast-cefr" style="margin-top:6px;" onchange="episodeCefr = this.value; updateSidebarDecisions();">
+          <option value="A1" ${episodeCefr === 'A1' ? 'selected' : ''}>A1 (30s default / 2 clips)</option>
+          <option value="A2" ${episodeCefr === 'A2' ? 'selected' : ''}>A2 (35s–40s / 2–3 clips)</option>
+          <option value="B1" ${episodeCefr === 'B1' ? 'selected' : ''}>B1 (45s / 3 clips)</option>
+        </select>
+      </div>
+
+      <div class="brief-section">
+        <h4>3. YOUR HUMAN SEED / ANECDOTE (ANTI-SLOP ANCHOR)</h4>
+        <textarea id="cast-seed" rows="3" placeholder="e.g. Rolf taking this rule way too seriously while someone tries to be nice to him..." oninput="episodeSeed = this.value; updateSidebarDecisions();">${episodeSeed}</textarea>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-top: 14px;">
+        <button class="ghost" onclick="setStep(1)">← Back to Stereotypes</button>
+        <button class="ok" onclick="submitCastAndSeed()">Proceed to Align & Diverge ➔</button>
+      </div>
+    </div>
+  `;
+}
+
+async function submitCastAndSeed() {
+  const main = Object.keys(castRoles).find(k => castRoles[k] === 'main');
+  if (!main) {
+    alert("You must select exactly ONE Primary (Main) character.");
+    return;
+  }
+
+  selectedCast = {
+    main: main,
+    side: Object.keys(castRoles).find(k => castRoles[k] === 'side') || '',
+    guest: Object.keys(castRoles).find(k => castRoles[k] === 'guest') || '',
+    bg: Object.keys(castRoles).find(k => castRoles[k] === 'bg') || ''
+  };
+  
+  episodeCefr = $('#cast-cefr').value;
+  episodeSeed = $('#cast-seed').value;
+
+  // Clear previous align data to trigger LLM generation for new cast/seed
+  alignData = null;
+  divergeData = null;
+
+  setStep(3);
+}
+
+/* STEP 3: INTERACTIVE ALIGN & DIVERGE STUDIO (CHATBOT) */
+let chatMessages = [];
+let activeChatSessionKey = null;
+let isChatExtracting = false;
+
+async function initChat(force = false) {
+  const currentKey = `${selectedStereotype?.name_de}_${selectedCast?.main}`;
+  if (!force && chatMessages.length > 0 && activeChatSessionKey === currentKey) {
+    renderChatUI();
+    return;
+  }
+  activeChatSessionKey = currentKey;
+  chatMessages = [];
+  renderChatUI();
+  await sendChatMessage("", true); // trigger initial AI message
+}
+
+async function sendChatMessage(text, isInitial = false) {
+  if (!isInitial && !text.trim()) return;
+  
+  if (!isInitial) {
+    chatMessages.push({ role: "user", content: text.trim() });
+    renderChatUI();
+  }
+
+  // Show pulsing loader in chat
+  const chatHistory = $('#chat-history');
+  if (chatHistory) {
+    chatHistory.innerHTML += `
+      <div class="chat-bubble ai" id="chat-loading">
+        <div class="pulsing-dots"><span></span><span></span><span></span></div>
+      </div>
+    `;
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+  }
+
+  try {
+    const chatData = await api('/api/co-creation/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        messages: chatMessages, 
+        stereotype: selectedStereotype, 
+        cast: selectedCast, 
+        seed: episodeSeed, 
+        cefr: episodeCefr 
+      })
+    });
+
+    const loadingEl = $('#chat-loading');
+    if (loadingEl) loadingEl.remove();
+
+    const replyText = chatData.reply_text || chatData.reply || "";
+    const widgetData = chatData.widget || null;
+
+    chatMessages.push({ role: "assistant", content: replyText, widget: widgetData });
+    renderChatUI();
+  } catch (err) {
+    const loadingEl = $('#chat-loading');
+    if (loadingEl) loadingEl.remove();
+    chatMessages.push({ role: "assistant", content: "⚠️ Error connecting to AI. Please try again." });
+    renderChatUI();
+  }
+}
+
+function selectGenerativeOption(title) {
+  sendChatMessage(`I choose ${title}`);
+}
+
+function renderChatUI() {
+  const container = $('#align-studio-body');
+  if (!container) return;
+
+  const messagesHtml = chatMessages.map(m => {
+    let formattedText = "";
+    if (window.marked && typeof marked.parse === 'function') {
+      formattedText = marked.parse(m.content);
+    } else {
+      formattedText = m.content.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+    }
+
+    let widgetHtml = "";
+    if (m.widget && m.widget.type && m.widget.type !== "none" && m.widget.options && m.widget.options.length) {
+      const cardsHtml = m.widget.options.map(opt => `
+        <div class="gen-card" onclick="selectGenerativeOption('${opt.title.replace(/'/g, "\\'")}')">
+          <span class="gen-card-tag">${opt.label || 'OPTION'}</span>
+          <div class="gen-card-title">${opt.title}</div>
+          <div class="gen-card-desc">${opt.desc}</div>
+          <div class="gen-card-btn">Select This Option ➔</div>
+        </div>
+      `).join('');
+
+      widgetHtml = `
+        <div class="gen-widget-container">
+          <div class="gen-widget-title">⚡ ${m.widget.title || 'Interactive Options'}</div>
+          <div class="gen-widget-grid">
+            ${cardsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="chat-bubble ${m.role === 'user' ? 'user' : 'ai'}">
+        <div>${formattedText}</div>
+        ${widgetHtml}
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="chat-container">
+      <div class="chat-history" id="chat-history">
+        ${messagesHtml}
+        ${isChatExtracting ? `
+          <div class="chat-bubble ai">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <div class="pulsing-dots"><span></span><span></span><span></span></div>
+              <span><b>Locking Brief...</b> Extracting structured JSON decisions from chat history.</span>
+            </div>
+          </div>
+        ` : ''}
+      </div>
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Type your idea or agree with the AI..." onkeydown="if(event.key==='Enter') { sendChatMessage(this.value); this.value=''; }" ${isChatExtracting ? 'disabled' : ''} />
+        <button class="primary" onclick="const i=$('#chat-input'); sendChatMessage(i.value); i.value='';" ${isChatExtracting ? 'disabled' : ''}>Send</button>
+      </div>
+    </div>
+    
+    <div style="display:flex; justify-content:space-between; margin-top:14px;">
+      <button class="ghost" onclick="setStep(2)" ${isChatExtracting ? 'disabled' : ''}>← Back to Cast & Seed</button>
+      <button class="ok" onclick="extractAndCommitBrief()" ${isChatExtracting ? 'disabled' : ''}>${isChatExtracting ? 'Extracting...' : 'Lock Brief & Proceed to Summary ➔'}</button>
+    </div>
+  `;
+
+  const chatHistory = $('#chat-history');
+  if (chatHistory) chatHistory.scrollTop = chatHistory.scrollHeight;
+  const chatInput = $('#chat-input');
+  if (chatInput && !isChatExtracting) chatInput.focus();
+}
+
+async function extractAndCommitBrief() {
+  if (chatMessages.length < 2) {
+    alert("Chat with the AI Co-Director to shape the story first.");
+    return;
+  }
+  isChatExtracting = true;
+  renderChatUI();
+  try {
+    const data = await api('/api/v3/commit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: chatMessages, stereotype: selectedStereotype,
+        cast: selectedCast, seed: episodeSeed, cefr: episodeCefr,
+        run_id: activeRunId
+      })
+    });
+    activeRunId = data.run_id;
+    activeBrief = data.brief;
+    localStorage.setItem('activeRunId', activeRunId);
+    fetchSavedEpisodes();
+    // new run → clear downstream so each stage regenerates
+    activeScreenplay = null; activeStoryboard = null; activeVideoPrompts = null;
+    // reflect into the sidebar
+    selectedLocation = { location: activeBrief.location };
+    selectedLesson = { lesson: (activeBrief.lesson?.particle || activeBrief.lesson?.structure || '') };
+    selectedAngle = { label: activeBrief.comedic_angle || 'Angle' };
+    updateSidebarDecisions();
+    isChatExtracting = false;
+    setStep(4);
+  } catch (err) {
+    isChatExtracting = false;
+    renderChatUI();
+    alert("Commit failed: " + err.message);
+  }
+}
+
+function renderAlignDivergeView(container) {
+  const currentKey = `${selectedStereotype?.name_de}_${selectedCast?.main}`;
+  container.innerHTML = `
+    <div class="card">
+      <div class="card-title">
+        <span>Step 03 · Co-Creation Chat Studio</span>
+        ${chatMessages.length > 0 ? `<button class="ghost" style="color:#ef4444; font-size:11px;" onclick="initChat(true)">🔄 Reset Chat</button>` : ''}
+      </div>
+      <p style="color:var(--dim); font-size:13px; margin-bottom:16px;">
+        Chat with your AI Co-Director to collaboratively decide on the Location, German Lesson, and Comedic Angle for this episode.
+      </p>
+      <div id="align-studio-body"></div>
+    </div>
+  `;
+
+  if (chatMessages.length > 0 && activeChatSessionKey === currentKey) {
+    renderChatUI();
+  } else {
+    initChat();
+  }
+}
+
+function commitStoryBrief() {
+  if (!selectedLocation || !selectedLesson || !selectedAngle) {
+    alert("Please select a Location, a Lesson target, and a Comedic Angle before proceeding.");
+    return;
+  }
+
+  activeBriefData = {
+    episode: { title_de: selectedStereotype?.name_de, stereotype_name: selectedStereotype?.name_de, cefr_level: episodeCefr },
+    cast: selectedCast,
+    location: selectedLocation.location,
+    lesson: selectedLesson.lesson,
+    premise: selectedAngle.premise,
+    game_of_scene: selectedAngle.game,
+    target_line: { german: selectedLesson.target_line_tease || "Das geht doch so nicht!", english: selectedLesson.pragmatic_function }
+  };
+  setStep(4);
+}
+
+/* STEP 4: STORY BRIEF SUMMARY (real brief from the pipeline) */
+function renderStoryBriefView(container) {
+  const b = activeBrief;
+  if (!b) { container.innerHTML = briefFirst(); return; }
+  const beats = (b.escalation_beats || []).map(x => `<li>${x}</li>`).join('');
+  const les = b.lesson || {}, tl = b.target_line || {};
+  container.innerHTML = `
+    <div class="card">
+      <div class="card-title"><span>Step 04 · Locked Story Brief</span><span class="pill live">Locked ✓</span></div>
+      <div class="brief-section"><h4>Episode</h4><div class="kv">
+        <div><b>Title</b>${b.title_de || '—'}</div>
+        <div><b>Stereotype</b>${b.stereotype_name || '—'}</div>
+        <div><b>CEFR</b>${b.cefr_level || '—'}</div>
+        <div><b>Main</b>${b.cast?.main || '—'}</div>
+        <div><b>Side</b>${b.cast?.side || 'None'}</div>
+        <div><b>Location</b>${b.location || '—'}</div>
+      </div></div>
+      <div class="brief-section"><h4>Premise & Game</h4>
+        <p style="font-size:13px;margin-bottom:6px;"><b>Premise:</b> ${b.premise || '—'}</p>
+        <p style="font-size:12.5px;color:var(--dim);"><b>Game of the scene (shown, never named):</b> ${b.game_of_scene || '—'}</p></div>
+      <div class="brief-section"><h4>Beats → Button</h4>
+        <ol style="margin-left:18px;font-size:13px;line-height:1.7;">${beats}</ol>
+        <p style="font-size:13px;margin-top:8px;color:var(--ok);"><b>Button:</b> ${b.button || '—'}</p></div>
+      <div class="brief-section"><h4>German Lesson</h4>
+        <p style="font-size:13px;"><b>${les.particle || les.structure || '—'}</b> — ${les.pragmatic_function || ''}</p>
+        <p style="font-size:12px;color:var(--dim);">${les.pop_up_grammar || ''}</p>
+        <p style="font-size:13px;margin-top:6px;">Target line: „${tl.german || ''}“ <span style="color:var(--dim)">(${tl.english || ''})</span></p></div>
+      <div style="display:flex;justify-content:space-between;margin-top:14px;">
+        <button class="ghost" onclick="setStep(3)">← Edit in Chat</button>
+        <button class="ok" onclick="setStep(5)">Generate Screenplay ➔</button>
+      </div>
+    </div>`;
+}
+
+/* STEP 5: SCREENPLAY READER (fetches the real screenplay) */
+async function renderScreenplayView(container) {
+  if (!activeRunId) { container.innerHTML = briefFirst(); return; }
+  if (!activeScreenplay) {
+    container.innerHTML = loaderCard('Writing the screenplay (director layer) via Gemini…');
+    try {
+      const d = await api(`/api/v3/runs/${activeRunId}/screenplay`, { method: 'POST' });
+      activeScreenplay = d.screenplay; activeScreenplay._problems = d.problems || [];
+    } catch (err) { container.innerHTML = errCard('Screenplay failed', err.message, () => { activeScreenplay = null; setStep(5); }); return; }
+  }
+  const sp = activeScreenplay;
+  const segs = (sp.segments || []).map(seg => {
+    const rows = (seg.shots || []).map(sh => `
+      <tr><td><b>#${sh.shot_number}</b></td><td>${sh.shot_size} / ${sh.camera_angle}</td><td>${sh.camera_move}</td>
+      <td>${sh.action}<br><span style="color:var(--dim);font-size:11px;">${sh.blocking} · ${sh.expression}</span></td><td>${sh.duration_s}s</td></tr>`).join('');
+    const dlg = (seg.shots || []).flatMap(sh => sh.dialogue || []).map(d => `
+      <div class="dialogue-line"><span class="speaker">${d.speaker}:</span>„${d.german}“ <span style="color:var(--dim);font-style:italic;font-size:12px;">(${d.english})</span></div>`).join('');
+    return `<div class="segment-card">
+      <h4 style="font:700 13px ui-monospace,monospace;color:var(--accent);margin-bottom:10px;">Segment #${seg.segment_number} — ${seg.setting} (~${seg.duration_s}s)</h4>
+      <table class="shot-table"><thead><tr><th>Shot</th><th>Size/Angle</th><th>Move</th><th>Action & Blocking</th><th>Dur</th></tr></thead><tbody>${rows}</tbody></table>
+      <div class="dialogue-box">${dlg}</div></div>`;
+  }).join('');
+  const probs = (sp._problems && sp._problems.length) ? `<div class="error-card">⚠ Validator: ${sp._problems.join('; ')}</div>` : '';
+  container.innerHTML = `<div class="card">
+    <div class="card-title"><span>Step 05 · Screenplay & Director Layer</span>
+      <button class="ok" onclick="setStep(6)">Approve ➔ Storyboard Panels</button></div>
+    <p style="color:var(--dim);font-size:12.5px;margin-bottom:12px;">${sp.stereotype || ''} · teaches <b>${sp.grammar_target || ''}</b> · ${sp.total_duration_s || ''}s</p>
+    ${probs}${segs}
+    <div style="display:flex;justify-content:space-between;margin-top:8px;">
+      <button class="ghost" onclick="setStep(4)">← Story Brief</button>
+      <button class="ghost" onclick="activeScreenplay=null; setStep(5)">↻ Regenerate</button></div></div>`;
+}
+
+/* STEP 6: STORYBOARD PANEL PROMPTS (fetches real per-shot image prompts) */
+async function renderStoryboardView(container) {
+  if (!activeRunId) { container.innerHTML = briefFirst(); return; }
+  if (!activeStoryboard) {
+    container.innerHTML = loaderCard('Compiling per-shot storyboard image prompts…');
+    try {
+      const d = await api(`/api/v3/runs/${activeRunId}/storyboard-prompts`, { method: 'POST' });
+      activeStoryboard = d.storyboard;
+    } catch (err) { container.innerHTML = errCard('Storyboard prompts failed', err.message, () => { activeStoryboard = null; setStep(6); }); return; }
+  }
+  const panels = (activeStoryboard.panels || []).map(p => {
+    const pid = `sb-${p.segment_number}-${p.shot_number}`;
+    const pad = n => String(n).padStart(2, '0');
+    return `<div class="prompt-card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <b style="color:var(--accent)">Panel — Segment ${p.segment_number}, Shot ${p.shot_number} (9:16)</b>
+        <button class="ghost" onclick="copyText('${pid}')">📋 Copy Image Prompt</button></div>
+      <pre id="${pid}">${escapeHtml(p.image_prompt)}</pre>
+      <label class="dropzone" id="dz-${pid}">+ Upload generated panel (panel_s${pad(p.segment_number)}_${pad(p.shot_number)}.png)
+        <input type="file" accept="image/*" style="display:none" onchange="uploadPanel(${p.segment_number},${p.shot_number},this,'dz-${pid}')"></label>
+    </div>`;
+  }).join('');
+  container.innerHTML = `<div class="card">
+    <div class="card-title"><span>Step 06 · Storyboard Image Prompts</span>
+      <button class="ok" onclick="setStep(7)">Proceed to Video ➔</button></div>
+    <p style="color:var(--dim);font-size:12.5px;margin-bottom:12px;">Mirrored style (every panel): <i>${escapeHtml(activeStoryboard.style_clause || '')}</i>. Copy each prompt into GPT Image 2 / Nano Banana Pro <b>with your character sheets attached</b>, generate the 9:16 panel, then upload it back.</p>
+    ${panels}
+    <div style="display:flex;justify-content:space-between;">
+      <button class="ghost" onclick="setStep(5)">← Screenplay</button>
+      <button class="ghost" onclick="activeStoryboard=null; setStep(6)">↻ Regenerate Prompts</button></div></div>`;
+}
+
+/* STEP 7: VIDEO & ASSEMBLY STUDIO (fetches real per-segment Seedance prompts) */
+async function renderVideoAssemblyView(container) {
+  if (!activeRunId) { container.innerHTML = briefFirst(); return; }
+  if (!activeVideoPrompts) {
+    container.innerHTML = loaderCard('Compiling per-segment Seedance prompts…');
+    try {
+      activeVideoPrompts = await api(`/api/v3/runs/${activeRunId}/video-prompts`, { method: 'POST' });
+    } catch (err) { container.innerHTML = errCard('Video prompts failed', err.message, () => { activeVideoPrompts = null; setStep(7); }); return; }
+  }
+  const manifest = activeVideoPrompts.refs_manifest?.segments || {};
+  const segs = (activeVideoPrompts.prompts?.segments || []).map(seg => {
+    const sid = `seed-${seg.segment_number}`, pad = n => String(n).padStart(2, '0');
+    const refs = (manifest[String(seg.segment_number)] || []).map(r =>
+      `<code>${r.role}</code>:${r.binds}${(r.status || '').startsWith('pending') ? ' <span style="color:var(--warn)">(pending)</span>' : ''}`).join(' · ');
+    return `<div class="prompt-card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <b style="color:var(--purple)">Seedance 2.0 Prompt — Segment ${seg.segment_number} (~15s)</b>
+        <button class="ghost" onclick="copyText('${sid}')">📋 Copy Prompt</button></div>
+      <pre id="${sid}">${escapeHtml(seg.seedance_prompt)}</pre>
+      <p style="font-size:11px;color:var(--dim);margin-bottom:8px;">Attach refs: ${refs || '—'}</p>
+      <label class="dropzone" id="dz-${sid}">+ Upload generated clip (segment_${pad(seg.segment_number)}.mp4)
+        <input type="file" accept="video/*" style="display:none" onchange="uploadClip(${seg.segment_number},this,'dz-${sid}')"></label>
+    </div>`;
+  }).join('');
+  container.innerHTML = `<div class="card">
+    <div class="card-title"><span>Step 07 · Video Prompts & Assembly</span></div>
+    <p style="color:var(--dim);font-size:12.5px;margin-bottom:12px;">Copy each segment prompt into Seedance (attaching the listed @Image panels + character sheets + @Audio voices), generate the 15s clip, and upload it back.</p>
+    ${segs}
+    <div style="display:flex;justify-content:space-between;">
+      <button class="ghost" onclick="setStep(6)">← Storyboard</button>
+      <button class="ghost" onclick="activeVideoPrompts=null; setStep(7)">↻ Regenerate Prompts</button></div></div>`;
+}
+
+/* Shared helpers for the V3 stage views */
+function briefFirst() { return `<div class="card"><p style="color:var(--dim)">Lock the co-creation (Step 03) first — that creates the episode run.</p><button class="ghost" onclick="setStep(3)">← Go to Chat</button></div>`; }
+function loaderCard(msg) { return `<div class="card"><div class="loader-inline"><div class="pulsing-dots"><span></span><span></span><span></span></div><span>${msg}</span></div></div>`; }
+function errCard(title, msg, retryFn) { window.__retry = retryFn; return `<div class="card"><div class="error-card"><b>${title}</b><span>${msg}</span><button class="ghost" onclick="window.__retry&&window.__retry()">↻ Retry</button></div></div>`; }
+function copyText(id) { const el = document.getElementById(id); if (el) { navigator.clipboard.writeText(el.innerText); const b = event.target; const t = b.innerText; b.innerText = '✓ Copied'; setTimeout(() => b.innerText = t, 1200); } }
+function escapeHtml(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+async function uploadPanel(seg, shot, input, dzId) {
+  const f = input.files[0]; if (!f) return;
+  const fd = new FormData(); fd.append('file', f);
+  try { await fetch(`/api/v3/runs/${activeRunId}/panels/${seg}/${shot}`, { method: 'POST', body: fd });
+    const dz = document.getElementById(dzId); if (dz) { dz.classList.add('filled'); dz.childNodes[0].nodeValue = '✓ Panel uploaded — '; } }
+  catch (e) { alert('Upload failed: ' + e); }
+}
+async function uploadClip(seg, input, dzId) {
+  const f = input.files[0]; if (!f) return;
+  const fd = new FormData(); fd.append('file', f);
+  try { await fetch(`/api/v3/runs/${activeRunId}/clips/${seg}`, { method: 'POST', body: fd });
+    const dz = document.getElementById(dzId); if (dz) { dz.classList.add('filled'); dz.childNodes[0].nodeValue = '✓ Clip uploaded — '; } }
+  catch (e) { alert('Upload failed: ' + e); }
+}
+
+// Initial Load
+setStep(1);
+fetchStereotypes();
+async function fetchSavedEpisodes() {
+  try {
+    const episodes = await api('/api/v3/episodes');
+    const select = $('#saved-episodes-select');
+    if (!select) return;
+    const optionsHtml = '<option value="">📂 Resume Saved Episode...</option>' + episodes.map(ep => `
+      <option value="${ep.run_id}" ${activeRunId === ep.run_id ? 'selected' : ''}>
+        ${ep.title} (${ep.main_cast || 'No Cast'}) [${ep.run_id.slice(0,6)}]
+      </option>
+    `).join('');
+    select.innerHTML = optionsHtml;
+  } catch (e) {
+    console.error("Failed to fetch saved episodes", e);
+  }
+}
+
+async function loadSavedEpisode(runId) {
+  if (!runId) return;
+  try {
+    const data = await api(`/api/v3/runs/${runId}`);
+    activeRunId = data.run_id;
+    activeBrief = data.brief;
+    activeScreenplay = data.screenplay;
+    activeStoryboard = data.storyboard;
+    activeVideoPrompts = data.prompts;
+    
+    if (activeBrief) {
+      selectedStereotype = {
+        name_de: activeBrief.stereotype_name || activeBrief.title_de,
+        category: activeBrief.category || 'General',
+        description: activeBrief.stereotype_name
+      };
+      selectedCast = activeBrief.cast || { main: "Rolf die Wurst" };
+      episodeCefr = activeBrief.cefr_level || "A1";
+      selectedLocation = { location: activeBrief.location };
+      selectedLesson = { lesson: (activeBrief.lesson?.particle || activeBrief.lesson?.structure || '') };
+      selectedAngle = { label: activeBrief.comedic_angle || 'Angle' };
+      updateSidebarDecisions();
+    }
+    
+    localStorage.setItem('activeRunId', runId);
+    fetchSavedEpisodes();
+    
+    if (data.storyboard) setStep(6);
+    else if (data.screenplay) setStep(5);
+    else if (data.brief) setStep(4);
+    else setStep(3);
+  } catch (err) {
+    alert("Failed to load saved episode: " + err.message);
+  }
+}
+
+// Auto-resume active run on page refresh
+window.addEventListener('DOMContentLoaded', async () => {
+  fetchSavedEpisodes();
+  const savedRunId = localStorage.getItem('activeRunId');
+  if (savedRunId) {
+    console.log("Auto-resuming active run:", savedRunId);
+    await loadSavedEpisode(savedRunId);
+  }
+});
 </script>
 </body>
 </html>

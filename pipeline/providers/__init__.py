@@ -7,3 +7,4 @@ is identical, so real APIs are a one-key change, never a rewrite.
 """
 
 from .video import get_video_provider  # noqa: F401
+from .image import get_image_provider  # noqa: F401

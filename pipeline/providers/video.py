@@ -67,13 +67,17 @@ class MockVideoProvider:
 class FalVideoProvider:
     """Real Seedance via fal.ai. Requires: `pip install fal-client` + FAL_KEY in .env.
 
-    ⚠ VERIFY BEFORE FIRST REAL RUN: `MODEL` is the fal.ai Seedance route and the
-    `arguments` keys must match fal.ai's CURRENT Seedance schema (these models are
-    newer than this code — confirm at https://fal.ai/models). Everything else
-    (upload refs → subscribe → download) is the standard fal_client flow.
+    Endpoint = Seedance 2.0 `reference-to-video` (verified in
+    docs/planning/RESEARCH_v3_tech_derisk_seedance_and_storyboard.md §2/§5b): it is
+    the only route taking many image refs + audio refs, so it carries our
+    char/style/storyboard images AND per-character voice refs (Path A).
+    `image_urls`(≤9) / `audio_urls`(≤3,≤15s) / `duration`(4–15s) / `generate_audio`
+    / `aspect_ratio` / `resolution` are the real schema keys. Residual unknown (§7):
+    whether a paid call truly clones a German voice + lip-syncs — needs one FAL_KEY
+    test. Confirm the exact `fal-ai/…` prefix from the model page on first run.
     """
     name = "fal"
-    MODEL = os.environ.get("FAL_SEEDANCE_MODEL", "fal-ai/bytedance/seedance/v1/pro/text-to-video")
+    MODEL = os.environ.get("FAL_SEEDANCE_MODEL", "fal-ai/bytedance/seedance-2.0/reference-to-video")
 
     def __init__(self):
         if not os.environ.get("FAL_KEY"):
@@ -101,16 +105,21 @@ class FalVideoProvider:
             else:
                 image_urls.append(url)
 
+        # Seedance 2.0 duration is an enum 4–15s; V3 clips target ~15s. Clamp
+        # whatever the scene/segment asks into that window.
+        dur = int(scene.get("duration_s", 15) or 15)
+        dur = max(4, min(dur, 15))
         args = {
             "prompt": prompt[:3000],
             "aspect_ratio": "9:16",
             "resolution": "720p",
-            "duration": int(scene.get("duration_s", 7) or 7),
+            "duration": dur,
+            "generate_audio": True,  # keep true so @Audio voice refs drive lip-sync
         }
         if image_urls:
-            args["image_urls"] = image_urls  # ⚠ confirm key name in current fal schema
+            args["image_urls"] = image_urls  # ✓ reference-to-video schema (≤9 images)
         if audio_urls:
-            args["audio_urls"] = audio_urls  # ⚠ confirm key name in current fal schema
+            args["audio_urls"] = audio_urls  # ✓ reference-to-video schema (≤3, ≤15s)
 
         result = fal_client.subscribe(self.MODEL, arguments=args, with_logs=False)
         url = (result.get("video") or {}).get("url") if isinstance(result.get("video"), dict) \

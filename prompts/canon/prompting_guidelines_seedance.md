@@ -1,6 +1,8 @@
-# Prompting Guidelines — Seedance 2.5
+# Prompting Guidelines — Seedance 2.0
 
-> version: 2.1 · canon file · v2.1 (2026-07-21): per-character voice-identity references (Path A)
+> version: 2.2 · canon file
+> v2.2 (2026-07-22): naming correction Seedance 2.5 → **2.0** (the live fal model); image-ref cap corrected to **≤ 9** for `bytedance/seedance-2.0/reference-to-video`. Basis: `docs/planning/RESEARCH_v3_tech_derisk_seedance_and_storyboard.md` §5a — all other guidance confirmed correct by fal's docs. V3 context: `VISION_v3_universe_and_studio.md`.
+> v2.1 (2026-07-21): per-character voice-identity references (Path A)
 
 ## 1. Prompt structure (strict order)
 
@@ -19,7 +21,7 @@ Engine weights **first 20–30 words** heaviest. Lock **primary subject + core a
 
 | Slot | Limit | Syntax | Role |
 |---|---|---|---|
-| Images | ≤ 9 (v2.0) / ≤ 50 (v2.5) | `@ImageN` | Identity lock, style anchor |
+| Images | ≤ 9 | `@ImageN` | Identity lock, style anchor (char sheet, portrait, style ref, storyboard frame) |
 | Videos | ≤ 3 (≤ 15 s total) | `@VideoN` | Motion trajectory, camera transfer |
 | Audio  | ≤ 3 (total ≤ clip length) | `@AudioN` | Rhythm, phoneme lip-sync |
 

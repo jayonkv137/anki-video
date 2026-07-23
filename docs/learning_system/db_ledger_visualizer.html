@@ -1,593 +1,416 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Learning System: Supabase Ledger Visualizer</title>
-    <style>
-        :root {
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --accent: #38bdf8;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155;
-            --success: #4ade80;
-            --warning: #fbbf24;
-            --danger: #f87171;
-            --primary: #6366f1;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E3 Supabase Ledger & Series Memory Visualizer</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --primary: #3b82f6;
+      --accent: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --code-bg: #090d16;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.5;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
 
-        header {
-            max-width: 1200px;
-            margin: 0 auto 30px auto;
-            text-align: center;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 20px;
-        }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 2rem;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
 
-        h1 {
-            margin: 0 0 10px 0;
-            color: var(--accent);
-        }
+    header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
 
-        .instructions {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto;
-        }
+    h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 0.5rem; }
+    p.subtitle { color: var(--muted); font-size: 0.95rem; }
 
-        .controls {
-            max-width: 1200px;
-            margin: 0 auto 30px auto;
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+    .control-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
 
-        button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-        }
+    label { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
 
-        button.btn-accent {
-            background-color: var(--accent);
-            color: var(--bg);
-        }
-        button.btn-accent:hover {
-            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
-        }
+    select, input, button {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
 
-        button.btn-danger {
-            background-color: var(--danger);
-        }
-        button.btn-danger:hover {
-            box-shadow: 0 4px 12px rgba(248, 113, 113, 0.4);
-        }
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
 
-        button:disabled {
-            background-color: #475569;
-            color: #94a3b8;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+    button:hover { opacity: 0.9; transform: translateY(-1px); }
+    button.btn-accent { background: var(--accent); color: #000; }
+    button.btn-danger { background: var(--danger); color: white; }
 
-        .workspace {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 30px;
-        }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
 
-        @media (max-width: 900px) {
-            .workspace {
-                grid-template-columns: 1fr;
-            }
-        }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .table-container {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--primary);
+    }
 
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 10px;
-            margin: 0;
-        }
+    .table-container {
+      overflow-x: auto;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
 
-        .table-header h2 {
-            margin: 0;
-            font-size: 1.25rem;
-            color: var(--accent);
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      text-align: left;
+    }
 
-        .db-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            text-align: left;
-        }
+    th, td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
 
-        .db-table th, .db-table td {
-            padding: 10px;
-            border-bottom: 1px solid var(--border);
-        }
+    th { background: #1e293b; color: var(--muted); position: sticky; top: 0; }
 
-        .db-table th {
-            background-color: rgba(15, 23, 42, 0.4);
-            color: var(--text-muted);
-            font-weight: 600;
-        }
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
 
-        .db-table tr.active-row {
-            background-color: rgba(56, 189, 248, 0.1);
-        }
+    .badge-running { background: rgba(59, 130, 246, 0.2); color: var(--primary); }
+    .badge-choice { background: rgba(245, 158, 11, 0.2); color: var(--accent); }
+    .badge-completed { background: rgba(16, 185, 129, 0.2); color: var(--success); }
 
-        .db-table tr.new-row {
-            animation: highlightNew 1s ease-out;
-        }
+    .digest-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.8rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #38bdf8;
+      white-space: pre-wrap;
+      height: 180px;
+      overflow-y: auto;
+    }
 
-        @keyframes highlightNew {
-            0% { background-color: rgba(74, 222, 128, 0.4); }
-            100% { background-color: transparent; }
-        }
+    .code-bridge {
+      background: #020617;
+      border: 1px dashed var(--primary);
+      padding: 1.25rem;
+      border-radius: 8px;
+    }
 
-        .db-table tr.cascade-delete {
-            animation: fadeOutDelete 0.8s ease-in forwards;
-        }
-
-        @keyframes fadeOutDelete {
-            0% { background-color: rgba(248, 113, 113, 0.4); opacity: 1; }
-            100% { background-color: rgba(248, 113, 113, 0.1); opacity: 0; transform: scaleY(0); display: none; }
-        }
-
-        /* Sidebar Info Panel */
-        .info-panel {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            position: sticky;
-            top: 20px;
-            height: fit-content;
-        }
-
-        .info-panel h3 {
-            margin: 0 0 10px 0;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-            color: var(--accent);
-        }
-
-        .explanation-box {
-            background-color: rgba(15, 23, 42, 0.5);
-            border-left: 4px solid var(--primary);
-            padding: 15px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .explanation-box strong {
-            color: var(--text);
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .stat-card {
-            background-color: rgba(15, 23, 42, 0.4);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .stat-card .num {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--success);
-        }
-
-        .stat-card .label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        /* Connector Lines (Foreign Keys representation) */
-        .fk-badge {
-            background-color: rgba(99, 102, 241, 0.2);
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.75rem;
-        }
-    </style>
+    .code-bridge h3 { font-size: 0.95rem; color: var(--primary); margin-bottom: 0.5rem; }
+    .code-snippet { font-family: monospace; font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; }
+    .highlight { color: #f43f5e; font-weight: bold; }
+    .highlight-green { color: #10b981; font-weight: bold; }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1>Supabase Ledger Schema Visualizer</h1>
-        <p class="instructions">An interactive sandbox explaining the relational schema of your run ledger tables: runs, run_events, and episodes.</p>
-    </header>
+  <header>
+    <h1>E3 Supabase Ledger & Series Memory Visualizer</h1>
+    <p class="subtitle">Interactive Glass-Box Sandbox: Simulate LLM token costs, inspect PostgREST tables, test SHA-256 hashes, and generate series memory digests.</p>
+  </header>
 
-    <div class="controls">
-        <button id="btn-start" class="btn-accent">🚀 Start New Run</button>
-        <button id="btn-event" disabled>📝 Log Stage Event</button>
-        <button id="btn-cost" disabled>💰 Add LLM Cost</button>
-        <button id="btn-episode" disabled>🎬 Save Completed Episode</button>
-        <button id="btn-delete" class="btn-danger" disabled>🗑️ Cascading Delete Run</button>
+  <!-- CONTROLS -->
+  <div class="control-panel">
+    <div class="form-group">
+      <label>1. Select LLM Stage & Model</label>
+      <select id="stageSelect">
+        <option value="story_options">Stage 1a: story_options (Sonnet 5)</option>
+        <option value="story_expand">Stage 1b: story_expand (Sonnet 5)</option>
+        <option value="screenplay">Stage 2: screenplay (Sonnet 5)</option>
+        <option value="quality_check">Stage 6: quality_check (Haiku 4.5)</option>
+        <option value="prompts">Stage 7: prompts (Sonnet 5)</option>
+      </select>
     </div>
 
-    <div class="workspace">
-        
-        <!-- LEFT COLUMN: LIVE DATABASE TABLES -->
-        <div style="display: flex; flex-direction: column; gap: 30px;">
-            
-            <!-- RUNS TABLE -->
-            <div class="table-container">
-                <div class="table-header">
-                    <h2>Table: runs</h2>
-                    <span class="fk-badge">Primary Key: id</span>
-                </div>
-                <table class="db-table" id="table-runs">
-                    <thead>
-                        <tr>
-                            <th>id (UUID)</th>
-                            <th>status</th>
-                            <th>stage</th>
-                            <th>cost_cents</th>
-                            <th>word_positions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="5" style="text-align: center; color: var(--text-muted);">Database is empty. Click "Start New Run" above.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- RUN EVENTS TABLE -->
-            <div class="table-container">
-                <div class="table-header">
-                    <h2>Table: run_events</h2>
-                    <span class="fk-badge">Foreign Key: run_id ➔ runs.id</span>
-                </div>
-                <table class="db-table" id="table-events">
-                    <thead>
-                        <tr>
-                            <th>id (bigint)</th>
-                            <th>run_id (FK)</th>
-                            <th>stage</th>
-                            <th>status</th>
-                            <th>tokens_in</th>
-                            <th>tokens_out</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: var(--text-muted);">No events logged yet.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- EPISODES TABLE -->
-            <div class="table-container">
-                <div class="table-header">
-                    <h2>Table: episodes</h2>
-                    <span class="fk-badge">Foreign Key: run_id ➔ runs.id</span>
-                </div>
-                <table class="db-table" id="table-episodes">
-                    <thead>
-                        <tr>
-                            <th>run_id (FK)</th>
-                            <th>title_de</th>
-                            <th>scenario</th>
-                            <th>mains</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="4" style="text-align: center; color: var(--text-muted);">No episodes completed yet.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-
-        <!-- RIGHT COLUMN: INTERACTIVE PEDAGOGY -->
-        <div class="info-panel">
-            <h3>Schema Insights</h3>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="num" id="stat-total-cost">0.00$</div>
-                    <div class="label">Total Spent</div>
-                </div>
-                <div class="stat-card">
-                    <div class="num" id="stat-events-count">0</div>
-                    <div class="label">Logged Events</div>
-                </div>
-            </div>
-
-            <div class="explanation-box" id="explanation">
-                <strong>Database Ready</strong>
-                Click "Start New Run" to open an active session. The pipeline creates a unique UUID for the run and updates its status to 'running'.
-            </div>
-
-            <div class="explanation-box" style="border-left-color: var(--accent);">
-                <strong>💡 Did you know?</strong>
-                Because of the PostgREST API, we don't write SQL queries in python. We write:
-                <code style="display: block; background: #0f172a; padding: 6px; border-radius: 4px; font-size: 0.8rem; margin-top: 5px; color: var(--accent);">
-                    requests.post(url, json=data)
-                </code>
-                Supabase converts this JSON directly into SQL under the hood!
-            </div>
-        </div>
-
+    <div class="form-group">
+      <label>Prompt Tokens (In)</label>
+      <input type="number" id="tokensIn" value="10500" style="width: 110px;">
     </div>
 
-    <script>
-        let runId = null;
-        let currentStageIdx = 0;
-        let totalCost = 0;
-        let eventCounter = 1001;
+    <div class="form-group">
+      <label>Completion Tokens (Out)</label>
+      <input type="number" id="tokensOut" value="4200" style="width: 110px;">
+    </div>
 
-        const stages = ["init", "words", "story_options", "screenplay", "quality_check", "prompts", "finalize"];
+    <button onclick="executeStage()">▶ Execute Stage & Update Ledger</button>
+    <button onclick="tamperArtifact()" class="btn-accent">⚠️ Tamper Artifact Hash</button>
+    <button onclick="resetLedger()" class="btn-danger">Reset All</button>
+  </div>
 
-        const btnStart = document.getElementById("btn-start");
-        const btnEvent = document.getElementById("btn-event");
-        const btnCost = document.getElementById("btn-cost");
-        const btnEpisode = document.getElementById("btn-episode");
-        const btnDelete = document.getElementById("btn-delete");
+  <!-- 3 TABLE GRID -->
+  <div class="grid-3">
 
-        const tableRuns = document.getElementById("table-runs").querySelector("tbody");
-        const tableEvents = document.getElementById("table-events").querySelector("tbody");
-        const tableEpisodes = document.getElementById("table-episodes").querySelector("tbody");
+    <!-- RUNS TABLE -->
+    <div class="card">
+      <div class="card-title">
+        🗄️ `runs` Table
+        <span id="runCostBadge" class="badge badge-completed">0¢</span>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr><th>id</th><th>status</th><th>stage</th><th>cost</th></tr>
+          </thead>
+          <tbody id="runsTbody">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-        const explanation = document.getElementById("explanation");
-        const statCost = document.getElementById("stat-total-cost");
-        const statEvents = document.getElementById("stat-events-count");
+    <!-- RUN_EVENTS TABLE -->
+    <div class="card">
+      <div class="card-title">
+        📜 `run_events` Table (Audit log)
+        <span id="eventCountBadge" class="badge badge-running">0 events</span>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr><th>stage</th><th>tokens (in/out)</th><th>sha256</th></tr>
+          </thead>
+          <tbody id="eventsTbody">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-        // Helper: Generate UUID
-        function generateUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-        }
+    <!-- EPISODES TABLE -->
+    <div class="card">
+      <div class="card-title">
+        🎬 `episodes` (Series Memory)
+        <button onclick="addEpisode()" style="font-size:0.7rem; padding:0.2rem 0.5rem;">+ Add Ep</button>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr><th>title_de</th><th>scenario</th><th>mains</th></tr>
+          </thead>
+          <tbody id="episodesTbody">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-        // Action 1: Start Run
-        btnStart.addEventListener("click", () => {
-            runId = generateUUID();
-            currentStageIdx = 0;
-            totalCost = 0;
-            
-            // Update buttons
-            btnStart.disabled = true;
-            btnEvent.disabled = false;
-            btnCost.disabled = false;
-            btnEpisode.disabled = true;
-            btnDelete.disabled = false;
+  </div>
 
-            // Clear events & episodes UI
-            tableEvents.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No events logged yet.</td></tr>`;
-            tableEpisodes.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No episodes completed yet.</td></tr>`;
+  <!-- MEMORY DIGEST OUTPUT -->
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <div class="card-title">🧠 Series Memory Digest (`rcp.py` -> Prompt Injection Output)</div>
+    <div class="digest-box" id="digestBox">// Click "+ Add Ep" or execute a full run to see the series memory digest injected into the LLM prompt.</div>
+  </div>
 
-            // Write row to runs
-            tableRuns.innerHTML = `
-                <tr class="new-row active-row">
-                    <td><code style="color: var(--accent);">${runId.substring(0,8)}...</code></td>
-                    <td><span style="color: var(--success);">running</span></td>
-                    <td id="run-stage-val">init</td>
-                    <td id="run-cost-val">0</td>
-                    <td>[311, 312, 313]</td>
-                </tr>
-            `;
+  <!-- CODE BRIDGE -->
+  <div class="code-bridge">
+    <h3>🔍 Python & SQL Code Bridge (Under The Hood)</h3>
+    <div class="code-snippet" id="codeBridge">
+// Waiting for stage execution... Click "Execute Stage & Update Ledger" to see pipeline/ledger.py math!
+    </div>
+  </div>
 
-            statCost.textContent = "0.00$";
-            statEvents.textContent = "0";
+  <script>
+    let currentRun = {
+      id: "e0c04e38-76d4-4fd0-a63d-982dd23f5c11",
+      status: "running",
+      stage: "init",
+      cost_cents: 0,
+      word_positions: [27, 44, 62, 80, 189, 290, 394, 474, 495, 575]
+    };
 
-            explanation.innerHTML = `
-                <strong>🟢 Run Started!</strong>
-                A new row has been inserted into the <code>runs</code> table with status <code>'running'</code> and stage <code>'init'</code>.
-                <br><br>
-                Notice the unique ID. This UUID is our anchor; any event logged next must link back to this exact ID using a <strong>Foreign Key</strong>.
-            `;
-        });
+    let events = [];
+    let episodes = [
+      { title_de: "Kati und der Handtuch-Krieg", scenario: "Freibad towel war over sunbed spot", mains: ["Kati die Kartoffel", "Rolf die Wurst"] }
+    ];
 
-        // Action 2: Log Stage Event
-        btnEvent.addEventListener("click", () => {
-            if (currentStageIdx >= stages.length - 1) {
-                explanation.innerHTML = `
-                    <strong>🏁 Pipeline Finalized!</strong>
-                    You've run all stages. You can now choose to save this run as a completed episode in the series memory (Table: <code>episodes</code>).
-                `;
-                return;
-            }
+    const PRICING = {
+      "claude-sonnet-5": { in: 0.0003, out: 0.0015 },
+      "claude-haiku-4-5": { in: 0.0001, out: 0.0005 }
+    };
 
-            currentStageIdx++;
-            const newStage = stages[currentStageIdx];
+    function render() {
+      // 1. Runs
+      document.getElementById('runsTbody').innerHTML = `
+        <tr>
+          <td><code>${currentRun.id.slice(0, 8)}...</code></td>
+          <td><span class="badge badge-${currentRun.status === 'completed' ? 'completed' : 'running'}">${currentRun.status}</span></td>
+          <td><code>${currentRun.stage}</code></td>
+          <td><strong>${currentRun.cost_cents}¢</strong></td>
+        </tr>
+      `;
+      document.getElementById('runCostBadge').textContent = `${currentRun.cost_cents}¢ (~$${(currentRun.cost_cents/100).toFixed(2)})`;
 
-            // Update runs UI
-            document.getElementById("run-stage-val").textContent = newStage;
+      // 2. Events
+      document.getElementById('eventsTbody').innerHTML = events.map(e => `
+        <tr>
+          <td><code>${e.stage}</code></td>
+          <td>${e.tokens_in} + ${e.tokens_out}</td>
+          <td><code style="color:${e.sha256.includes('TAMPERED') ? '#ef4444' : '#10b981'}">${e.sha256.slice(0, 10)}...</code></td>
+        </tr>
+      `).join('');
+      document.getElementById('eventCountBadge').textContent = `${events.length} events`;
 
-            // Clear empty row if first event
-            if (tableEvents.innerHTML.includes("No events logged")) {
-                tableEvents.innerHTML = "";
-            }
+      // 3. Episodes
+      document.getElementById('episodesTbody').innerHTML = episodes.map(ep => `
+        <tr>
+          <td><strong>${ep.title_de}</strong></td>
+          <td>${ep.scenario.slice(0, 30)}...</td>
+          <td>${ep.mains.join(', ')}</td>
+        </tr>
+      `).join('');
 
-            // Write event row
-            const tr = document.createElement("tr");
-            tr.className = "new-row";
-            tr.innerHTML = `
-                <td><code>${eventCounter++}</code></td>
-                <td><code style="color: var(--primary);">${runId.substring(0,8)}...</code></td>
-                <td><strong>${newStage}</strong></td>
-                <td><span style="color: var(--success);">completed</span></td>
-                <td>0</td>
-                <td>0</td>
-            `;
-            tableEvents.appendChild(tr);
+      // 4. Digest
+      let digest = "## Recent episodes (" + episodes.length + " most recent)\n\n";
+      episodes.forEach((ep, i) => {
+        digest += `${i+1}. **${ep.title_de}** — ${ep.scenario}\n   Mains: ${ep.mains.join(', ')}\n`;
+      });
+      digest += "\n## Aggregates\n- DO NOT repeat any of the above scenarios or main-cast pairings.";
+      document.getElementById('digestBox').textContent = digest;
+    }
 
-            // Update stats
-            statEvents.textContent = tableEvents.children.length;
+    function executeStage() {
+      const stage = document.getElementById('stageSelect').value;
+      const tIn = parseInt(document.getElementById('tokensIn').value) || 0;
+      const tOut = parseInt(document.getElementById('tokensOut').value) || 0;
 
-            explanation.innerHTML = `
-                <strong>📝 Stage Changed to: '${newStage}'</strong>
-                We just ran the logic for <code>${newStage}</code> and logged a new row in the <code>run_events</code> table.
-                <br><br>
-                Look at the <strong>run_id</strong> field in the event table. It matches the parent run's ID exactly! This represents a <code>Foreign Key (FK)</code> relationship.
-            `;
+      const model = stage === 'quality_check' ? 'claude-haiku-4-5' : 'claude-sonnet-5';
+      const rates = PRICING[model];
+      const addedCents = Math.round((tIn * rates.in + tOut * rates.out));
 
-            if (newStage === "finalize") {
-                btnEvent.disabled = true;
-                btnEpisode.disabled = false;
-            }
-        });
+      currentRun.stage = stage;
+      currentRun.cost_cents += addedCents;
+      if (stage === 'prompts') currentRun.status = 'completed';
 
-        // Action 3: Add LLM Cost
-        btnCost.addEventListener("click", () => {
-            const tIn = Math.floor(Math.random() * 5000) + 2000;
-            const tOut = Math.floor(Math.random() * 2000) + 500;
-            
-            // Cost logic: Sonnet 5 approx $3/M in, $15/M out
-            const cents = Math.round((tIn * 0.3 + tOut * 1.5) / 100);
-            totalCost += cents;
+      const mockHash = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      
+      events.push({
+        stage: stage,
+        tokens_in: tIn,
+        tokens_out: tOut,
+        sha256: mockHash
+      });
 
-            // Update runs UI cost field
-            document.getElementById("run-cost-val").textContent = totalCost;
+      render();
 
-            // Update event row tokens (update last row)
-            const rows = tableEvents.querySelectorAll("tr");
-            if (rows.length > 0) {
-                const lastRow = rows[rows.length - 1];
-                const cells = lastRow.querySelectorAll("td");
-                if (cells.length > 4) {
-                    cells[4].textContent = tIn;
-                    cells[5].textContent = tOut;
-                    lastRow.classList.add("new-row");
-                    setTimeout(() => lastRow.classList.remove("new-row"), 1000);
-                }
-            }
+      document.getElementById('codeBridge').innerHTML = `
+<span class="highlight"># pipeline/ledger.py (add_cost):</span>
+rate = PRICING_CENTS_PER_TOKEN["${model}"]
+cost = int(${tIn} * ${rates.in} + ${tOut} * ${rates.out}) <span class="highlight-green"># +${addedCents}¢</span>
+new_total = (run["cost_cents"] || 0) + cost
+update_run("${currentRun.id.slice(0,8)}...", cost_cents=${currentRun.cost_cents})
 
-            statCost.textContent = (totalCost / 100).toFixed(2) + "$";
+<span class="highlight"># Supabase REST Call (POST /rest/v1/run_events):</span>
+_post("run_events", { "run_id": "${currentRun.id.slice(0,8)}...", "stage": "${stage}", "artifact_sha256": "${mockHash.slice(0,10)}..." })
+      `;
+    }
 
-            explanation.innerHTML = `
-                <strong>💰 Cost added: ${cents} cents</strong>
-                We calculated the tokens spent (In: ${tIn}, Out: ${tOut}) and updated the <code>cost_cents</code> field in the parent <code>runs</code> table.
-                <br><br>
-                This ensures you have aggregate visibility on how much this specific generation run cost overall.
-            `;
-        });
+    function tamperArtifact() {
+      if (events.length === 0) {
+        alert("Execute at least one stage first!");
+        return;
+      }
+      events[events.length - 1].sha256 = "TAMPERED_HASH_BAD_CHECKSUM";
+      render();
+      document.getElementById('codeBridge').innerHTML = `
+<span class="highlight-green">⚠️ SHA-256 Checksum Mismatch Alert!</span>
+File contents on disk no longer match the hash logged in Supabase \`run_events\`.
+<span class="highlight"># rcp.py (verify_canon):</span>
+actual_hash = hashlib.sha256(path.read_bytes()).hexdigest()
+if actual_hash != expected_hash:
+    raise RuntimeError("Canon or Artifact hash mismatch! Tamper protection triggered.")
+      `;
+    }
 
-        // Action 4: Save Episode
-        btnEpisode.addEventListener("click", () => {
-            btnEpisode.disabled = true;
-            
-            // Clear empty state
-            tableEpisodes.innerHTML = "";
+    function addEpisode() {
+      const title = prompt("Enter Episode Title (DE):", "Bert und die Bier-Diktatur");
+      if (!title) return;
+      episodes.push({
+        title_de: title,
+        scenario: "Bert tries to enforce beer purity laws in the park",
+        mains: ["Bert das Bier", "Müller das Brot"]
+      });
+      render();
+    }
 
-            // Write episode row
-            const tr = document.createElement("tr");
-            tr.className = "new-row";
-            tr.innerHTML = `
-                <td><code style="color: var(--primary);">${runId.substring(0,8)}...</code></td>
-                <td><strong>Katis Abenteuer</strong></td>
-                <td>Kati seeks the perfect slice of bread.</td>
-                <td>["Kati die Kartoffel", "Müller das Brot"]</td>
-            `;
-            tableEpisodes.appendChild(tr);
+    function resetLedger() {
+      currentRun = {
+        id: "e0c04e38-76d4-4fd0-a63d-982dd23f5c11",
+        status: "running",
+        stage: "init",
+        cost_cents: 0,
+        word_positions: [27, 44, 62, 80, 189, 290, 394, 474, 495, 575]
+      };
+      events = [];
+      render();
+      document.getElementById('codeBridge').innerHTML = "// System reset. Ready.";
+    }
 
-            explanation.innerHTML = `
-                <strong>🎬 Saved to Episodes (Series Memory)</strong>
-                The completed run is now compressed and pushed to the <code>episodes</code> table.
-                <br><br>
-                Future runs will load the last 5 episodes from this table to construct the <strong>Series Memory Digest</strong>, preventing the pipeline from repeating this exact scenario!
-            `;
-        });
-
-        // Action 5: Cascading Delete
-        btnDelete.addEventListener("click", () => {
-            btnStart.disabled = false;
-            btnEvent.disabled = true;
-            btnCost.disabled = true;
-            btnEpisode.disabled = true;
-            btnDelete.disabled = true;
-
-            // Visual cascade animation
-            const runRows = tableRuns.querySelectorAll("tr");
-            runRows.forEach(r => r.className = "cascade-delete");
-
-            const eventRows = tableEvents.querySelectorAll("tr");
-            eventRows.forEach(r => r.className = "cascade-delete");
-
-            const episodeRows = tableEpisodes.querySelectorAll("tr");
-            episodeRows.forEach(r => r.className = "cascade-delete");
-
-            explanation.innerHTML = `
-                <strong>💥 ON DELETE CASCADE TRIGGERED!</strong>
-                When we run <code>DELETE FROM runs WHERE id = '${runId}'</code>, look what happens:
-                <br><br>
-                Because of the <code>ON DELETE CASCADE</code> constraint we set in the SQL DDL schema, PostgreSQL automatically finds all rows in <code>run_events</code> and <code>episodes</code> linked to this run ID and purges them too!
-            `;
-
-            setTimeout(() => {
-                tableRuns.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Database is empty. Click "Start New Run" above.</td></tr>`;
-                tableEvents.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No events logged yet.</td></tr>`;
-                tableEpisodes.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No episodes completed yet.</td></tr>`;
-                runId = null;
-            }, 800);
-        });
-    </script>
+    render();
+  </script>
 </body>
 </html>

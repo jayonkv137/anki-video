@@ -63,24 +63,103 @@ OPTION_SCHEMA = _schema(
 
 OPTIONS_SCHEMA = _schema(options=_arr(OPTION_SCHEMA))
 
+# V3 screenplay (2026-07-22): stereotype-driven, 2–3 SEGMENTS = 2–3 Seedance clips
+# (~15s each, one multi-shot generation per segment), NOT 10 one-per-word scenes.
+DIALOGUE_LINE = _schema(speaker=STR, german=STR, english=STR)
+
+# V3 director layer (2026-07-22, DESIGN_v3_data_flow.md): the filmmaker decisions the
+# screenplay locks per shot — they feed BOTH the storyboard panel and the Seedance motion
+# prompt. No on-screen/diegetic text (subtitles are a separate post step).
+SHOT_SCHEMA = _schema(
+    shot_number=INT,
+    duration_s=INT,       # seconds this shot runs; a segment's shots sum to its ~15s
+    shot_size=STR,        # ECU | CU | MCU | MS | MWS | WS | OTS
+    camera_angle=STR,     # eye-level | low | high | dutch | POV
+    camera_move=STR,      # the MOTION the video uses: "slow push-in" | "static" | "tracking" …
+    action=STR,           # ONE visible action (canon §6 one-action rule)
+    blocking=STR,         # who is where in the 9:16 vertical frame
+    gaze=STR,             # eyelines (who looks at what)
+    expression=STR,       # emotional beat (per character)
+    lighting_mood=STR,    # lighting + mood
+    dialogue=_arr(DIALOGUE_LINE),
+)
+
+SEGMENT_SCHEMA = _schema(
+    segment_number=INT,
+    duration_s=INT,       # ~15 — a single Seedance clip
+    setting=STR,
+    shots=_arr(SHOT_SCHEMA),
+)
+
 SCREENPLAY_SCHEMA = _schema(
-    title_de=STR, environment=STR,
-    scenes=_arr(_schema(
-        scene_number=INT, position=INT, german_word=STR, duration_s=INT,
-        setting=STR, action_en=STR,
-        dialogue=_arr(_schema(speaker=STR, german=STR, english=STR)),
-        target_word_emphasis=STR, continuity_notes=STR, learning_check=STR,
-    )),
+    title_de=STR,
+    stereotype=STR,        # the German micro-behavior (from the compendium)
+    typology=STR,          # one of the 5 (fixes grammar target + character pairing)
+    cefr_level=STR,        # A1 | A2 | B1 — sets word/sentence/duration caps
+    grammar_target=STR,    # the structure this episode teaches
+    total_duration_s=INT,  # 30 (2×15) default, 45 (3×15) when needed
+    environment=STR,
+    target_vocab=_arr(_schema(german=STR, english=STR, gender=STR)),  # emergent; gender ∈ der/die/das/— for color-coding
+    segments=_arr(SEGMENT_SCHEMA),
+)
+
+# ── Co-creation stage (V3) schemas — stereotype + human seed → Story Brief ──
+# (see docs/planning/DESIGN_cocreation_stage.md). The Brief is the handoff into skill-2.
+CAST_SCHEMA = _schema(main=STR, side=STR, guest=STR, background=STR)  # "" = unused role
+LESSON_SCHEMA = _schema(particle=STR, structure=STR, pragmatic_function=STR, pop_up_grammar=STR)
+TARGET_LINE_SCHEMA = _schema(speaker=STR, german=STR, english=STR, why=STR)
+
+# skill-1a-align → options for the human (Ask-Don't-Guess); lesson_options carry BOTH particle + structure
+LOCATION_OPTION = _schema(setting_type=STR, environment=STR, time_of_day=STR, why=STR)
+LESSON_OPTION = _schema(kind=STR, lesson=STR, pragmatic_function=STR, pop_up_grammar=STR, why=STR)  # kind: particle|structure
+ALIGN_SCHEMA = _schema(
+    stereotype_id=STR, stereotype_name=STR, cefr_level=STR, cast=CAST_SCHEMA,
+    location_options=_arr(LOCATION_OPTION),
+    lesson_options=_arr(LESSON_OPTION),
+    comedic_angle_suggestion=STR,
+)
+
+# skill-1b-diverge → 3–5 distinct comedic angles (Refine-via-Examples)
+ANGLE_SCHEMA = _schema(label=STR, operator=STR, premise=STR, game=STR,
+                       lesson_integration=STR, button=STR)
+DIVERGE_SCHEMA = _schema(options=_arr(ANGLE_SCHEMA))
+
+# skill-1c-commit → critique + the locked Story Brief (the handoff into skill-2)
+STORY_BRIEF_SCHEMA = _schema(
+    title_de=STR,
+    stereotype_id=STR, stereotype_name=STR, category=STR, cefr_level=STR,
+    seed=STR,                     # the human's braindump (anti-slop anchor)
+    cast=CAST_SCHEMA,
+    location=STR,
+    comedic_angle=STR,            # chosen typology / sub-genre
+    lesson=LESSON_SCHEMA,         # particle and/or structure (both offered, chosen)
+    premise=STR,
+    game_of_scene=STR,            # implicit stereotype "game" — never named in dialogue
+    escalation_beats=_arr(STR),   # base reality → first unusual → framing → escalation
+    button=STR,
+    target_line=TARGET_LINE_SCHEMA,
+    oblique_constraint=STR,       # the lateral curveball ("" if none)
+    banned_terms=_arr(STR),       # stereotype name+synonyms + pedagogical tokens kept OUT of dialogue
+)
+BRIEF_COMMIT_SCHEMA = _schema(
+    critique=_arr(_schema(check=STR, passed=BOOL, note=STR)),
+    brief=STORY_BRIEF_SCHEMA,
 )
 
 REF_SCHEMA = _schema(slot=STR, binds=STR, role=STR)
 
+# V3 storyboard (skill-2b): per-shot image-generation prompts, compiled from the screenplay
+PANEL_PROMPT_SCHEMA = _schema(segment_number=INT, shot_number=INT, image_prompt=STR)
+STORYBOARD_SCHEMA = _schema(style_clause=STR, panels=_arr(PANEL_PROMPT_SCHEMA))
+
+# V3 (2026-07-22): ONE Seedance prompt per 15s SEGMENT (Omni dropped, canon look-blocks
+# dropped — the panels + sheets carry the look). role ∈ identity | voice | style | panel.
 PROMPTS_SCHEMA = _schema(
-    scenes=_arr(_schema(
-        scene_number=INT,
-        characters_in_frame=_arr(STR),
-        seedance=_schema(prompt=STR, reference_assets=_arr(REF_SCHEMA)),
-        omni=_schema(base_prompt=STR, edit_turns=_arr(STR), reference_images=_arr(REF_SCHEMA)),
+    segments=_arr(_schema(
+        segment_number=INT,
+        characters=_arr(STR),
+        seedance_prompt=STR,
+        reference_assets=_arr(REF_SCHEMA),
     )),
 )
 
@@ -97,14 +176,60 @@ CAPTION_SCHEMA = _schema(caption=STR, hashtags=_arr(STR))
 
 # ── LLM call helper ─────────────────────────────────────────────
 
+def _call_gemini(system: str, user: str, schema: dict, temperature: float | None = None) -> tuple[dict, int, int]:
+    from google import genai
+    from google.genai import types
+    api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    model_name = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+    client = genai.Client(api_key=api_key)
+    
+    config = types.GenerateContentConfig(
+        system_instruction=system,
+        response_mime_type="application/json",
+        temperature=temperature if temperature is not None else 0.7,
+    )
+    
+    response = client.models.generate_content(
+        model=model_name,
+        contents=user,
+        config=config,
+    )
+    
+    # Clean control characters if present and use strict=False to allow unescaped newlines in JSON strings
+    text = response.text
+    try:
+        parsed = json.loads(text, strict=False)
+    except json.JSONDecodeError:
+        # Fallback sanitize raw control characters inside strings
+        import re
+        sanitized = re.sub(r'[\x00-\x1f\x7f-\x9f]', lambda m: '\\n' if m.group(0) == '\n' else '', text)
+        parsed = json.loads(sanitized, strict=False)
+    t_in = response.usage_metadata.prompt_token_count if response.usage_metadata else 500
+    t_out = response.usage_metadata.candidates_token_count if response.usage_metadata else 500
+    return parsed, t_in, t_out
+
+
 def _call(client: Anthropic, system: str, user: str, label: str,
           schema: dict, run_id: str, stage: str,
-          model: str = MODEL, max_tokens: int = 24000) -> tuple[dict, int, int]:
-    """Call Anthropic with structured output. Returns (parsed_json, tokens_in, tokens_out)."""
+          model: str = MODEL, max_tokens: int = 24000,
+          temperature: float | None = None) -> tuple[dict, int, int]:
+    """Call LLM (Google Gemini or Anthropic) with structured output."""
+    google_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    if google_key:
+        try:
+            parsed, t_in, t_out = _call_gemini(system, user, schema, temperature)
+            print(f"[{label} (Gemini 2.5): {t_in} in / {t_out} out]")
+            ledger.add_cost(run_id, t_in, t_out, model="gemini-2.5-flash")
+            return parsed, t_in, t_out
+        except Exception as e:
+            print(f"[Gemini call error, falling back to Anthropic: {e}]")
+
+    extra = {"temperature": temperature} if temperature is not None else {}
     with client.messages.stream(
         model=model, max_tokens=max_tokens, system=system,
         output_config={"format": {"type": "json_schema", "schema": schema}},
         messages=[{"role": "user", "content": user}],
+        **extra,
     ) as stream:
         resp = stream.get_final_message()
 
@@ -114,7 +239,7 @@ def _call(client: Anthropic, system: str, user: str, label: str,
     text = next(b.text for b in resp.content if b.type == "text")
     result = json.loads(text)
 
-    # Track cost (priced at the model actually used for this call)
+    # Track cost
     ledger.add_cost(run_id, t_in, t_out, model=model)
 
     return result, t_in, t_out
@@ -266,6 +391,96 @@ def stage_story_expand(run_id: str, rcp: RunContextPack, words: list[dict],
     return story
 
 
+# ── Co-creation stage (V3): stereotype + human seed → Story Brief ──────────
+# Three human-gated steps (align → diverge → commit). See DESIGN_cocreation_stage.md.
+# For V3 runs these replace the word-based story stages above (kept for the legacy deck flow).
+
+OBLIQUE_STRATEGIES = [
+    "The supporting character controls the space through silence.",
+    "The conflict centers on an object smaller than a coin.",
+    "One character never once breaks their routine, whatever happens.",
+    "The escalation happens entirely through a single repeated gesture.",
+    "The main character treats a mundane chore as a high-stakes emergency.",
+    "The room's temperature or air is the real antagonist.",
+    "Nobody ever raises their voice; the tension is all in restraint.",
+]
+
+
+def stage_align(run_id: str, rcp: RunContextPack, stereotype: dict, seed: str,
+                cast: dict, cefr_level: str, ep_dir: Path, client: Anthropic) -> dict:
+    """Co-creation step 1 (skill-1a): stereotype + seed + cast → location & lesson options."""
+    skill = _load_skill("skill-1a-align.md")
+    skill = (skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
+             .replace("{{STEREOTYPE_JSON}}", json.dumps(stereotype, ensure_ascii=False))
+             .replace("{{SEED}}", seed or "(none — invent something grounded and relatable)")
+             .replace("{{CAST_JSON}}", json.dumps(cast, ensure_ascii=False))
+             .replace("{{CEFR_LEVEL}}", cefr_level))
+    system = rcp.for_story_stage() + "\n\n" + skill
+    aligned, t_in, t_out = _call(
+        client, system,
+        "Produce the alignment JSON (location options + BOTH-kind lesson options) now.",
+        "skill-1a align", ALIGN_SCHEMA, run_id, "align")
+    ep_dir.mkdir(parents=True, exist_ok=True)
+    p = ep_dir / "align.json"
+    p.write_text(json.dumps(aligned, ensure_ascii=False, indent=2), encoding="utf-8")
+    ledger.log_event(run_id, "align", "completed", artifact_path=str(p.relative_to(REPO)),
+                     artifact_sha256=ledger.sha256_file(p), tokens_in=t_in, tokens_out=t_out)
+    ledger.update_run(run_id, stage="align")
+    return aligned
+
+
+def stage_diverge(run_id: str, rcp: RunContextPack, aligned_chosen: dict,
+                  oblique: str | None, ep_dir: Path, client: Anthropic) -> dict:
+    """Co-creation step 2 (skill-1b, HOT temp): chosen params → 3–5 comedic angles."""
+    oblique = oblique or random.choice(OBLIQUE_STRATEGIES)
+    skill = _load_skill("skill-1b-diverge.md")
+    skill = (skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
+             .replace("{{ALIGNED_JSON}}", json.dumps(aligned_chosen, ensure_ascii=False))
+             .replace("{{OBLIQUE_CONSTRAINT}}", oblique))
+    system = rcp.for_story_stage() + "\n\n" + skill
+    diverge, t_in, t_out = _call(
+        client, system, "Produce 3–5 distinct comedic angle options as JSON now.",
+        "skill-1b diverge", DIVERGE_SCHEMA, run_id, "diverge", temperature=1.0)
+    p = ep_dir / "diverge.json"
+    p.write_text(json.dumps({"oblique_constraint": oblique, **diverge}, ensure_ascii=False, indent=2),
+                 encoding="utf-8")
+    ledger.log_event(run_id, "diverge", "completed", artifact_path=str(p.relative_to(REPO)),
+                     artifact_sha256=ledger.sha256_file(p), tokens_in=t_in, tokens_out=t_out)
+    ledger.update_run(run_id, stage="diverge")
+    return diverge
+
+
+def stage_commit(run_id: str, rcp: RunContextPack, aligned_chosen: dict, chosen_angle: dict,
+                 seed: str, ep_dir: Path, client: Anthropic) -> tuple[dict, list[str]]:
+    """Co-creation step 3 (skill-1c, COLD temp): chosen angle → critique → locked Story Brief."""
+    skill = _load_skill("skill-1c-commit.md")
+    skill = (skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
+             .replace("{{ALIGNED_JSON}}", json.dumps(aligned_chosen, ensure_ascii=False))
+             .replace("{{CHOSEN_ANGLE_JSON}}", json.dumps(chosen_angle, ensure_ascii=False))
+             .replace("{{SEED}}", seed or "(none)"))
+    system = rcp.for_story_stage() + "\n\n" + skill
+    out, t_in, t_out = _call(
+        client, system, "Run the critique and output the committed brief JSON now.",
+        "skill-1c commit", BRIEF_COMMIT_SCHEMA, run_id, "commit", temperature=0.2)
+    brief = out.get("brief", {})
+    problems = validate_brief(brief)
+    p = ep_dir / "brief.json"
+    p.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+    ledger.log_event(run_id, "commit", "completed", artifact_path=str(p.relative_to(REPO)),
+                     artifact_sha256=ledger.sha256_file(p), tokens_in=t_in, tokens_out=t_out,
+                     detail={"brief_problems": problems})
+    ledger.update_run(run_id, stage="commit")
+    # Mark the stereotype covered so it drops out of future daily picks.
+    sid = brief.get("stereotype_id")
+    if sid:
+        from . import stereotypes as stlib
+        try:
+            stlib.mark_covered(sid, ep_dir.name)
+        except Exception as e:
+            print(f"  (note: could not mark stereotype {sid} covered: {e})")
+    return brief, problems
+
+
 # ── Stage 5: Screenplay ─────────────────────────────────────────
 
 def word_stem(g: str) -> str:
@@ -280,27 +495,106 @@ def word_stem(g: str) -> str:
     return w
 
 
-def validate_screenplay(sp: dict, words: list[dict]) -> list[str]:
+# CEFR caps — from RESEARCH_shortform_pedagogy_framework.md §3.2.
+# level → (max_total_duration_s, max_sentence_words, max_total_words)
+CEFR_CAPS = {"A1": (30, 8, 30), "A2": (40, 12, 55), "B1": (45, 15, 80)}
+
+
+# ── Co-creation safeguards (anti-slop / anti-didactic — DESIGN_cocreation_stage §4) ──
+DEFAULT_BANNED_TOKENS = ["lernen", "bedeutet", "grammatik", "vokabel", "lektion"]
+
+
+def _all_dialogue_lines(sp: dict) -> list[dict]:
+    """Every dialogue line dict across a segment/shot screenplay."""
+    return [d for seg in sp.get("segments", [])
+            for sh in seg.get("shots", [])
+            for d in sh.get("dialogue", [])]
+
+
+def find_forbidden_in_dialogue(sp: dict, terms: list[str]) -> list[str]:
+    """Safeguard: report any dialogue line containing a forbidden term (the stereotype
+    name + synonyms, or pedagogical tokens). Case-insensitive substring. [] = clean."""
+    hits = []
+    for d in _all_dialogue_lines(sp):
+        line = d.get("german") or ""
+        low = line.lower()
+        for t in terms:
+            t = (t or "").strip().lower()
+            if t and t in low:
+                hits.append(f"forbidden '{t}' in dialogue: \"{line[:50]}\"")
+    return hits
+
+
+def validate_brief(brief: dict) -> list[str]:
+    """Structural + safeguard checks on a Story Brief (skill-1c commit output)."""
     problems = []
-    scenes = sp.get("scenes", [])
-    if len(scenes) != 10:
-        problems.append(f"expected 10 scenes, got {len(scenes)}")
-    by_pos = {w["position"]: w for w in words}
-    seen = set()
-    for sc in scenes:
-        pos = sc.get("position")
-        if pos not in by_pos:
-            problems.append(f"scene {sc.get('scene_number')}: unknown position {pos}")
-            continue
-        seen.add(pos)
-        text = " ".join(d.get("german", "") for d in sc.get("dialogue", [])).lower()
-        if word_stem(by_pos[pos]["german"]) not in text:
-            problems.append(f"scene {sc.get('scene_number')}: '{by_pos[pos]['german']}' not in its German dialogue")
-        # (Müller word-budget check removed 2026-07-21 — bible v1.2 dialogue rule:
-        #  every character speaks real full sentences; brevity is style, not a cap.)
-    missing = set(by_pos) - seen
-    if missing:
-        problems.append(f"words without scenes: {sorted(missing)}")
+    if not (brief.get("cast", {}).get("main") or "").strip():
+        problems.append("cast.main is required (≥1 main character)")
+    lesson = brief.get("lesson", {})
+    if not ((lesson.get("particle") or "").strip() or (lesson.get("structure") or "").strip()):
+        problems.append("lesson needs a particle OR a structure (both-offered → one chosen)")
+    if len(brief.get("escalation_beats", [])) < 2:
+        problems.append("escalation_beats: need ≥2 (base reality → … → escalation)")
+    for f in ("stereotype_name", "cefr_level", "premise", "button"):
+        if not (brief.get(f) or "").strip():
+            problems.append(f"{f} missing")
+    name = (brief.get("stereotype_name") or "").strip().lower()
+    banned = [b.lower() for b in brief.get("banned_terms", [])]
+    if name and not any(name in b or b in name for b in banned):
+        problems.append("banned_terms should include the stereotype name (kept out of dialogue)")
+    return problems
+
+
+def validate_screenplay(sp: dict) -> list[str]:
+    """V3 structural + pedagogical validators (stereotype-first — no deck coverage).
+
+    Checks the segment/shot shape, the 15s Seedance-clip cap, the CEFR word/sentence
+    caps, the speaker cap, and that the teaching metadata is declared. Whether the
+    grammar target actually surfaces *naturally* in the dialogue is a linguistic
+    judgment — that lives in skill-2q (the LLM quality check), not here.
+    """
+    problems = []
+    segs = sp.get("segments", [])
+    if not (2 <= len(segs) <= 3):
+        problems.append(f"expected 2–3 segments, got {len(segs)}")
+
+    total = sum(int(s.get("duration_s", 0) or 0) for s in segs)
+    if not (28 <= total <= 47):
+        problems.append(f"total duration {total}s not ~30 or ~45s")
+    for s in segs:
+        d = int(s.get("duration_s", 0) or 0)
+        if d > 15:
+            problems.append(f"segment {s.get('segment_number')}: {d}s over the 15s Seedance clip cap")
+        shots = s.get("shots", [])
+        if not (1 <= len(shots) <= 5):
+            problems.append(f"segment {s.get('segment_number')}: {len(shots)} shots (expect 1–5 per 15s)")
+        shot_sum = sum(int(sh.get("duration_s", 0) or 0) for sh in shots)
+        if shots and abs(shot_sum - d) > 2:
+            problems.append(f"segment {s.get('segment_number')}: shot durations sum {shot_sum}s ≠ segment {d}s")
+
+    lines = [d for s in segs for sh in s.get("shots", []) for d in sh.get("dialogue", [])]
+    level = (sp.get("cefr_level") or "").upper()
+    caps = CEFR_CAPS.get(level)
+    if not caps:
+        problems.append(f"unknown cefr_level '{sp.get('cefr_level')}' (expect A1/A2/B1)")
+    else:
+        _, max_sent, max_words = caps
+        total_words = sum(len((d.get("german") or "").split()) for d in lines)
+        if total_words > max_words:
+            problems.append(f"{level}: {total_words} words over the {max_words}-word cap")
+        for d in lines:
+            n = len((d.get("german") or "").split())
+            if n > max_sent:
+                problems.append(f"{level}: {n}-word line over the {max_sent}-word sentence cap — "
+                                f"'{(d.get('german') or '')[:40]}…'")
+
+    speakers = {d.get("speaker") for d in lines if d.get("speaker")}
+    if len(speakers) > 3:
+        problems.append(f"{len(speakers)} speakers {sorted(speakers)} — cap is 2 mains (rare 3rd)")
+
+    for field in ("stereotype", "typology", "grammar_target"):
+        if not (sp.get(field) or "").strip():
+            problems.append(f"{field} missing (V3 teaching metadata)")
     return problems
 
 
@@ -313,9 +607,11 @@ def stage_screenplay(run_id: str, rcp: RunContextPack, words: list[dict],
     quality-check verdict and must address it — dialogue naturalness first.
     """
     skill = _load_skill("skill-2-screenplay-writer.md")
+    # V3: stereotype-first — the screenplay is driven by the story/scenario, not a
+    # fixed deck-word set. `words` stays in the signature for CLI compatibility but
+    # no longer constrains the screenplay (see BUILD_PLAN_v3.md Phase 3).
     skill = (
         skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
-        .replace("{{WORDS_JSON}}", json.dumps(words, ensure_ascii=False))
         .replace("{{STORY_JSON}}", json.dumps(story, ensure_ascii=False))
     )
     system = rcp.for_screenplay_stage() + "\n\n" + skill
@@ -337,7 +633,7 @@ def stage_screenplay(run_id: str, rcp: RunContextPack, words: list[dict],
         label, SCREENPLAY_SCHEMA, run_id, "screenplay",
     )
 
-    problems = validate_screenplay(sp, words)
+    problems = validate_screenplay(sp)
     if problems:
         print("! screenplay validation failed, retrying with feedback:")
         for p in problems:
@@ -350,7 +646,7 @@ def stage_screenplay(run_id: str, rcp: RunContextPack, words: list[dict],
         )
         t_in += t_in2
         t_out += t_out2
-        problems = validate_screenplay(sp, words)
+        problems = validate_screenplay(sp)
 
     sp_path = ep_dir / "screenplay.json"
     sp_path.write_text(json.dumps(sp, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -374,14 +670,13 @@ def stage_quality_check(run_id: str, rcp: RunContextPack, sp: dict,
     into ONE rewrite of stage 5, then re-judges once. The verdict is always
     recorded truthfully in the ledger either way.
     """
-    # 1. Code validators (scene count, word coverage, Müller budget)
-    code_problems = validate_screenplay(sp, words)
+    # 1. Code validators (segment/shot shape, 15s clip cap, CEFR word caps — V3)
+    code_problems = validate_screenplay(sp)
 
     # 2. LLM checklist — skill-2q judged by Haiku 4.5 (cheap, strict)
     skill = _load_skill("skill-2q-quality-check.md")
     skill = (
         skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
-        .replace("{{WORDS_JSON}}", json.dumps(words, ensure_ascii=False))
         .replace("{{SCREENPLAY_JSON}}", json.dumps(sp, ensure_ascii=False))
     )
     system = rcp.for_screenplay_stage() + "\n\n" + skill
@@ -418,6 +713,70 @@ def stage_quality_check(run_id: str, rcp: RunContextPack, sp: dict,
         if feedback:
             print(f"  → feedback for rewrite: {feedback}")
     return passed, problems, feedback
+
+
+# ── Stage 6.5: Storyboard (screenplay → per-shot image prompts → panels) ──
+
+def _find_shot(sp: dict, seg_n, shot_n) -> dict:
+    for seg in sp.get("segments", []):
+        if seg.get("segment_number") == seg_n:
+            for sh in seg.get("shots", []):
+                if sh.get("shot_number") == shot_n:
+                    return sh
+    return {}
+
+
+def stage_storyboard(run_id: str, rcp: RunContextPack, sp: dict, ep_dir: Path,
+                     client: Anthropic, image_provider: str = "mock") -> tuple[dict, list]:
+    """V3 storyboard: screenplay → per-shot image prompts (skill-2b) → 9:16 panels via the
+    image provider (mock | gpt-image-2 | nano-banana-pro). Panels double as the Seedance
+    @Image anchors downstream (DESIGN_v3_data_flow.md §3–4)."""
+    skill = _load_skill("skill-2b-storyboard.md")
+    skill = (skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
+             .replace("{{SCREENPLAY_JSON}}", json.dumps(sp, ensure_ascii=False)))
+    system = rcp.for_prompt_stage() + "\n\n" + skill
+    board, t_in, t_out = _call(
+        client, system, "Produce the per-shot storyboard image prompts JSON now.",
+        "skill-2b storyboard", STORYBOARD_SCHEMA, run_id, "storyboard", max_tokens=32000)
+
+    ep_dir.mkdir(parents=True, exist_ok=True)
+    bp = ep_dir / "storyboard.json"
+    bp.write_text(json.dumps(board, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # Character identity refs (sheet + portrait) for every speaking character.
+    speakers = {d.get("speaker") for seg in sp.get("segments", []) for sh in seg.get("shots", [])
+                for d in sh.get("dialogue", []) if d.get("speaker")}
+    refs = []
+    for name in sorted(speakers):
+        for e in _character_ref_paths(name):
+            refs.append({"binds": name, "role": "character", **e})
+
+    from .providers import get_image_provider
+    provider = get_image_provider(image_provider)
+    panels_dir = ep_dir / "storyboard"
+    panels_dir.mkdir(parents=True, exist_ok=True)
+    out = []
+    for panel in board.get("panels", []):
+        seg_n, shot_n = panel.get("segment_number"), panel.get("shot_number")
+        shot = _find_shot(sp, seg_n, shot_n)
+        dest = panels_dir / f"panel_s{int(seg_n):02d}_{int(shot_n):02d}.png"
+        try:
+            provider.generate(shot, panel.get("image_prompt", ""), refs, dest)
+            out.append(dest)
+            print(f"  ✓ panel seg {seg_n} shot {shot_n} → {dest.name}")
+        except Exception as e:
+            print(f"  ✗ panel seg {seg_n} shot {shot_n}: {e}")
+            ledger.log_event(run_id, "storyboard", "failed",
+                             detail={"panel": f"{seg_n}.{shot_n}", "error": str(e)})
+            raise
+
+    ledger.log_event(run_id, "storyboard", "completed",
+                     artifact_path=str(bp.relative_to(REPO)), artifact_sha256=ledger.sha256_file(bp),
+                     tokens_in=t_in, tokens_out=t_out,
+                     detail={"panels": len(out), "provider": provider.name})
+    ledger.update_run(run_id, stage="storyboard")
+    print(f"✅ {len(out)} storyboard panels → {panels_dir.relative_to(REPO)}/  (provider: {provider.name})")
+    return board, out
 
 
 # ── Stage 7: Prompt writer + canon substitution + refs manifest ──────
@@ -494,23 +853,28 @@ def _resolve_binds(binds: str, role: str) -> list[dict]:
 
 
 def build_refs_manifest(prompts: dict, run_id: str, ep_dir: Path) -> dict:
-    """scene → the unique reference assets it needs, each resolved to file path(s)
-    (or pending). Aggregated across both engine packages, deduped by (binds, role);
-    character identities expand to two rows (sheet + portrait)."""
-    scenes = {}
-    for sc in prompts.get("scenes", []):
+    """segment → the reference assets it needs, each resolved to a file path (or pending),
+    deduped by (binds, role). identity → sheet+portrait · voice → mp3 · style → pending ·
+    panel → the storyboard panel file for that shot key (s<seg>_<shot>)."""
+    segments = {}
+    for seg in prompts.get("segments", []):
         refs, seen = [], set()
-        pooled = (sc.get("seedance", {}).get("reference_assets", [])
-                  + sc.get("omni", {}).get("reference_images", []))
-        for r in pooled:
+        for r in seg.get("reference_assets", []):
             binds, role = r.get("binds", ""), r.get("role", "")
             if (binds, role) in seen:
                 continue
             seen.add((binds, role))
-            for entry in _resolve_binds(binds, role):
-                refs.append({"binds": binds, "role": role, **entry})
-        scenes[str(sc.get("scene_number"))] = refs
-    return {"run_id": run_id, "episode": ep_dir.name, "scenes": scenes}
+            if role == "panel":
+                panel = ep_dir / "storyboard" / f"panel_{binds}.png"
+                ok = panel.exists()
+                refs.append({"binds": binds, "role": role, "variant": "panel",
+                             "path": str(panel.resolve()) if ok else None,
+                             "status": "resolved" if ok else f"pending — panel {binds} not generated yet"})
+            else:
+                for entry in _resolve_binds(binds, role):
+                    refs.append({"binds": binds, "role": role, **entry})
+        segments[str(seg.get("segment_number"))] = refs
+    return {"run_id": run_id, "episode": ep_dir.name, "segments": segments}
 
 
 def substitute_canon(prompts: dict) -> dict:
@@ -546,55 +910,50 @@ def substitute_canon(prompts: dict) -> dict:
 
 def stage_prompts(run_id: str, rcp: RunContextPack, sp: dict,
                   ep_dir: Path, client: Anthropic) -> dict:
-    """Generate dual Seedance/Omni packages → canon substitution → per-scene split + refs manifest."""
+    """V3: screenplay + storyboard panels → ONE thin multi-shot Seedance prompt per 15s segment
+    (skill-3 v4). Binds panels + character sheets + voices + style; no Omni, no canon look-blocks."""
     skill = _load_skill("skill-3-prompt-writer.md")
     skill = skill.replace("{{SCREENPLAY_JSON}}", json.dumps(sp, ensure_ascii=False))
     system = rcp.for_prompt_stage() + "\n\n" + skill
 
     prompts, t_in, t_out = _call(
-        client, system, "Produce the dual Seedance/Omni prompt packages JSON now.",
-        "skill-3 prompts", PROMPTS_SCHEMA, run_id, "prompts",
-        max_tokens=64000,  # 10 scenes x dual packages exceeds the 24k default (was truncating mid-JSON)
+        client, system, "Produce the per-segment Seedance prompt packages JSON now.",
+        "skill-3 prompts", PROMPTS_SCHEMA, run_id, "prompts", max_tokens=32000,
     )
-    prompts = substitute_canon(prompts)
 
-    # Seedance hard cap check (3000 chars post-substitution — engine limit)
-    over_cap = [(sc.get("scene_number"), len(sc.get("seedance", {}).get("prompt", "")))
-                for sc in prompts.get("scenes", [])
-                if len(sc.get("seedance", {}).get("prompt", "")) > 3000]
+    # Seedance 3000-char cap check (per segment — easy now, no canon blocks)
+    over_cap = [(seg.get("segment_number"), len(seg.get("seedance_prompt", "")))
+                for seg in prompts.get("segments", [])
+                if len(seg.get("seedance_prompt", "")) > 3000]
     if over_cap:
-        print(f"⚠ Seedance 3000-char cap EXCEEDED in {len(over_cap)} scene(s): "
-              + ", ".join(f"scene {n} ({l} chars)" for n, l in over_cap))
-        print("  → prune scene text or /tune skill-3's character budget before generating video.")
+        print(f"⚠ Seedance 3000-char cap EXCEEDED in {len(over_cap)} segment(s): "
+              + ", ".join(f"segment {n} ({l} chars)" for n, l in over_cap))
 
-    # Combined artifact (hashed in ledger)
     prompts_path = ep_dir / "prompts.json"
     prompts_path.write_text(json.dumps(prompts, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # Per-scene split into scene_NN.{seedance,omni}.json + refs_manifest.json
+    # Per-segment split: segment_NN.seedance.json + refs_manifest.json
     prompts_dir = ep_dir / "prompts"
     prompts_dir.mkdir(parents=True, exist_ok=True)
-    for sc in prompts.get("scenes", []):
-        n = sc.get("scene_number")
-        (prompts_dir / f"scene_{n:02d}.seedance.json").write_text(
-            json.dumps(sc.get("seedance", {}), ensure_ascii=False, indent=2), encoding="utf-8")
-        (prompts_dir / f"scene_{n:02d}.omni.json").write_text(
-            json.dumps(sc.get("omni", {}), ensure_ascii=False, indent=2), encoding="utf-8")
+    for seg in prompts.get("segments", []):
+        n = seg.get("segment_number")
+        (prompts_dir / f"segment_{int(n):02d}.seedance.json").write_text(
+            json.dumps(seg, ensure_ascii=False, indent=2), encoding="utf-8")
     manifest = build_refs_manifest(prompts, run_id, ep_dir)
     manifest_path = prompts_dir / "refs_manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
     sha = ledger.sha256_file(prompts_path)
-    n_scenes = len(prompts.get("scenes", []))
+    n_seg = len(prompts.get("segments", []))
     ledger.log_event(run_id, "prompts", "completed",
                      artifact_path=str(prompts_path.relative_to(REPO)),
                      artifact_sha256=sha, tokens_in=t_in, tokens_out=t_out,
-                     detail={"scenes": n_scenes,
+                     detail={"segments": n_seg,
                              "refs_manifest": str(manifest_path.relative_to(REPO)),
                              "seedance_over_cap": over_cap})
     ledger.update_run(run_id, stage="prompts")
 
-    print(f"→ {n_scenes} scenes: seedance + omni packages + refs_manifest → {prompts_dir.relative_to(REPO)}/")
+    print(f"→ {n_seg} segment Seedance prompts + refs_manifest → {prompts_dir.relative_to(REPO)}/")
     return prompts
 
 
