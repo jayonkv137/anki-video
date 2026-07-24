@@ -752,7 +752,11 @@ def v3_commit(req: CommitReq):
             stlib.mark_covered(sid, ep.name)
         except Exception as e:
             print(f"[mark_covered failed: {e}]")
-    ledger.update_run(run_id, stage="brief")
+    try:
+        ledger.update_run(run_id, stage="brief")
+    except Exception as e:
+        print(f"[ledger.update_run failed: {e}]")
+        
     return {"run_id": run_id, "brief": brief}
 
 
@@ -902,6 +906,42 @@ async def v3_upload_clip(run_id: str, seg: int, file: UploadFile = File(...)):
     dest = clips / f"segment_{seg:02d}.mp4"
     dest.write_bytes(await file.read())
     return {"status": "saved", "file": dest.name}
+
+
+# ── Overseer ("Director") — the always-present editor over a run's artifacts ──
+# propose (plan) → human confirms → apply (deterministic edits + targeted recompiles).
+
+class OverseerPlanReq(BaseModel):
+    run_id: str
+    instruction: str
+    step: str = ""
+
+
+class OverseerApplyReq(BaseModel):
+    run_id: str
+    operations: list[dict]
+
+
+@app.post("/api/overseer/plan")
+def overseer_plan(req: OverseerPlanReq):
+    """Propose a typed edit plan (+ the recompile set) for the human to confirm. Applies nothing."""
+    from pipeline import overseer
+    if not _v3_ep(req.run_id).exists():
+        raise HTTPException(404, "no such run — lock a brief first")
+    try:
+        return overseer.plan(req.run_id, req.instruction, req.step, _get_rcp())
+    except Exception as e:
+        return {"reply": f"⚠️ Director error: {e}", "operations": [],
+                "needs_confirmation": False, "recompile": []}
+
+
+@app.post("/api/overseer/apply")
+def overseer_apply(req: OverseerApplyReq):
+    """Execute the confirmed operations + run the targeted downstream recompiles."""
+    from pipeline import overseer
+    if not _v3_ep(req.run_id).exists():
+        raise HTTPException(404, "no such run")
+    return overseer.apply(req.run_id, req.operations, _get_rcp())
 
 
 @app.get("/")

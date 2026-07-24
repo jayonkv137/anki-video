@@ -21,6 +21,8 @@ This **unifies** `skill-1a-align`/`1b-diverge`/`1c-commit` into the Strategist (
 
 ## Part B — The Overseer Agent (the always-present editor)
 
+> **STATUS: BUILT & verified live (2026-07-24).** Floating "Director" window (open/close, on every step) + `pipeline/overseer.py` (`plan`/`apply`) + `skill-5-overseer.md` + `/api/overseer/{plan,apply}`. Mechanism = **propose → confirm → apply** (NOT a free-form loop): structured-output planning → human confirm-with-diff → deterministic Python edits + targeted graph recompiles + ledger log. Verified live: "make seg 3 shot 2 warmer/content" → edited the screenplay shot → recompiled ONLY sheet 3 + Seedance prompt 3 (segs 1–2 byte-unchanged) → UI refreshed. Ops built: `edit_shot`, `rewrite_segment`, `edit_brief`, `answer_only`. See `changelog.md` 2026-07-24.
+
 **The vision (Jayon):** one full-context agent, present at *every* stage, that the human can talk to at any point to make a change that lands in the *right place* — e.g. after the screenplay, "change this shot" → the agent edits the screenplay shot and re-runs just the affected storyboard panel + Seedance prompt.
 
 **Is it feasible? YES — and our architecture is what makes it possible.** The overseer is only tractable because we built the **lock + compiler** design: the screenplay is the single source of truth, and everything downstream (storyboard, prompts) is a *deterministic compile* from it. So a change has a **well-defined downstream recompile set** — the dependency graph:
@@ -44,9 +46,9 @@ Without this design, "change any part, propagate everywhere" would be impossible
 **Stack:** a plain **Gemini/Anthropic function-calling loop** — our pipeline is a simple linear DAG, so we do NOT need LangGraph's cyclic-graph machinery. (LangGraph/`interrupt()` becomes worth it only if we later want durable, resumable multi-step edit sessions.) Gemini already does function-calling + structured output, which is all the overseer needs.
 
 ## Sequencing
-1. **Now:** lock the Story Strategist mechanism (skill done) — the core the user feels.
-2. **Then (connection):** wire the studio chat to the Strategist skill + a real `/commit` that writes `brief.json`, creates the run, and `mark_covered` — this persistence is the prerequisite for the overseer and for coverage/audit/resume.
-3. **Then (overseer):** build the typed edit/regen tools over the persisted artifacts + the dependency graph + the always-on Director panel.
+1. ✅ **DONE:** the Story Strategist mechanism (skill + wired into `/api/co-creation/chat`, 2026-07-24).
+2. ✅ **DONE:** persistence — `/api/v3/commit` writes `brief.json`, creates the run, `mark_covered`; screenplay/storyboard/prompts all persist per `ep_<run_id>`.
+3. ✅ **DONE (2026-07-24):** the overseer — typed edit/regen ops over the persisted artifacts + the dependency-graph recompiles + the floating Director panel (`pipeline/overseer.py`, `skill-5-overseer.md`, `/api/overseer/*`). Follow-ups: more op types (change_lesson, add/remove shot), a run-scoped undo button surfacing the ledger, and streaming replies.
 
 ## Critical risks (design against them)
 - **Socratic rigidity** — phases must be a *soft* spine (allow jumping + the "just draft it" escape), or the chat feels controlling/slow. Keep it fun and generative, not an interrogation.
