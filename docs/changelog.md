@@ -2,6 +2,15 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-24 (latest) — Subtitle engine + Assembly Studio (the pipeline's final stage)
+
+- **Decision — light path, not Remotion.** Jayon's research recommended a React + Remotion + Lambda + Vercel AI SDK stack; our studio is FastAPI + vanilla-JS + ffmpeg, and `assemble.py` already burns subtitles. So we **adopt the research's ideas** (frame-based declarative JSON state, word-level timing, the layout/colour rules, decoupled subtitles for instant preview, tool-calling edits) but realise them in our stack at **~$0** — no Remotion/React/Lambda/$300-licence. See `DESIGN_subtitle_and_assembly.md`.
+- **Subtitle engine (`pipeline/subtitles.py`).** A declarative `subtitles.json` state (30fps, 1080×1920) is the single source of truth for BOTH the live preview and the burn. Colour-coding is computed from OUR data (`target_vocab[].gender` → der=blue/die=red/das=green; grammar→yellow), timing is screenplay-derived (free; distribute each shot's known German across its window, ≤24 chars/line). `render_ass` emits per-word `\c` colour + `\k` karaoke + `\pos(540,1150)` safe-zone + opaque box; `concat_clips`/`burn`/`mock_clip` do ffmpeg assembly.
+- **API (`app.py`):** `POST /assemble` · `GET/POST /subtitles` · `POST /export` · `GET /video/{joined|final}` · `POST /mock-clips` (dev).
+- **UI — Step 07 Assembly Studio.** HTML5 video + a **live colour overlay** (reads the JSON, updates instantly on every edit — no re-render) + a cue editor (editable text · ±frame nudge · click-a-word to recolour) + **Burn & Export** → downloadable `final.mp4`.
+- **Director subtitle ops.** Overseer gains `recolor_word`, `edit_subtitle`, `shift_subtitles` (leaf edits, no recompile) — "make 'der Hund' blue", "fix the typo in segment 2", "shift segment 3's captions".
+- **Verified LIVE:** colour map ✓ · ASS burn (frame-extract: "Radweg" blue, box, safe-zone) ✓ · full assemble→subs→**live overlay in the UI** ("Radwegnutzungspflicht!" red on the video) ✓ · cue editor ✓ · **export → final.mp4 download** ✓ · Director `recolor_word` (Radweg der→die) ✓. (Mock clips prove the whole chain without a `FAL_KEY`.)
+
 ## 2026-07-24 (latest) — The Overseer ("Director") — always-present editor, BUILT
 
 - **What it is.** A floating, minimizable **"Director" window** present on every studio step. You tell it what to change at any stage; it lands the edit at the right layer and shows you exactly what will recompile **before** anything changes. Realizes the vision in `DESIGN_story_ideation_and_overseer.md` Part B.

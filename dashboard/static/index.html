@@ -179,6 +179,21 @@
   .dialogue-box { margin-top: 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
   .dialogue-line { font-size: 13.5px; } .dialogue-line .speaker { font-weight: 700; color: var(--gate); margin-right: 6px; }
   .prompt-card { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+  /* Assembly & subtitle studio */
+  .asm-grid { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 720px) { .asm-grid { grid-template-columns: 1fr; } }
+  .asm-stage { position: relative; width: 100%; max-width: 300px; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+  #asm-video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
+  #asm-overlay { position: absolute; inset: 0; pointer-events: none; }
+  .asm-cap { position: absolute; left: 50%; transform: translate(-50%, -50%); max-width: 92%; text-align: center; font-weight: 700; line-height: 1.15; background: rgba(0,0,0,0.88); padding: 0.18em 0.5em; border-radius: 0.28em; white-space: nowrap; }
+  .asm-cues { display: flex; flex-direction: column; gap: 10px; max-height: 540px; overflow-y: auto; padding-right: 4px; }
+  .cue-edit { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  .cue-meta { display: flex; align-items: center; font-size: 11px; color: var(--fg); margin-bottom: 6px; }
+  .cue-nudge { background: var(--panel); border: 1px solid var(--line); color: var(--fg); border-radius: 5px; padding: 2px 7px; font-size: 11px; cursor: pointer; margin-left: 4px; }
+  .cue-input { width: 100%; background: var(--panel); border: 1px solid var(--line); color: var(--fg); border-radius: 6px; padding: 7px 9px; font: 13px inherit; box-sizing: border-box; }
+  .cue-words { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 7px; }
+  .cue-word { font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 1px dotted transparent; }
+  .cue-word:hover { border-bottom-color: currentColor; }
   .prompt-card pre { white-space: pre-wrap; word-break: break-word; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px; font: 12px/1.5 ui-monospace, monospace; color: var(--fg); margin: 8px 0; max-height: 300px; overflow: auto; }
   .dropzone { display: block; border: 1.5px dashed var(--line); border-radius: 8px; padding: 14px; text-align: center; color: var(--dim); font-size: 12px; cursor: pointer; }
   .dropzone:hover { border-color: var(--accent); color: var(--accent); }
@@ -271,6 +286,8 @@ let activeBrief = null;
 let activeScreenplay = null;
 let activeStoryboard = null;
 let activeVideoPrompts = null;
+let activeSubtitles = null;     // the declarative subtitle STATE (assembly studio)
+let asmSaveTimer = null;
 
 // Align & Diverge State
 let alignData = null;
@@ -763,7 +780,7 @@ async function extractAndCommitBrief() {
     localStorage.setItem('activeRunId', activeRunId);
     fetchSavedEpisodes();
     // new run → clear downstream so each stage regenerates
-    activeScreenplay = null; activeStoryboard = null; activeVideoPrompts = null;
+    activeScreenplay = null; activeStoryboard = null; activeVideoPrompts = null; activeSubtitles = null;
     // reflect into the sidebar
     selectedLocation = { location: activeBrief.location };
     selectedLesson = { lesson: (activeBrief.lesson?.particle || activeBrief.lesson?.structure || '') };
@@ -948,12 +965,123 @@ async function renderVideoAssemblyView(container) {
     </div>`;
   }).join('');
   container.innerHTML = `<div class="card">
-    <div class="card-title"><span>Step 07 · Video Prompts & Assembly</span></div>
-    <p style="color:var(--dim);font-size:12.5px;margin-bottom:12px;">Copy each segment prompt into Seedance (attaching the listed @Image panels + character sheets + @Audio voices), generate the 15s clip, and upload it back.</p>
+    <div class="card-title"><span>Step 07 · Video Prompts</span></div>
+    <p style="color:var(--dim);font-size:12.5px;margin-bottom:12px;">Copy each segment prompt into Seedance (attaching the listed @Image panels + character sheets + @Audio voices), generate the 15s clip, and upload it back — then assemble + subtitle below.</p>
     ${segs}
     <div style="display:flex;justify-content:space-between;">
       <button class="ghost" onclick="setStep(6)">← Storyboard</button>
-      <button class="ghost" onclick="activeVideoPrompts=null; setStep(7)">↻ Regenerate Prompts</button></div></div>`;
+      <button class="ghost" onclick="activeVideoPrompts=null; setStep(7)">↻ Regenerate Prompts</button></div></div>
+    <div class="card" id="asm-studio"></div>`;
+  renderAssemblyStudio();
+}
+
+/* STEP 07 (cont.) · ASSEMBLY & SUBTITLE STUDIO — concat clips, auto color-coded German subs,
+   live overlay preview (no re-render), cue editor, ffmpeg burn+export. */
+async function renderAssemblyStudio() {
+  const box = document.getElementById('asm-studio'); if (!box) return;
+  const S = activeSubtitles;
+  const legend = `<span style="color:#3B82F6">der</span> · <span style="color:#EF4444">die</span> · <span style="color:#22C55E">das</span> · <span style="color:#FBBF24">grammar</span>`;
+  if (!S) {
+    box.innerHTML = `<div class="card-title"><span>Assembly & Subtitles</span></div>
+      <p style="color:var(--dim);font-size:12.5px;margin-bottom:14px;">Once your segment clips are uploaded, assemble them into one 9:16 cut and auto-generate word-level, color-coded German subtitles (${legend}). No clips yet? Generate mock ones to try the flow.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="ok" onclick="assembleVideo()">🎬 Assemble + Auto-Subtitle</button>
+        <button class="ghost" onclick="genMockClips()">＋ Generate mock clips (dev)</button>
+      </div><div id="asm-msg" style="margin-top:10px;font-size:12px;color:var(--dim)"></div>`;
+    return;
+  }
+  const fps = S.composition.fps;
+  const cues = S.subtitles.map((c, i) => {
+    const words = c.words.map((w, wi) =>
+      `<span class="cue-word" style="color:${S.colors[w.colorLabel] || '#fff'}" title="click to recolor" onclick="cycleWordColor(${i},${wi})">${escapeHtml(w.word)}</span>`).join(' ');
+    return `<div class="cue-edit">
+      <div class="cue-meta">seg${c.segment}·sh${c.shot} <span style="color:var(--dim)">f${c.startFrame}–${c.endFrame}</span>
+        <span style="margin-left:auto"><button class="cue-nudge" onclick="shiftCue(${i},-5)">−5f</button><button class="cue-nudge" onclick="shiftCue(${i},5)">+5f</button></span></div>
+      <input class="cue-input" value="${escapeHtml(c.text)}" onchange="editCueText(${i}, this.value)" onfocus="seekToCue(${i})">
+      <div class="cue-words">${words}</div></div>`;
+  }).join('');
+  box.innerHTML = `<div class="card-title"><span>Assembly & Subtitles</span>
+      <button class="ok" onclick="exportFinal()">⬇ Burn &amp; Export final.mp4</button></div>
+    <p style="color:var(--dim);font-size:12px;margin-bottom:12px;">Live preview — subtitle edits update instantly, no re-render. Colors: ${legend}. Click a word to recolor; edit text/timing at right. <span id="asm-export-status"></span></p>
+    <div class="asm-grid">
+      <div class="asm-stage" id="asm-stage">
+        <video id="asm-video" playsinline controls src="/api/v3/runs/${activeRunId}/video/joined?t=${Date.now()}"></video>
+        <div id="asm-overlay"></div>
+      </div>
+      <div class="asm-cues">${cues}</div>
+    </div>
+    <div style="margin-top:10px;"><button class="ghost" onclick="assembleVideo()">↻ Re-assemble (rebuilds subtitles from screenplay)</button></div>`;
+  mountOverlaySync();
+}
+
+async function genMockClips() {
+  const m = document.getElementById('asm-msg'); if (m) m.textContent = '⏳ Generating mock clips…';
+  try { const r = await api(`/api/v3/runs/${activeRunId}/mock-clips`, { method: 'POST' });
+    if (m) m.textContent = `✓ ${(r.clips||[]).length} mock clips created — now click Assemble.`; }
+  catch (e) { if (m) m.textContent = '⚠️ ' + (e.message || e); }
+}
+async function assembleVideo() {
+  const box = document.getElementById('asm-studio');
+  if (box) box.innerHTML = loaderCard('Assembling clips + building color-coded subtitles…').replace('card','');
+  try { activeSubtitles = await api(`/api/v3/runs/${activeRunId}/assemble`, { method: 'POST' }); }
+  catch (e) { activeSubtitles = null; if (box) box.innerHTML = errCard('Assemble failed', e.message, () => renderAssemblyStudio()); return; }
+  renderAssemblyStudio();
+}
+let asmRVFC = null;
+function mountOverlaySync() {
+  const v = document.getElementById('asm-video'); if (!v) return;
+  const fps = activeSubtitles.composition.fps;
+  const tick = () => { renderOverlay(Math.round(v.currentTime * fps));
+    if ('requestVideoFrameCallback' in v) asmRVFC = v.requestVideoFrameCallback(tick); };
+  if ('requestVideoFrameCallback' in v) asmRVFC = v.requestVideoFrameCallback(tick);
+  else v.ontimeupdate = () => renderOverlay(Math.round(v.currentTime * fps));
+  renderOverlay(0);
+}
+function renderOverlay(frame) {
+  const ov = document.getElementById('asm-overlay'), stage = document.getElementById('asm-stage');
+  if (!ov || !stage || !activeSubtitles) return;
+  const S = activeSubtitles, cue = S.subtitles.find(c => frame >= c.startFrame && frame < c.endFrame);
+  if (!cue) { ov.innerHTML = ''; return; }
+  const h = stage.clientHeight || 500;
+  const fontPx = Math.max(10, h * S.layout.fontSize / S.composition.height);
+  const words = cue.words.map(w => {
+    const active = frame >= w.startFrame && frame < w.endFrame;
+    return `<span style="color:${S.colors[w.colorLabel] || '#fff'};${active ? 'text-shadow:0 0 10px currentColor;' : 'opacity:.92'}">${escapeHtml(w.word)}</span>`;
+  }).join(' ');
+  ov.innerHTML = `<div class="asm-cap" style="font-size:${fontPx}px;top:${(S.layout.safeY / S.composition.height * 100).toFixed(1)}%">${words}</div>`;
+}
+function seekToCue(i) { const v = document.getElementById('asm-video'); const c = activeSubtitles.subtitles[i];
+  if (v && c) { v.currentTime = c.startFrame / activeSubtitles.composition.fps; } }
+
+/* ── local subtitle-state edits (mutate → live overlay → debounced save) ── */
+function _normw(w){ return (w||'').toLowerCase().replace(/^[^\wäöüß]+|[^\wäöüß]+$/gu,''); }
+function _colorLookup(){ const m={}; activeSubtitles.subtitles.forEach(c=>c.words.forEach(w=>{ if(w.colorLabel) m[_normw(w.word)]=w.colorLabel; })); return m; }
+function editCueText(i, text){
+  const c = activeSubtitles.subtitles[i]; const look=_colorLookup();
+  const toks = text.trim().split(/\s+/).filter(Boolean);
+  const span = Math.max(1, c.endFrame - c.startFrame), tot = toks.reduce((a,t)=>a+Math.max(1,_normw(t).length),0);
+  let acc=0; c.text=text; c.words = toks.map(t=>{ const ws=c.startFrame+Math.round(span*acc/tot); acc+=Math.max(1,_normw(t).length);
+    const we=c.startFrame+Math.round(span*acc/tot); return {word:t,startFrame:ws,endFrame:Math.max(ws+1,we),colorLabel:look[_normw(t)]||''}; });
+  renderAssemblyStudio(); saveSubtitles();
+}
+function cycleWordColor(i, wi){
+  const order=['','der','die','das','grammar']; const w=activeSubtitles.subtitles[i].words[wi];
+  w.colorLabel = order[(order.indexOf(w.colorLabel)+1)%order.length];
+  renderAssemblyStudio(); saveSubtitles();
+}
+function shiftCue(i, df){
+  const c=activeSubtitles.subtitles[i]; c.startFrame=Math.max(0,c.startFrame+df); c.endFrame=Math.max(c.startFrame+1,c.endFrame+df);
+  c.words.forEach(w=>{ w.startFrame=Math.max(0,w.startFrame+df); w.endFrame=Math.max(w.startFrame+1,w.endFrame+df); });
+  renderAssemblyStudio(); saveSubtitles();
+}
+function saveSubtitles(){ clearTimeout(asmSaveTimer); asmSaveTimer=setTimeout(async()=>{
+  try{ await api(`/api/v3/runs/${activeRunId}/subtitles`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:activeSubtitles})}); }catch(e){} }, 500); }
+async function exportFinal(){
+  const s=document.getElementById('asm-export-status'); if(s) s.innerHTML='⏳ Burning subtitles…';
+  try{ clearTimeout(asmSaveTimer); await api(`/api/v3/runs/${activeRunId}/subtitles`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:activeSubtitles})});
+    await api(`/api/v3/runs/${activeRunId}/export`,{method:'POST'});
+    if(s) s.innerHTML=`✅ <a href="/api/v3/runs/${activeRunId}/video/final?t=${Date.now()}" target="_blank" style="color:var(--gate)">Download final.mp4 ↗</a>`;
+  }catch(e){ if(s) s.innerHTML='⚠️ '+(e.message||e); }
 }
 
 /* Shared helpers for the V3 stage views */

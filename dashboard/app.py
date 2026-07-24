@@ -908,6 +908,105 @@ async def v3_upload_clip(run_id: str, seg: int, file: UploadFile = File(...)):
     return {"status": "saved", "file": dest.name}
 
 
+# ── Assembly & Subtitles (light path: ffmpeg concat + ASS burn) ──────────────
+
+def _clip_paths(ep: Path) -> list:
+    cdir = ep / "clips"
+    return sorted(cdir.glob("segment_*.mp4")) if cdir.exists() else []
+
+
+class SubtitlesSaveReq(BaseModel):
+    state: dict
+
+
+@app.post("/api/v3/runs/{run_id}/assemble")
+def v3_assemble(run_id: str):
+    """Concat the uploaded segment clips → assembly/joined.mp4, then build subtitles.json from the
+    screenplay (word-level, colour-coded der/die/das/grammar) using the REAL clip durations."""
+    from pipeline import subtitles as subs
+    ep = _v3_ep(run_id)
+    clips = _clip_paths(ep)
+    if not clips:
+        raise HTTPException(409, "no segment clips uploaded yet (upload them in the Video step)")
+    if not (ep / "screenplay.json").exists():
+        raise HTTPException(409, "no screenplay")
+    sp = json.loads((ep / "screenplay.json").read_text(encoding="utf-8"))
+    asm = ep / "assembly"
+    asm.mkdir(parents=True, exist_ok=True)
+    subs.concat_clips(clips, asm / "joined.mp4")
+    durs = [subs.clip_duration(c) for c in clips]
+    state = subs.build_subtitle_state(sp, durs)
+    (ep / "subtitles.json").write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+    try:
+        ledger.update_run(run_id, stage="assemble")
+    except Exception:
+        pass
+    return {"composition": state["composition"], "subtitles": state["subtitles"],
+            "colors": state["colors"], "layout": state["layout"], "has_joined": True}
+
+
+@app.get("/api/v3/runs/{run_id}/subtitles")
+def v3_get_subtitles(run_id: str):
+    ep = _v3_ep(run_id)
+    p = ep / "subtitles.json"
+    if not p.exists():
+        raise HTTPException(404, "no subtitles yet — assemble first")
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+@app.post("/api/v3/runs/{run_id}/subtitles")
+def v3_save_subtitles(run_id: str, req: SubtitlesSaveReq):
+    """Persist the edited subtitle STATE (from the cue editor or the Director)."""
+    ep = _v3_ep(run_id)
+    (ep / "subtitles.json").write_text(json.dumps(req.state, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"status": "saved", "cues": len(req.state.get("subtitles", []))}
+
+
+@app.post("/api/v3/runs/{run_id}/export")
+def v3_export(run_id: str):
+    """Burn the current subtitles.json onto joined.mp4 → assembly/final.mp4 (libass)."""
+    from pipeline import subtitles as subs
+    ep = _v3_ep(run_id)
+    joined = ep / "assembly" / "joined.mp4"
+    if not joined.exists():
+        raise HTTPException(409, "assemble first")
+    state = json.loads((ep / "subtitles.json").read_text(encoding="utf-8"))
+    subs.burn(joined, state, ep / "assembly" / "final.mp4")
+    return {"status": "exported", "final": "final.mp4"}
+
+
+@app.get("/api/v3/runs/{run_id}/video/{which}")
+def v3_video(run_id: str, which: str):
+    ep = _v3_ep(run_id)
+    name = {"joined": "joined.mp4", "final": "final.mp4"}.get(which)
+    if not name:
+        raise HTTPException(404, "unknown video")
+    f = ep / "assembly" / name
+    if not f.exists():
+        raise HTTPException(404, f"{name} not generated yet")
+    return FileResponse(f, media_type="video/mp4")
+
+
+@app.post("/api/v3/runs/{run_id}/mock-clips")
+def v3_mock_clips(run_id: str):
+    """Dev/demo: synthesize mock segment clips at the screenplay durations (no FAL_KEY) so the
+    assembly → subtitles → export flow runs end-to-end. Overwrites existing clips."""
+    from pipeline import subtitles as subs
+    ep = _v3_ep(run_id)
+    if not (ep / "screenplay.json").exists():
+        raise HTTPException(409, "no screenplay")
+    sp = json.loads((ep / "screenplay.json").read_text(encoding="utf-8"))
+    cdir = ep / "clips"
+    cdir.mkdir(parents=True, exist_ok=True)
+    made = []
+    for i, seg in enumerate(sp.get("segments", [])):
+        n = int(seg.get("segment_number"))
+        dur = seg.get("duration_s", 15) or 15
+        subs.mock_clip(cdir / f"segment_{n:02d}.mp4", dur, f"SEGMENT {n}", idx=i)
+        made.append(f"segment_{n:02d}.mp4")
+    return {"status": "created", "clips": made}
+
+
 # ── Overseer ("Director") — the always-present editor over a run's artifacts ──
 # propose (plan) → human confirms → apply (deterministic edits + targeted recompiles).
 

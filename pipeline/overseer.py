@@ -15,6 +15,7 @@ See docs/planning/DESIGN_story_ideation_and_overseer.md Part B.
 """
 
 import json
+import re
 from pathlib import Path
 
 from . import ledger
@@ -25,6 +26,13 @@ from .stages import (_call_gemini, _load_skill, _schema, _arr, STR, INT, BOOL,
 
 SHOT_FIELDS = {"shot_size", "camera_angle", "camera_move", "action", "blocking",
                "gaze", "expression", "lighting_mood", "duration_s"}
+
+# Director → subtitle recolour vocabulary (natural words → colourLabel)
+SUB_COLOR = {"der": "der", "blue": "der", "masculine": "der",
+             "die": "die", "red": "die", "feminine": "die",
+             "das": "das", "green": "das", "neuter": "das",
+             "grammar": "grammar", "yellow": "grammar",
+             "white": "", "default": "", "none": "", "plain": ""}
 
 # ── Plan schema (Gemini structured output) ───────────────────────────
 OP_SCHEMA = _schema(
@@ -72,8 +80,15 @@ def _state_summary(ep: Path) -> str:
                     f"({sh.get('duration_s')}s {sh.get('shot_size')}/{sh.get('camera_angle')}): "
                     f"action={(sh.get('action') or '')[:70]} | light={sh.get('lighting_mood')} "
                     f"| gaze={sh.get('gaze')} | expr={sh.get('expression')} | dialogue=[{dlg}]")
+    subs = _read(ep, "subtitles.json")
+    if subs:
+        lines.append(f"SUBTITLES: {len(subs.get('subtitles', []))} cues (colour-coded German)")
+        for c in subs.get("subtitles", []):
+            cols = ",".join(f"{w['word']}:{w['colorLabel']}" for w in c.get("words", []) if w.get("colorLabel"))
+            lines.append(f"  {c.get('id')} seg{c.get('segment')} f{c.get('startFrame')}-{c.get('endFrame')}: "
+                         f"{c.get('text')!r}" + (f" [{cols}]" if cols else ""))
     lines.append(f"ARTIFACTS present → brief={bool(brief)} screenplay={bool(sp)} "
-                 f"storyboard={bool(board)} prompts={bool(prompts)}")
+                 f"storyboard={bool(board)} prompts={bool(prompts)} subtitles={bool(subs)}")
     return "\n".join(lines) or "(empty run — nothing generated yet)"
 
 
@@ -132,11 +147,16 @@ def apply(run_id: str, operations: list, rcp) -> dict:
     """Execute the confirmed ops deterministically, then run the targeted recompiles."""
     ep = _ep(run_id)
     sp, brief = _read(ep, "screenplay.json"), _read(ep, "brief.json")
-    applied, segs, brief_touched = [], set(), False
+    sub_state = _read(ep, "subtitles.json")
+    applied, segs, brief_touched, subs_touched = [], set(), False, False
 
     for op in operations:
         t = op.get("op")
-        if t == "edit_shot" and sp:
+        if t in ("recolor_word", "edit_subtitle", "shift_subtitles") and sub_state:
+            if _apply_sub_op(sub_state, op):
+                subs_touched = True
+                applied.append(op.get("summary") or t.replace("_", " "))
+        elif t == "edit_shot" and sp:
             seg_n, shot_n = int(op.get("segment_number") or 0), int(op.get("shot_number") or 0)
             sh = _find_shot(sp, seg_n, shot_n)
             if sh is None:
@@ -158,11 +178,13 @@ def apply(run_id: str, operations: list, rcp) -> dict:
             brief_touched = True
             applied.append(op.get("summary") or "edited the brief")
 
-    # persist the lock edits
+    # persist the lock edits + subtitle edits
     if brief_touched:
         _write(ep, "brief.json", brief)
     if sp:
         _write(ep, "screenplay.json", sp)
+    if subs_touched:
+        _write(ep, "subtitles.json", sub_state)
 
     # targeted downstream recompiles (the dependency graph)
     recompiled = []
@@ -190,8 +212,60 @@ def apply(run_id: str, operations: list, rcp) -> dict:
             "storyboard": _read(ep, "storyboard.json"),
             "prompts": _read(ep, "prompts.json"),
             "refs_manifest": _read(ep, "prompts/refs_manifest.json"),
+            "subtitles": _read(ep, "subtitles.json"),
         },
     }
+
+
+def _apply_sub_op(state: dict, op: dict) -> bool:
+    """Mutate the subtitle STATE (the leaf artifact — no recompile). Supports recolour_word,
+    edit_subtitle (retext a cue by segment/shot), and shift_subtitles (nudge a segment's cues)."""
+    from . import subtitles as subs
+    t, cues = op.get("op"), state.get("subtitles", [])
+    changed = False
+    if t == "recolor_word":
+        for fe in op.get("field_edits", []):
+            target, label = subs._norm(fe.get("field", "")), SUB_COLOR.get((fe.get("value") or "").lower().strip(), "")
+            for cue in cues:
+                for w in cue.get("words", []):
+                    if subs._norm(w.get("word", "")) == target:
+                        w["colorLabel"] = label
+                        changed = True
+    elif t == "edit_subtitle":
+        seg_n, shot_n = int(op.get("segment_number") or 0), int(op.get("shot_number") or 0)
+        text = op.get("note") or ""
+        for cue in cues:
+            if cue.get("segment") == seg_n and (not shot_n or cue.get("shot") == shot_n) and text:
+                look = {subs._norm(w["word"]): w.get("colorLabel", "")
+                        for c in cues for w in c.get("words", [])}
+                cue["text"] = text
+                cue["words"] = subs._distribute_words(text.split(), cue["startFrame"], cue["endFrame"],
+                                                      {}, set())
+                for w in cue["words"]:
+                    w["colorLabel"] = look.get(subs._norm(w["word"]), "")
+                changed = True
+                break
+    elif t == "shift_subtitles":
+        seg_n = int(op.get("segment_number") or 0)
+        df = 0
+        for fe in op.get("field_edits", []):
+            try:
+                df = int(str(fe.get("value", "0")).strip())
+            except ValueError:
+                df = 0
+        if not df and op.get("note"):
+            m = re.search(r"-?\d+", op["note"])
+            df = int(m.group()) if m else 0
+        for cue in cues:
+            if seg_n and cue.get("segment") != seg_n:
+                continue
+            cue["startFrame"] = max(0, cue["startFrame"] + df)
+            cue["endFrame"] = max(cue["startFrame"] + 1, cue["endFrame"] + df)
+            for w in cue.get("words", []):
+                w["startFrame"] = max(0, w["startFrame"] + df)
+                w["endFrame"] = max(w["startFrame"] + 1, w["endFrame"] + df)
+            changed = True
+    return changed
 
 
 # ── Deterministic edit helpers ───────────────────────────────────────

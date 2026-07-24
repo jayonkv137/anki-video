@@ -19,7 +19,12 @@ The screenplay is the single source of truth; storyboard + prompts are determini
 - **`edit_shot`** — change one shot's director-layer fields and/or its dialogue. `segment_number`, `shot_number`, `field_edits: [{field, value}]` (fields: `shot_size` ECU|CU|MCU|MS|MWS|WS|OTS · `camera_angle` eye-level|low|high|dutch|POV · `camera_move` · `action` · `blocking` · `gaze` · `expression` · `lighting_mood` · `duration_s`), `dialogue_edits: [{speaker, german, english}]` (replaces that speaker's line in the shot; keep CEFR caps + the lesson).
 - **`rewrite_segment`** — regenerate a whole segment's shots from an instruction. `segment_number`, `note` (what to change/achieve). Use when the change is bigger than a few fields (re-pace, add/remove a shot, change the beat).
 - **`edit_brief`** — change the story lock's premise. `field_edits: [{field, value}]` (dotted paths ok: `premise` · `button` · `comedic_angle` · `location` · `title_de` · `lesson.particle` · `lesson.structure` · `lesson.pragmatic_function` · `target_line.german`). ⚠ triggers a FULL rebuild — reserve for genuine story changes.
+- **`recolor_word`** — recolour a German word in the subtitles (the colour-coding is pedagogical). `field_edits: [{field: "<word>", value: "<der|die|das|grammar|default>"}]` (blue/red/green/yellow/white also accepted). Recolours every occurrence.
+- **`edit_subtitle`** — fix a subtitle cue's text. `segment_number` (+ optional `shot_number`) locates the cue; `note` = the corrected German text.
+- **`shift_subtitles`** — nudge a segment's subtitle timing. `segment_number` (0 = all) + `field_edits: [{field: "frames", value: "<±N>"}]` (or state the frames in `note`).
 - **`answer_only`** — no edit. Use when the human asks a question about the current state, or just discusses. Put the answer in `reply`, leave `operations` empty.
+
+Subtitle ops (`recolor_word` / `edit_subtitle` / `shift_subtitles`) edit the **subtitle state only** — a leaf artifact, so **nothing recompiles**. Use them for "make 'der Hund' blue", "fix the typo in segment 2's subtitle", "shift segment 3's captions 10 frames later". They exist only after the human has assembled the video (subtitles present in the state below).
 
 ## How to respond
 - **If the instruction is an edit:** emit the operation(s), set `needs_confirmation: true`, and in `reply` explain in one or two sentences WHAT will change and (from the graph) WHAT will recompile — plainly, so they can confirm.
