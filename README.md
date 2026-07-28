@@ -13,19 +13,19 @@ The studio strictly maintains the visual identity of these 4 recurring character
 
 <div style="display: flex; gap: 10px;">
   <div align="center">
-    <img src="docs/assets/kati.png" width="150"><br>
+    <img src="resources/Kati die Kartoffel/Kati-Master.png" width="150"><br>
     <b>Kati die Kartoffel</b>
   </div>
   <div align="center">
-    <img src="docs/assets/bert.png" width="150"><br>
+    <img src="resources/Bert das Bier/Bert Main.png" width="150"><br>
     <b>Professor Bert</b>
   </div>
   <div align="center">
-    <img src="docs/assets/rolf.png" width="150"><br>
+    <img src="resources/Rolf die Wurst/Rolf Main.png" width="150"><br>
     <b>Rolf die Wurst</b>
   </div>
   <div align="center">
-    <img src="docs/assets/muller.png" width="150"><br>
+    <img src="resources/Muller das Brot/Muller-Main.png" width="150"><br>
     <b>Müller das Brot</b>
   </div>
 </div>
