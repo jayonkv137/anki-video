@@ -55,7 +55,32 @@ def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+import uuid
+
 # ── Run lifecycle ────────────────────────────────────────────────
+
+def resolve_run_id(run_id: str) -> str:
+    """If run_id is an 8-char short prefix, resolve it to the full 36-char UUID in Supabase if possible."""
+    if not run_id:
+        return run_id
+    try:
+        uuid.UUID(str(run_id))
+        return str(run_id)  # Already a valid 36-char UUID
+    except ValueError:
+        pass
+    
+    # Try resolving short prefix against recent runs in Supabase
+    try:
+        recent = _get("runs", {"select": "id", "order": "started_at.desc", "limit": "100"})
+        for r in recent:
+            rid = str(r.get("id", ""))
+            if rid.startswith(run_id):
+                return rid
+    except Exception:
+        pass
+        
+    return run_id
+
 
 def create_run(word_positions: list[int], canon_versions: dict) -> dict:
     """Open a new run in the ledger. Returns the run row."""
@@ -69,17 +94,30 @@ def create_run(word_positions: list[int], canon_versions: dict) -> dict:
 
 def update_run(run_id: str, **fields) -> dict:
     """Update run fields (status, stage, chosen_option, cost_cents, etc.)."""
-    return _patch("runs", {"id": f"eq.{run_id}"}, fields)
+    full_id = resolve_run_id(run_id)
+    try:
+        return _patch("runs", {"id": f"eq.{full_id}"}, fields)
+    except Exception as e:
+        print(f"[ledger.update_run warning: skipped for run_id={run_id}: {e}]")
+        return {}
 
 
 def get_run(run_id: str) -> dict | None:
-    rows = _get("runs", {"id": f"eq.{run_id}", "select": "*"})
-    return rows[0] if rows else None
+    full_id = resolve_run_id(run_id)
+    try:
+        rows = _get("runs", {"id": f"eq.{full_id}", "select": "*"})
+        return rows[0] if rows else None
+    except Exception as e:
+        print(f"[ledger.get_run warning: failed for run_id={run_id}: {e}]")
+        return None
 
 
 def get_latest_run() -> dict | None:
-    rows = _get("runs", {"select": "*", "order": "started_at.desc", "limit": "1"})
-    return rows[0] if rows else None
+    try:
+        rows = _get("runs", {"select": "*", "order": "started_at.desc", "limit": "1"})
+        return rows[0] if rows else None
+    except Exception:
+        return None
 
 
 # ── Run events ───────────────────────────────────────────────────
@@ -89,24 +127,34 @@ def log_event(run_id: str, stage: str, status: str = "completed",
               tokens_in: int = 0, tokens_out: int = 0,
               detail: dict = None) -> dict:
     """Record a stage event in the ledger."""
-    return _post("run_events", {
-        "run_id": run_id,
-        "stage": stage,
-        "status": status,
-        "artifact_path": artifact_path,
-        "artifact_sha256": artifact_sha256,
-        "tokens_in": tokens_in,
-        "tokens_out": tokens_out,
-        "detail": json.dumps(detail or {}),
-    })
+    full_id = resolve_run_id(run_id)
+    try:
+        return _post("run_events", {
+            "run_id": full_id,
+            "stage": stage,
+            "status": status,
+            "artifact_path": artifact_path,
+            "artifact_sha256": artifact_sha256,
+            "tokens_in": tokens_in,
+            "tokens_out": tokens_out,
+            "detail": json.dumps(detail or {}),
+        })
+    except Exception as e:
+        print(f"[ledger.log_event warning: skipped for run_id={run_id}: {e}]")
+        return {}
 
 
 def get_events(run_id: str) -> list[dict]:
-    return _get("run_events", {
-        "run_id": f"eq.{run_id}",
-        "select": "*",
-        "order": "created_at.asc",
-    })
+    full_id = resolve_run_id(run_id)
+    try:
+        return _get("run_events", {
+            "run_id": f"eq.{full_id}",
+            "select": "*",
+            "order": "created_at.asc",
+        })
+    except Exception as e:
+        print(f"[ledger.get_events warning: failed for run_id={run_id}: {e}]")
+        return []
 
 
 # ── Episodes (series memory) ────────────────────────────────────
@@ -114,16 +162,21 @@ def get_events(run_id: str) -> list[dict]:
 def save_episode(run_id: str, title_de: str, scenario: str,
                  environment: str, mains: list[str], cameos: list[str],
                  word_positions: list[int], verdict: str = "pending") -> dict:
-    return _post("episodes", {
-        "run_id": run_id,
-        "title_de": title_de,
-        "scenario": scenario,
-        "environment": environment,
-        "mains": mains,
-        "cameos": cameos,
-        "word_positions": word_positions,
-        "verdict": verdict,
-    })
+    full_id = resolve_run_id(run_id)
+    try:
+        return _post("episodes", {
+            "run_id": full_id,
+            "title_de": title_de,
+            "scenario": scenario,
+            "environment": environment,
+            "mains": mains,
+            "cameos": cameos,
+            "word_positions": word_positions,
+            "verdict": verdict,
+        })
+    except Exception as e:
+        print(f"[ledger.save_episode warning: skipped for run_id={run_id}: {e}]")
+        return {}
 
 
 # ── Cost tracking ────────────────────────────────────────────────
@@ -140,7 +193,11 @@ def add_cost(run_id: str, tokens_in: int, tokens_out: int,
     """Add token cost to the run total. Returns new total."""
     rate = PRICING_CENTS_PER_TOKEN.get(model, PRICING_CENTS_PER_TOKEN["claude-sonnet-5"])
     cost = int(tokens_in * rate["in"] + tokens_out * rate["out"])  # cents
-    run = get_run(run_id)
-    new_total = (run.get("cost_cents") or 0) + cost
-    update_run(run_id, cost_cents=new_total)
-    return new_total
+    try:
+        run = get_run(run_id) or {}
+        new_total = (run.get("cost_cents") or 0) + cost
+        update_run(run_id, cost_cents=new_total)
+        return new_total
+    except Exception as e:
+        print(f"[ledger.add_cost warning: skipped for run_id={run_id}: {e}]")
+        return cost

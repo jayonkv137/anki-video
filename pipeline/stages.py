@@ -80,14 +80,13 @@ SHOT_SCHEMA = _schema(
     blocking=STR,         # who is where in the 9:16 vertical frame
     gaze=STR,             # eyelines (who looks at what)
     expression=STR,       # emotional beat (per character)
-    lighting_mood=STR,    # lighting + mood
     dialogue=_arr(DIALOGUE_LINE),
 )
 
 SEGMENT_SCHEMA = _schema(
     segment_number=INT,
     duration_s=INT,       # ~15 — a single Seedance clip
-    setting=STR,
+    time_and_weather=STR, # time of day and weather for this segment
     shots=_arr(SHOT_SCHEMA),
 )
 
@@ -99,6 +98,7 @@ SCREENPLAY_SCHEMA = _schema(
     grammar_target=STR,    # the structure this episode teaches
     total_duration_s=INT,  # 30 (2×15) default, 45 (3×15) when needed
     environment=STR,
+    global_aesthetic_rules=STR, # overall look, e.g. Cinematic 35mm, photorealistic
     target_vocab=_arr(_schema(german=STR, english=STR, gender=STR)),  # emergent; gender ∈ der/die/das/— for color-coding
     segments=_arr(SEGMENT_SCHEMA),
 )
@@ -140,6 +140,7 @@ STORY_BRIEF_SCHEMA = _schema(
     target_line=TARGET_LINE_SCHEMA,
     oblique_constraint=STR,       # the lateral curveball ("" if none)
     banned_terms=_arr(STR),       # stereotype name+synonyms + pedagogical tokens kept OUT of dialogue
+    director_notes=_arr(STR),     # capture nuances/context from brainstorming phase
 )
 BRIEF_COMMIT_SCHEMA = _schema(
     critique=_arr(_schema(check=STR, passed=BOOL, note=STR)),
@@ -188,8 +189,15 @@ CAPTION_SCHEMA = _schema(caption=STR, hashtags=_arr(STR))
 def _call_gemini(system: str, user: str, schema: dict, temperature: float | None = None) -> tuple[dict, int, int]:
     from google import genai
     from google.genai import types
+    import time
     api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
-    model_name = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+    primary_model = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+    # De-duplicate fallback list preserving order
+    fallback_models = []
+    for m in [primary_model, "gemini-3.6-flash"]:
+        if m not in fallback_models:
+            fallback_models.append(m)
+            
     client = genai.Client(api_key=api_key)
     
     config = types.GenerateContentConfig(
@@ -198,24 +206,34 @@ def _call_gemini(system: str, user: str, schema: dict, temperature: float | None
         temperature=temperature if temperature is not None else 0.7,
     )
     
-    response = client.models.generate_content(
-        model=model_name,
-        contents=user,
-        config=config,
-    )
-    
-    # Clean control characters if present and use strict=False to allow unescaped newlines in JSON strings
-    text = response.text
-    try:
-        parsed = json.loads(text, strict=False)
-    except json.JSONDecodeError:
-        # Fallback sanitize raw control characters inside strings
-        import re
-        sanitized = re.sub(r'[\x00-\x1f\x7f-\x9f]', lambda m: '\\n' if m.group(0) == '\n' else '', text)
-        parsed = json.loads(sanitized, strict=False)
-    t_in = response.usage_metadata.prompt_token_count if response.usage_metadata else 500
-    t_out = response.usage_metadata.candidates_token_count if response.usage_metadata else 500
-    return parsed, t_in, t_out
+    last_err = None
+    for model_name in fallback_models:
+        for attempt in range(2):
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=user,
+                    config=config,
+                )
+                text = response.text
+                try:
+                    parsed = json.loads(text, strict=False)
+                except json.JSONDecodeError:
+                    import re
+                    sanitized = re.sub(r'[\x00-\x1f\x7f-\x9f]', lambda m: '\\n' if m.group(0) == '\n' else '', text)
+                    parsed = json.loads(sanitized, strict=False)
+                t_in = response.usage_metadata.prompt_token_count if response.usage_metadata else 500
+                t_out = response.usage_metadata.candidates_token_count if response.usage_metadata else 500
+                return parsed, t_in, t_out
+            except Exception as e:
+                last_err = e
+                err_str = str(e)
+                if any(tok in err_str for tok in ("503", "UNAVAILABLE", "429", "RESOURCE_EXHAUSTED")):
+                    time.sleep(1.0)
+                    continue
+                raise e
+    if last_err:
+        raise last_err
 
 
 def _call(client: Anthropic, system: str, user: str, label: str,
@@ -748,6 +766,7 @@ def stage_storyboard(run_id: str, rcp: RunContextPack, sp: dict, ep_dir: Path,
     the Seedance step resolves (DESIGN_v3_data_flow.md §3–4)."""
     skill = _load_skill("skill-2b-storyboard.md")
     skill = (skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
+             .replace("{{CANON_BLOCKS}}", rcp.canon_blocks)
              .replace("{{SCREENPLAY_JSON}}", json.dumps(sp, ensure_ascii=False)))
     system = rcp.for_prompt_stage() + "\n\n" + skill
     board, t_in, t_out = _call(

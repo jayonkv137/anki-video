@@ -2,6 +2,19 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-24 (latest) — Dynamic Text-Based Wardrobe Overrides
+
+- **Pipeline Update:** Implemented a non-breaking architecture to allow users to add dynamic clothing and accessories to characters without requiring image uploads.
+- **Story Brief (`skill-1c-commit`) & Screenplay (`skill-2`)**: Added `wardrobe_overrides: [{"character", "accessory_description"}]` to JSON schemas.
+- **Storyboard Compiler (`skill-2b-storyboard`)**: Injected conditional logic to Nano Banana Pro prompts to explicitly bypass clothing from reference images when an override is present (`EXCEPT for their wardrobe. They are wearing [accessory_description].`).
+- **Video Compiler (`skill-3-prompt-writer`)**: Seedance prompt automatically inherits and appends the wardrobe text to the character's `@Image` identity binding.
+
+## 2026-07-24 (latest) — Nano Banana Pro Syntax for Storyboard
+
+- **Storyboard Prompt Rewrite:** Updated `skill-2b-storyboard.md` to conform to the strict Nano Banana Pro syntax requirements. 
+- **Semantic Feature Isolation:** Replaced generic instructions with explicit `[REFERENCE BINDING & RELATIONSHIP INSTRUCTION]` blocks. The model is now explicitly told which images correspond to which character and exactly what features to isolate (e.g. facial geometry, specific texture).
+- **Coordinate-based Layout:** Replaced static blocking descriptions with `[NEW SCENARIO: COORDINATE-BASED PANELS]`, relying on spatial coordinates (e.g. `center foreground`) and dynamic verbs to prevent overlapping subjects and spatial bleeding in the 9:16 grid layout.
+
 ## 2026-07-24 (latest) — Subtitle engine + Assembly Studio (the pipeline's final stage)
 
 - **Decision — light path, not Remotion.** Jayon's research recommended a React + Remotion + Lambda + Vercel AI SDK stack; our studio is FastAPI + vanilla-JS + ffmpeg, and `assemble.py` already burns subtitles. So we **adopt the research's ideas** (frame-based declarative JSON state, word-level timing, the layout/colour rules, decoupled subtitles for instant preview, tool-calling edits) but realise them in our stack at **~$0** — no Remotion/React/Lambda/$300-licence. See `DESIGN_subtitle_and_assembly.md`.

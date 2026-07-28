@@ -455,16 +455,50 @@ function renderStereotypesView(container) {
       ${lockedBannerHtml}
       <div class="card-title">
         <span>Step 01 · Pick Today's German Stereotype</span>
-        <button class="ghost" onclick="fetchStereotypes()">🔀 Shuffle 3 New Stereotypes</button>
+        <input type="text" id="st-search" placeholder="Search 100 stereotypes..." onkeyup="filterStereotypes()" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--fg); min-width: 250px;">
       </div>
       <p style="color: var(--dim); font-size: 13.5px; margin-bottom: 14px;">
-        Choose one of the 3 German micro-behaviors below to drive today's episode comedy.
+        Search the compendium and choose a micro-behavior to drive today's episode comedy.
       </p>
-      <div class="st-grid">
-        ${cardsHtml || '<p style="color:var(--dim)">Loading stereotypes...</p>'}
+      <div class="st-grid" style="max-height: 600px; overflow-y: auto; padding-right: 10px;">
+        ${cardsHtml || '<p style="color:var(--dim)">No stereotypes found...</p>'}
       </div>
     </div>
   `;
+}
+
+let allStereotypes = [];
+
+function filterStereotypes() {
+  const query = document.getElementById('st-search').value.toLowerCase();
+  candidateStereotypes = allStereotypes.filter(st => {
+    const text = `${st.name_de} ${st.name_en || st.name || ''} ${st.description} ${st.category}`.toLowerCase();
+    return text.includes(query);
+  });
+  // Rerender the grid without replacing the search bar to avoid losing focus
+  const grid = document.querySelector('.st-grid');
+  if (grid) {
+    grid.innerHTML = candidateStereotypes.map((st) => {
+      // Find original index in allStereotypes for picking
+      const originalIdx = allStereotypes.indexOf(st);
+      return `
+      <div class="st-card" onclick="pickStereotype(${originalIdx})">
+        <span class="st-cat">${st.category}</span>
+        <div>
+          <div class="st-title-de">${st.name_de}</div>
+          <div class="st-title-en">${st.name_en || st.name || ''}</div>
+        </div>
+        <div class="st-desc">${st.description}</div>
+        <div class="brief-section" style="margin-top:auto; padding:10px; font-size:11px; color:var(--dim);">
+          <b>Cultural Context:</b> ${st.cultural_context}
+        </div>
+        <button class="purple" style="margin-top: 12px; width: 100%;" onclick="event.stopPropagation(); pickStereotype(${originalIdx});">
+          Select "${st.name_de}" ➔
+        </button>
+      </div>
+      `;
+    }).join('') || '<p style="color:var(--dim)">No stereotypes found...</p>';
+  }
 }
 
 function discardActiveSession() {
@@ -484,12 +518,13 @@ function discardActiveSession() {
 }
 
 async function fetchStereotypes() {
-  candidateStereotypes = await api('/api/stereotypes/options?n=3');
+  allStereotypes = await api('/api/stereotypes/all');
+  candidateStereotypes = [...allStereotypes];
   renderStepView();
 }
 
 function pickStereotype(idx) {
-  selectedStereotype = candidateStereotypes[idx];
+  selectedStereotype = allStereotypes[idx];
   setStep(2);
 }
 

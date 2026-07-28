@@ -817,7 +817,10 @@ def v3_screenplay(run_id: str):
                         "{{STORY_JSON}}": json.dumps(brief, ensure_ascii=False)},
                        SCREENPLAY_SCHEMA, stage="screenplay")
     (ep / "screenplay.json").write_text(json.dumps(sp, ensure_ascii=False, indent=2), encoding="utf-8")
-    ledger.update_run(run_id, stage="screenplay")
+    try:
+        ledger.update_run(run_id, stage="screenplay")
+    except Exception as e:
+        print(f"[ledger.update_run failed: {e}]")
     return {"screenplay": sp, "problems": validate_screenplay(sp)}
 
 
@@ -833,7 +836,10 @@ def v3_storyboard(run_id: str):
                            "{{SCREENPLAY_JSON}}": json.dumps(sp, ensure_ascii=False)},
                           STORYBOARD_SCHEMA, stage="prompt")
     (ep / "storyboard.json").write_text(json.dumps(board, ensure_ascii=False, indent=2), encoding="utf-8")
-    ledger.update_run(run_id, stage="storyboard")
+    try:
+        ledger.update_run(run_id, stage="storyboard")
+    except Exception as e:
+        print(f"[ledger.update_run failed: {e}]")
     return {"storyboard": board}
 
 
@@ -894,7 +900,10 @@ def v3_video_prompts(run_id: str):
     manifest = build_refs_manifest(prompts, run_id, ep)
     (ep / "prompts" / "refs_manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
-    ledger.update_run(run_id, stage="prompts")
+    try:
+        ledger.update_run(run_id, stage="prompts")
+    except Exception as e:
+        print(f"[ledger.update_run failed: {e}]")
     return {"prompts": prompts, "refs_manifest": manifest}
 
 

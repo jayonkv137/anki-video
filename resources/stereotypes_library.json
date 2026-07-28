@@ -55,10 +55,7 @@
       "name_de": "Bei Rot bleibt man stehen!",
       "description": "Standing completely still at an empty pedestrian crossing, even at 3:00 AM, and waiting for the light to turn green.",
       "cultural_context": "German traffic regulations (§37 StVO) enforce strict compliance; it is viewed as a civic duty and a moral example for children ( Vorbildfunktion ).",
-      "source_key": "1-6",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1-6"
     },
     {
       "id": "002",
@@ -68,10 +65,7 @@
       "name_de": "Stoßlüften & Querlüften",
       "description": "Opening every window fully wide for 5–10 minutes several times daily, regardless of the weather, to exchange indoor air.",
       "cultural_context": "Rooted in a belief that  Frischluft  (fresh air) prevents mold and illness; rental contracts often contain explicit clauses obligating this to prevent building damage.",
-      "source_key": "1, 7-13",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 7-13"
     },
     {
       "id": "003",
@@ -81,10 +75,7 @@
       "name_de": "Das Pfand-System",
       "description": "Collecting and returning plastic and glass bottles to automated machines in supermarkets to reclaim deposits.",
       "cultural_context": "Enacted via the  Verpackungsverordnung , this system incentivizes recycling with a financial value (up to €0.25), achieving a 98% return rate globally.",
-      "source_key": "1, 6, 8, 9, 14-16",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 6, 8, 9, 14-16"
     },
     {
       "id": "004",
@@ -94,10 +85,7 @@
       "name_de": "Mülltrennung",
       "description": "Dividing household rubbish into 5 to 7 specific bins (Restmüll, Gelber Sack, Papier, Bio, Glass) and monitoring neighbor compliance.",
       "cultural_context": "Environmental protection is a legally mandated civic duty ( Kreislaufwirtschaftsgesetz ) and a moral imperative for preserving nature for future generations.",
-      "source_key": "1, 2, 5, 7, 14, 17-19",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 2, 5, 7, 14, 17-19"
     },
     {
       "id": "005",
@@ -107,10 +95,7 @@
       "name_de": "Sonn- und Feiertagsruhe",
       "description": "Absolute ban on noisy activities like vacuuming, lawn mowing, or hammering on Sundays and public holidays.",
       "cultural_context": "Sunday rest is anchored in the German Basic Law and the  Ladenschlussgesetz  (Shop Closing Law) as a day of social recovery and spiritual elevation.",
-      "source_key": "1, 9, 11, 14, 15, 17, 18, 20, 21",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 9, 11, 14, 15, 17, 18, 20, 21"
     },
     {
       "id": "006",
@@ -120,10 +105,7 @@
       "name_de": "Der Laminierte Zettel",
       "description": "Communicating complaints to neighbors via formal, printed, and often laminated notes taped in communal areas.",
       "cultural_context": "Lamination implies official status; it is a way to enforce the  Hausordnung  (house rules) while avoiding direct face-to-face confrontation.",
-      "source_key": "1, 7",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 7"
     },
     {
       "id": "007",
@@ -133,10 +115,7 @@
       "name_de": "Nur Barzahlung!",
       "description": "Refusing credit/debit card payments in restaurants, bakeries, or shops, often without advance warning.",
       "cultural_context": "Rooted in deep historical privacy concerns ( Datenschutz ) and a cultural aversion to debt ( Schulden  shares a root with  Schuld , or \"guilt\").",
-      "source_key": "1, 4, 6, 7, 18, 19, 22-24",
-      "status": "covered",
-      "episode_id": "ep_153013d8",
-      "covered_at": "2026-07-23T18:45:35"
+      "source_key": "1, 4, 6, 7, 18, 19, 22-24"
     },
     {
       "id": "008",
@@ -146,10 +125,7 @@
       "name_de": "Behörden & Faxgeräte",
       "description": "Government and medical offices insisting on receiving official applications or cancellations via physical paper or fax machine.",
       "cultural_context": "German administrative law ( Verwaltungsverfahrensgesetz ) hinges on physical authentication, \"wet\" signatures, and physical trails for legal certainty.",
-      "source_key": "1, 7, 18, 25",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 7, 18, 25"
     },
     {
       "id": "009",
@@ -159,10 +135,7 @@
       "name_de": "Der Amtliche Stempel",
       "description": "Believing that no document or contract has legal validity until it is stamped with a heavy wooden ink seal.",
       "cultural_context": "Historically, the validity of administrative procedures depends on physical authentication via official seals ( Dienstsiegel ).",
-      "source_key": "1, 26",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 26"
     },
     {
       "id": "010",
@@ -172,10 +145,7 @@
       "name_de": "Versicherungs-Wahn",
       "description": "Holding numerous insurance policies for every life risk, such as liability ( Haftpflichtversicherung ), legal, and pet liability.",
       "cultural_context": "Reflects a paramount cultural value on safety ( Sicherheit ) and long-term planning to protect against the unpredictable risks of life.",
-      "source_key": "1, 2, 5",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 2, 5"
     },
     {
       "id": "011",
@@ -185,10 +155,7 @@
       "name_de": "Abendbrot",
       "description": "Eating a simple cold dinner of bread, cheeses, and cold cuts at precisely 6:00 PM.",
       "cultural_context": "A deeply embedded cultural concept distinguishing the warm midday meal ( Mittagessen ) from the light, structured evening meal.",
-      "source_key": "1, 7, 12, 18",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 7, 12, 18"
     },
     {
       "id": "012",
@@ -198,10 +165,7 @@
       "name_de": "Hausschuhe für Gäste",
       "description": "Requiring guests to remove outdoor shoes at the door and offering them guest slippers ( Gästehausschuhe ).",
       "cultural_context": "High standards of cleanliness and the prevalence of wooden or laminate flooring make indoor shoes socially unacceptable.",
-      "source_key": "1, 11",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 11"
     },
     {
       "id": "013",
@@ -211,10 +175,7 @@
       "name_de": "Zwei Bettdecken",
       "description": "Couples sharing a bed using two distinct single duvets and often two separate mattresses.",
       "cultural_context": "Allows for individual temperature control and prevents \"blanket thievery,\" maintaining strict personal sleep boundaries.",
-      "source_key": "1, 7, 27",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 7, 27"
     },
     {
       "id": "014",
@@ -225,9 +186,9 @@
       "description": "Being unable to buy groceries on Sunday due to the closure of all general retail and supermarkets.",
       "cultural_context": "The  Ladenschlussgesetz  (Shop Closing Law) protects a synchronized day of rest for workers, away from nonstop consumerism.",
       "source_key": "1, 6, 17, 18, 28",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "status": "covered",
+      "episode_id": "ep_3b20b405",
+      "covered_at": "2026-07-26T14:12:42"
     },
     {
       "id": "015",
@@ -237,10 +198,7 @@
       "name_de": "Die Rollläden",
       "description": "Lowering heavy, light-proof exterior window shutters every night to create a pitch-black, soundproof environment.",
       "cultural_context": "A standard architectural feature used for insulation, security, and ensuring the \"right\" to absolute darkness for quality sleep.",
-      "source_key": "1, 26, 27",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 26, 27"
     },
     {
       "id": "016",
@@ -250,10 +208,7 @@
       "name_de": "Testergebnis: Sehr Gut",
       "description": "Refusing to purchase products unless they have been awarded a top rating by the  Stiftung Warentest  foundation.",
       "cultural_context": "Established by the Bundestag in 1964, this seal is legally protected and serves as an influential marker of technical competence and quality.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "017",
@@ -263,10 +218,7 @@
       "name_de": "Küche mitnehmen",
       "description": "Dismantling and transporting the entire kitchen (sink, stove, cabinets) when moving to a new rental apartment.",
       "cultural_context": "Most German rental contracts offer apartments  unmöbliert  (unfurnished), meaning the kitchen is personal property and a long-term investment.",
-      "source_key": "1, 7, 13, 28",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 7, 13, 28"
     },
     {
       "id": "018",
@@ -276,10 +228,7 @@
       "name_de": "Tischdecke & Untersetzer",
       "description": "Placing protective coasters under every glass to prevent water rings or phantom damage to furniture.",
       "cultural_context": "A deeply ingrained domestic furniture preservation norm, reflected in the universal presence of  Bierdeckel  (beer mats).",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "019",
@@ -289,10 +238,7 @@
       "name_de": "Der SodaStream-Kult",
       "description": "Carbonating tap water at home and refusing to drink uncarbonated water, often labeled \"Kranberger.\"",
       "cultural_context": "Germany is one of the world's largest consumer markets for home carbonators due to a cultural preference for  Sprudel .",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "020",
@@ -302,10 +248,7 @@
       "name_de": "Sommer- & Winterbettwäsche",
       "description": "Changing duvet fills from down to linen on specific calendar dates, regardless of the actual weather.",
       "cultural_context": "Household tradition and domestic manuals dictate exact seasonal swaps to maintain discipline and preparedness.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "021",
@@ -315,10 +258,7 @@
       "name_de": "Deutsche Brotkultur",
       "description": "Claiming German dark sourdough ( Graubrot ) is superior and viewing soft white bread as \"edible sponge.\"",
       "cultural_context": "Inscribed into UNESCO's Intangible Cultural Heritage list, bread is a nutritional staple with over 3,000 recognized varieties.",
-      "source_key": "1, 12, 18",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 12, 18"
     },
     {
       "id": "022",
@@ -328,10 +268,7 @@
       "name_de": "Die Schorle-Kultur",
       "description": "Diluting juices or wine with carbonated mineral water to create refreshing  Schorlen .",
       "cultural_context": "Apfelschorle  is a national staple, often outselling pure juices because it is viewed as healthier and more hydrating.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "023",
@@ -341,10 +278,7 @@
       "name_de": "Spargelzeit",
       "description": "Treating white asparagus season (April to June) as a national religious holiday, consuming it daily.",
       "cultural_context": "A seasonal ritual celebrating local agriculture; the arrival of \"the white gold\" is a major cultural and culinary event.",
-      "source_key": "1, 7, 8",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 7, 8"
     },
     {
       "id": "024",
@@ -354,10 +288,7 @@
       "name_de": "Reinheitsgebot von 1516",
       "description": "Rejecting craft beers with flavorings by citing the 1516 Bavarian Beer Purity Law.",
       "cultural_context": "The  Vorläufiges Biergesetz  maintains historical legal status regulating commercial brewing ingredients to ensure quality and tradition.",
-      "source_key": "1, 11",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 11"
     },
     {
       "id": "025",
@@ -367,10 +298,7 @@
       "name_de": "Angrillen bei 15°C",
       "description": "Firing up a charcoal grill in public parks as soon as temperatures reach 15°C in early spring.",
       "cultural_context": "Angrillen  marks the official start of the social season and is a favorite communal pastime despite strict municipal regulations.",
-      "source_key": "1, 27",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 27"
     },
     {
       "id": "026",
@@ -380,10 +308,7 @@
       "name_de": "Kaffee und Kuchen",
       "description": "Sitting down at 3:00 PM on Sundays for filter coffee and bakery-fresh cake with family or friends.",
       "cultural_context": "A ritualized social institution that provides a moment of rest and communal connection during the weekend.",
-      "source_key": "1, 11, 22",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 11, 22"
     },
     {
       "id": "027",
@@ -393,10 +318,7 @@
       "name_de": "Dönerpreisbremse",
       "description": "Treating the German-style Döner Kebab as a national treasure and protesting price increases.",
       "cultural_context": "The \"Döner Index\" is a primary inflation metric in youth culture, reflecting the dish's status as a staple of modern German life.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "028",
@@ -406,10 +328,7 @@
       "name_de": "Mettigel",
       "description": "Eating seasoned raw minced pork spread on rolls, often shaped into a hedgehog with onion spines.",
       "cultural_context": "A traditional party staple since the 1950s economic miracle, permitted by strict food safety laws allowing raw pork sale only on the day of production.",
-      "source_key": "1, 7, 18, 29-31",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 7, 18, 29-31"
     },
     {
       "id": "029",
@@ -419,10 +338,7 @@
       "name_de": "Die Kult-Currywurst",
       "description": "Eating sliced fried sausage with curry-ketchup and powder out of a paper tray with a tiny plastic fork.",
       "cultural_context": "Over 800 million are consumed yearly; it is a symbol of urban street culture and post-war culinary history.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "030",
@@ -432,10 +348,7 @@
       "name_de": "Maggi-Würze",
       "description": "Keeping a dark bottle of Maggi liquid seasoning on the table for soups, eggs, and stews.",
       "cultural_context": "This liquid seasoning holds cult status, particularly in regions like Saarland where per capita consumption is the highest in the world.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "031",
@@ -445,10 +358,7 @@
       "name_de": "Pünktlichkeit ist Pflicht",
       "description": "Arriving 5 to 10 minutes early for appointments and viewing a 3-minute delay as a personal insult.",
       "cultural_context": "Timeliness is viewed as a \"trust currency\" and a fundamental sign of respect; lateness is seen as a breach of social order.",
-      "source_key": "1, 2, 5, 7, 13, 17, 18, 23, 32, 33",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 2, 5, 7, 13, 17, 18, 23, 32, 33"
     },
     {
       "id": "032",
@@ -458,10 +368,7 @@
       "name_de": "Direkte Kritik ohne Floskeln",
       "description": "Giving blunt, factual feedback without polite cushioning or small talk.",
       "cultural_context": "Efficiency and clarity are prioritized over emotional management; being direct is seen as a sign of honesty and trust.",
-      "source_key": "1, 4, 6, 12, 17-19, 23, 32, 33",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 4, 6, 12, 17-19, 23, 32, 33"
     },
     {
       "id": "033",
@@ -471,10 +378,7 @@
       "name_de": "Der heilige Feierabend",
       "description": "Shutting down work laptops at 5:00 PM and fiercely guarding leisure hours against work intrusion.",
       "cultural_context": "Labour laws ( Arbeitszeitgesetz ) and a cultural emphasis on work-life balance protect the right of workers to disconnect.",
-      "source_key": "1, 5, 17, 25, 32, 34",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 5, 17, 25, 32, 34"
     },
     {
       "id": "034",
@@ -484,10 +388,7 @@
       "name_de": "Mahlzeit!",
       "description": "Greeting colleagues between 11:30 AM and 1:30 PM with the single word \"Mahlzeit!\"",
       "cultural_context": "Derived from \"Gesegnete Mahlzeit,\" this workplace ritual acknowledges the shared window for the midday meal.",
-      "source_key": "1, 25, 35",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 25, 35"
     },
     {
       "id": "035",
@@ -497,10 +398,7 @@
       "name_de": "Einen Termin vereinbaren",
       "description": "Refusing spontaneous catch-ups and demanding social or professional meetings be scheduled weeks in advance.",
       "cultural_context": "Heavy reliance on calendar management systems ( Terminkalender ) ensures efficiency and respects the structure of daily life.",
-      "source_key": "1, 3, 5",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 3, 5"
     },
     {
       "id": "036",
@@ -510,10 +408,7 @@
       "name_de": "Arbeitsunfähigkeitsbescheinigung",
       "description": "Visiting the doctor for an official note ( Gelber Schein ) at the first sign of illness and resting without guilt.",
       "cultural_context": "German labor law ( Entgeltfortzahlungsgesetz ) grants 100% employer-paid sick leave for up to 6 weeks, reflecting a high value on health recovery.",
-      "source_key": "1, 20",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 20"
     },
     {
       "id": "037",
@@ -523,10 +418,7 @@
       "name_de": "Herr Doktor / Siezen",
       "description": "Addressing colleagues using formal \"Sie\" and full academic titles until explicitly invited to use \"Du.\"",
       "cultural_context": "Sociolinguistic etiquette and the  Sie/Du  boundary preserve \"Privatheit\" (privacy) and professional hierarchy.",
-      "source_key": "1, 17, 20, 23, 33, 36",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 17, 20, 23, 33, 36"
     },
     {
       "id": "038",
@@ -536,10 +428,7 @@
       "name_de": "Die Beschwerde / Reklamation",
       "description": "Filing immediate, highly detailed technical complaints when a product or service deviates by a small margin.",
       "cultural_context": "Consumer protection is a heavily utilized public institution; complaining is seen as a way to express a desire for high standards and efficiency.",
-      "source_key": "1, 35",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 35"
     },
     {
       "id": "039",
@@ -549,10 +438,7 @@
       "name_de": "Sauerstoffmangel im Tagungsraum",
       "description": "Interrupting presentations to demand opening windows because oxygen levels have dropped.",
       "cultural_context": "Corporate health and safety regulations ( Arbeitsstättenrichtlinie ) mandate specific air quality standards in commercial workspaces.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "040",
@@ -562,10 +448,7 @@
       "name_de": "Der Zertifikate-Wahn",
       "description": "Valuing official paper certificates and state qualifications far above uncertified practical experience.",
       "cultural_context": "The dual vocational training system ( Duale Ausbildung ) requires standardized certification to ensure professional competence and trust.",
-      "source_key": "1, 11, 26",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 11, 26"
     },
     {
       "id": "041",
@@ -575,10 +458,7 @@
       "name_de": "Liegen mit Handtuch reservieren",
       "description": "Waking up at 6:00 AM on vacation to place a towel on a poolside lounge chair to claim ownership.",
       "cultural_context": "A competitive and territorial approach to leisure where physical markers are viewed as valid placeholders for personal space.",
-      "source_key": "1, 2, 8",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 2, 8"
     },
     {
       "id": "042",
@@ -588,10 +468,7 @@
       "name_de": "Jack Wolfskin Uniform",
       "description": "Wearing waterproof hiking jackets and trail boots for mundane tasks like buying bread.",
       "cultural_context": "German culture values preparedness for unpredictable weather ( Allzeit Bereit ) and prioritizes utility over fashion.",
-      "source_key": "1, 22",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 22"
     },
     {
       "id": "043",
@@ -601,10 +478,7 @@
       "name_de": "Die Wanderlust",
       "description": "Spending weekends hiking through forests equipped with map apps, trekking poles, and packed lunch boxes.",
       "cultural_context": "Reflects a deep cultural and Romantic connection to nature and a national emphasis on physical fitness and resilience.",
-      "source_key": "1, 8, 12, 26",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 8, 12, 26"
     },
     {
       "id": "044",
@@ -614,10 +488,7 @@
       "name_de": "Freikörperkultur (FKK)",
       "description": "Embracing complete non-sexual nudity in saunas, designated lake shores, and beach zones.",
       "cultural_context": "The FKK movement (since the 19th century) views the unclothed body as a way to achieve harmony with nature and health.",
-      "source_key": "1, 5, 6, 18, 20, 23, 37, 38",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 5, 6, 18, 20, 23, 37, 38"
     },
     {
       "id": "045",
@@ -627,10 +498,7 @@
       "name_de": "Freie Fahrt für freie Bürger",
       "description": "Driving 220 km/h on unrestricted stretches and flashing headlights at slower cars in the left lane.",
       "cultural_context": "The ADAC historically defended the lack of speed limits as a symbol of personal freedom and engineering pride.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "046",
@@ -640,10 +508,7 @@
       "name_de": "Ballermann",
       "description": "Treating the island of Mallorca as an exclusive German colony for summer drinking vacations.",
       "cultural_context": "Reflected in massive seasonal tourism and a cultural preference for sun and sea to offset grey German winters.",
-      "source_key": "1, 2",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 2"
     },
     {
       "id": "047",
@@ -653,10 +518,7 @@
       "name_de": "Kleingartenverein",
       "description": "Renting a tiny garden plot and abiding by strict regulations on hedge height and lawn trimming.",
       "cultural_context": "The Federal Allotment Garden Law ( Bundeskleingartengesetz ) dictates land usage to ensure orderly communal cultivation.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "048",
@@ -666,10 +528,7 @@
       "name_de": "Pilze sammeln",
       "description": "Going into secret forest spots in autumn to harvest wild mushrooms while guarding locations like secrets.",
       "cultural_context": "Regulated by the Federal Nature Conservation Act, this is a traditional pursuit intended to maximize connection with nature's bounty.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "049",
@@ -679,10 +538,7 @@
       "name_de": "StVZO Fahrrad-Ausstattung",
       "description": "Refusing to ride a bicycle unless equipped with dynamo lights, reflectors, and a bell.",
       "cultural_context": "German Road Traffic Licensing Regulations (§67 StVZO) meticulously detail required equipment for road legality and safety.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "050",
@@ -692,10 +548,7 @@
       "name_de": "Campingplatz-Reservierung",
       "description": "Reserving exact caravan plot numbers 12 months in advance.",
       "cultural_context": "Germany is Europe's largest buyer of motorhomes, leading to early booking habits to ensure predictability and order.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "051",
@@ -705,10 +558,7 @@
       "name_de": "Socken in Sandalen",
       "description": "Wearing thick white socks inside leather cork-soled sandals without embarrassment.",
       "cultural_context": "Prioritizes orthopaedic utility, health, and comfort over aesthetic fashion trends or global mockery.",
-      "source_key": "1, 2, 32",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 2, 32"
     },
     {
       "id": "052",
@@ -718,10 +568,7 @@
       "name_de": "Funktionskleidung",
       "description": "Selecting everyday clothing based on zipper security, pocket count, and water resistance.",
       "cultural_context": "Reflects a cultural dominance of utilitarianism; being \"properly equipped\" for the environment is a baseline of civilized behavior.",
-      "source_key": "1, 13",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 13"
     },
     {
       "id": "053",
@@ -731,10 +578,7 @@
       "name_de": "Berghain Dresscode",
       "description": "Wearing head-to-toe plain black leather and combat boots to nightclubs.",
       "cultural_context": "Berlin club culture established strict anti-mainstream dress codes as a marker of identity and nightclub exclusivity.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "054",
@@ -744,10 +588,7 @@
       "name_de": "Trachten / Lederhosen",
       "description": "The assumption that all German men wear leather breeches and checkered shirts.",
       "cultural_context": "Alpine regional  Tracht  branding created a global association linking Bavarian clothing to the entire Federal Republic.",
-      "source_key": "1, 2, 20, 34",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 2, 20, 34"
     },
     {
       "id": "055",
@@ -757,10 +598,7 @@
       "name_de": "Loop-Schal Necessity / Der Zugluft-Schutz",
       "description": "Wearing a neck scarf at the slightest breeze out of fear of illness.",
       "cultural_context": "German folk-medical belief holds draft air ( Zugluft ) directly responsible for neck stiffness, colds, and various ailments.",
-      "source_key": "1, 3, 21",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 3, 21"
     },
     {
       "id": "056",
@@ -770,10 +608,7 @@
       "name_de": "Engelbert Strauss als Lifestyle",
       "description": "Wearing heavy-duty trade workwear (pants with kneepads) as everyday casual streetwear.",
       "cultural_context": "Known as \"Bauern-Gucci,\" this brand achieved iconic status for its durability, reflecting a respect for craftsmanship and utility.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "057",
@@ -783,10 +618,7 @@
       "name_de": "Der Friesennerz",
       "description": "Wearing a bright yellow rubberized rain mac to ensure complete impermeability.",
       "cultural_context": "A classic North German coastal item that remains a cult symbol of practical weatherproofing and regional identity.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "058",
@@ -796,10 +628,7 @@
       "name_de": "Das Schlüsseltäschchen",
       "description": "Carrying keys inside a small leather zipped pouch to prevent scratches on other items.",
       "cultural_context": "A traditional practical accessory designed to protect personal property and maintain order within one's bags.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "059",
@@ -809,10 +638,7 @@
       "name_de": "Die Fleecejacke",
       "description": "Relying on a zipped polyester fleece jacket as the universal solution for mid-layer warmth.",
       "cultural_context": "A core utilitarian wardrobe staple due to its durability and practicality in the unpredictable German climate.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "060",
@@ -822,10 +648,7 @@
       "name_de": "Reflektor-Bänder",
       "description": "Snapping fluorescent yellow reflective bands around ankles when walking at dusk.",
       "cultural_context": "Driven by safety campaigns from traffic associations to maintain public order and minimize avoidable accidents.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "061",
@@ -835,10 +658,7 @@
       "name_de": "Jammern & Meckern",
       "description": "Initiating social contact by complaining about weather, train delays, or prices.",
       "cultural_context": "Known as  Jammern auf hohem Niveau , this functions as a social lubricant to find common ground without being overly personal.",
-      "source_key": "1, 11, 18, 35",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 11, 18, 35"
     },
     {
       "id": "062",
@@ -848,10 +668,7 @@
       "name_de": "Der Deutsche Blick",
       "description": "Staring intensely at strangers on public transit without smiling or looking away.",
       "cultural_context": "Not viewed as aggression; it is a form of neutral social observation, directness, or a tool for enforcing community standards.",
-      "source_key": "1, 5-7, 15, 18, 35, 39",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 5-7, 15, 18, 35, 39"
     },
     {
       "id": "063",
@@ -861,10 +678,7 @@
       "name_de": "Prost & Augenkontakt",
       "description": "Making intense direct eye contact with everyone at the table while clinking glasses.",
       "cultural_context": "A universal etiquette rule; failing to do so is jokingly said to bring seven years of bad luck (or bad sex).",
-      "source_key": "1, 5, 7, 12, 14, 23",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 5, 7, 12, 14, 23"
     },
     {
       "id": "064",
@@ -874,10 +688,7 @@
       "name_de": "Tischklopfen",
       "description": "Rapping knuckles on wooden desks instead of clapping at university lectures or business meetings.",
       "cultural_context": "An academic custom ( Akademisches Klopfen ) dating back to 18th-century university fraternities to signal formal appreciation.",
-      "source_key": "1, 26",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 26"
     },
     {
       "id": "065",
@@ -887,10 +698,7 @@
       "name_de": "Kein Smalltalk",
       "description": "Skipping superficial questions like \"How are you?\" and jumping immediately to the point.",
       "cultural_context": "Pragmatic efficiency in conversation prioritizes task completion and authenticity over \"superficial\" social games.",
-      "source_key": "1, 5, 13, 15, 19, 30",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 5, 13, 15, 19, 30"
     },
     {
       "id": "066",
@@ -900,10 +708,7 @@
       "name_de": "Humorlosigkeit / Wörtlich nehmen",
       "description": "Responding to sarcasm or hyperbolic jokes with factual corrections or logical explanations.",
       "cultural_context": "German precision and the preference for factual accuracy often override contextual irony or social cushioning.",
-      "source_key": "1, 21",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 21"
     },
     {
       "id": "067",
@@ -913,10 +718,7 @@
       "name_de": "Zurechtweisung im Alltag",
       "description": "Total strangers publicly calling out individuals who walk on bike paths or cut in line.",
       "cultural_context": "A social control mechanism ( Soziale Kontrolle ) used to maintain shared order and ensure everyone follows the rules.",
-      "source_key": "1, 3, 6, 11, 13, 15",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 3, 6, 11, 13, 15"
     },
     {
       "id": "068",
@@ -926,10 +728,7 @@
       "name_de": "Aldi-Kassen-Stress",
       "description": "Panic-packing groceries while the cashier scans items at lightning speed.",
       "cultural_context": "Supermarket metrics prioritize item-scans-per-minute; customers are expected to function as a fast-paced component of this efficient system.",
-      "source_key": "1, 6, 7, 15, 19, 40, 41",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 6, 7, 15, 19, 40, 41"
     },
     {
       "id": "069",
@@ -939,10 +738,7 @@
       "name_de": "Der Warentrennstab",
       "description": "Placing the plastic divider bar on the belt immediately behind your items for the next customer.",
       "cultural_context": "An expected social courtesy to ensure clear boundaries and facilitate the cashier's efficiency.",
-      "source_key": "1, 7, 11",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 7, 11"
     },
     {
       "id": "070",
@@ -952,10 +748,7 @@
       "name_de": "Ehrliche Antwort",
       "description": "Answering \"How are you?\" with a detailed breakdown of health issues or work frustrations.",
       "cultural_context": "In German,  Wie geht's?  is treated as an authentic inquiry requiring an honest answer rather than a hollow greeting.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "071",
@@ -965,10 +758,7 @@
       "name_de": "Glühwein am Weihnachtsmarkt",
       "description": "Standing in sub-zero snow at Christmas markets clutching mugs of hot spiced wine.",
       "cultural_context": "Christmas markets are the primary social centerpiece of winter, fostering  Gemütlichkeit  (coziness) and community.",
-      "source_key": "1, 27",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 27"
     },
     {
       "id": "072",
@@ -978,10 +768,7 @@
       "name_de": "Die Maß Bier & Bierzelt",
       "description": "Drinking 1-liter glass mugs of beer while singing folk songs in Munich tents.",
       "cultural_context": "A temporary suspension of cultural restraint during a specific calendar event that celebrates regional identity and communal release.",
-      "source_key": "1, 2",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 2"
     },
     {
       "id": "073",
@@ -991,10 +778,7 @@
       "name_de": "Alaaf vs. Helau!",
       "description": "Dressing in costumes in February and screaming regional chants like \"Alaaf!\" or \"Helau!\"",
       "cultural_context": "Carnival season maintains centuries-old regional rivalries where using the wrong chant is a significant cultural faux pas.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "074",
@@ -1004,10 +788,7 @@
       "name_de": "Silvester-Böllerei",
       "description": "Transforming residential streets into war zones on December 31 with hand-launched fireworks.",
       "cultural_context": "A long-standing tradition where the intensity of the noise is seen as a celebratory way to drive out evil spirits for the new year.",
-      "source_key": "1, 27",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 27"
     },
     {
       "id": "075",
@@ -1017,10 +798,7 @@
       "name_de": "Dinner for One Kult",
       "description": "Watching a 1963 English comedy sketch every single New Year's Eve without fail.",
       "cultural_context": "It is the most frequently repeated TV program in history, broadcast annually across all regional German channels as a fixed ritual.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "076",
@@ -1030,10 +808,7 @@
       "name_de": "Bollerwagen-Tour am 1. Mai",
       "description": "Pulling wooden handcarts loaded with beer through the countryside on May 1st ( Vatertag ).",
       "cultural_context": "A widespread custom combining countryside hiking with traditional day-drinking rituals.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "077",
@@ -1043,10 +818,7 @@
       "name_de": "Der Adventskranz",
       "description": "Lighting exactly one candle each Sunday leading up to Christmas on a fir-branch wreath.",
       "cultural_context": "A traditional Lutheran invention from 1839 that became a universal household ritual for counting down to the holiday.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "078",
@@ -1056,10 +828,7 @@
       "name_de": "Schuhe putzen für Nikolaus",
       "description": "Polishing boots to perfection on December 5th for Nikolaus to fill with treats.",
       "cultural_context": "A nationwide tradition observed in households where the quality of the cleaning is rewarded with sweets or small gifts.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "079",
@@ -1069,10 +838,7 @@
       "name_de": "Martinsumzug & Laterne",
       "description": "Children marching through streets in mid-November holding colorful homemade paper lanterns.",
       "cultural_context": "Organized by schools and fire departments, this parade commemorates St. Martin and is a staple of childhood tradition.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "080",
@@ -1082,10 +848,7 @@
       "name_de": "Die Schultüte / Zuckertüte",
       "description": "Giving 6-year-old children a massive paper cone filled with sweets on their first day of primary school.",
       "cultural_context": "A uniquely German tradition documented since the 19th century to celebrate the transition into formal education.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "081",
@@ -1095,10 +858,7 @@
       "name_de": "Sonderverspätung der DB",
       "description": "Expecting trains to run with atomic clock precision and groaning loudly at delays.",
       "cultural_context": "National identity is tied to logistical efficiency; any failure in the rail system is felt as a personal and cultural grievance.",
-      "source_key": "1, 7, 14, 35",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 7, 14, 35"
     },
     {
       "id": "082",
@@ -1108,10 +868,7 @@
       "name_de": "Samstags Auto waschen",
       "description": "Spending Saturday mornings at self-service car wash bays polishing vehicles.",
       "cultural_context": "Strict environmental laws ( Wasserhaushaltsgesetz ) ban washing cars on private driveways; cars are often viewed as \"favorite children.\"",
-      "source_key": "1, 2",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 2"
     },
     {
       "id": "083",
@@ -1123,8 +880,8 @@
       "cultural_context": "High cycling speeds and dedicated infrastructure create intense territorial friction; lane discipline is essential for urban safety.",
       "source_key": "1, 4, 6, 15",
       "status": "covered",
-      "episode_id": "ep_95c24d43",
-      "covered_at": "2026-07-23T18:11:03"
+      "episode_id": "ep_3b20b405",
+      "covered_at": "2026-07-24T16:32:51"
     },
     {
       "id": "084",
@@ -1134,10 +891,7 @@
       "name_de": "Das Reißverschlussverfahren",
       "description": "Driving to the absolute end of a closing lane before merging.",
       "cultural_context": "The German Road Traffic Act (§7 Abs. 4 StVO) explicitly mandates merging at the point of closure to maximize traffic flow.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "085",
@@ -1147,10 +901,7 @@
       "name_de": "Der Hauptuntersuchungs-TÜV",
       "description": "Fearing the biennial vehicle inspection and panicking over small rust spots.",
       "cultural_context": "The Technical Inspection Association ( TÜV ) holds legally mandated authority, reflecting a culture that values technical perfection and safety.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "086",
@@ -1160,10 +911,7 @@
       "name_de": "Von O bis O / Winterreifen",
       "description": "Swapping car tires from summer to winter according to the rule \"From Easter to October.\"",
       "cultural_context": "German law specifies situational winter tire requirements, making driving on summer tires in icy conditions illegal.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "087",
@@ -1173,10 +921,7 @@
       "name_de": "Schwarzfahren & Kontrollis",
       "description": "Experiencing heart palpitations when plainclothes inspectors shout \"Fahrkarten bitte!\".",
       "cultural_context": "Riding without a ticket ( Schwarzfahren ) is a punishable offense under the penal code (§265a StGB), leading to strict enforcement.",
-      "source_key": "1, 28, 33",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 28, 33"
     },
     {
       "id": "088",
@@ -1186,10 +931,7 @@
       "name_de": "Fahrkarte entwerten",
       "description": "Validating paper transit tickets in stamping boxes prior to boarding.",
       "cultural_context": "Open-barrier systems rely on self-service validation; failure to do so results in heavy fines regardless of intent.",
-      "source_key": "1, 33",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 33"
     },
     {
       "id": "089",
@@ -1199,10 +941,7 @@
       "name_de": "Die Sicherheitsweste",
       "description": "Keeping high-vis yellow reflective vests in gloveboxes for use during breakdowns.",
       "cultural_context": "Federal law has mandated carrying a high-visibility vest in every vehicle since 2014 to ensure public safety.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "090",
@@ -1212,10 +951,7 @@
       "name_de": "Das Lastenrad",
       "description": "Replacing family cars with expensive wooden e-cargo bicycles for hauling kids.",
       "cultural_context": "Heavy municipal subsidies for  Lastenräder  exist in eco-conscious urban zones to promote sustainability.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "091",
@@ -1225,10 +961,7 @@
       "name_de": "Tatort um 20:15 Uhr",
       "description": "Gathering religiously on Sunday nights to watch the regional police detective drama.",
       "cultural_context": "Commanding massive market share since 1970,  Tatort  is a staple of national cultural identity and collective viewing habits.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "092",
@@ -1238,10 +971,7 @@
       "name_de": "Deutsche Synchronisation",
       "description": "Voice-dubbing every foreign movie into High German rather than using subtitles.",
       "cultural_context": "Germany possesses the largest dubbing industry in Western Europe due to a cultural preference for experiencing media in the native language.",
-      "source_key": "1, 20",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 20"
     },
     {
       "id": "093",
@@ -1251,10 +981,7 @@
       "name_de": "Die Schlager-Party",
       "description": "Singing along enthusiastically to upbeat folk-pop music at festivals.",
       "cultural_context": "Schlager  music accounts for a huge segment of the domestic market, serving as a tool for communal bonding and uninhibited fun.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "094",
@@ -1264,10 +991,7 @@
       "name_de": "Gesellschaftsspiele",
       "description": "Hosting weekend board game nights with complex strategy games and strict rulebook compliance.",
       "cultural_context": "Germany created the \"Eurogame\" genre; games are viewed as a constructive hobby emphasizing logic and social organization.",
-      "source_key": "1, 13",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 13"
     },
     {
       "id": "095",
@@ -1277,10 +1001,7 @@
       "name_de": "Lotto 6 aus 49",
       "description": "Tuning in to the Saturday night lottery drawing with paper tickets.",
       "cultural_context": "The state-run lottery has operated since 1955 as the nation's dominant legal gambling tradition.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "096",
@@ -1290,10 +1011,7 @@
       "name_de": "Der GEZ-Beitrag / Rundfunkbeitrag",
       "description": "Receiving mandatory demand letters for the public broadcasting fee for every household.",
       "cultural_context": "The Interstate Broadcasting Treaty mandates a flat-rate fee to fund public media, enforced strictly via registration databases.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "097",
@@ -1303,10 +1021,7 @@
       "name_de": "Die Maus",
       "description": "Watching the iconic orange mouse educational show into adulthood.",
       "cultural_context": "Broadcast since 1971, it is a national educational icon that teaches the technical details of how the world works.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "098",
@@ -1316,10 +1031,7 @@
       "name_de": "Der Kaffeekranz",
       "description": "Gathering neighbors to exchange news while drinking from fine porcelain cups.",
       "cultural_context": "A traditional social institution dating back to 18th-century bourgeois culture for maintaining neighborhood connections.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "099",
@@ -1329,10 +1041,7 @@
       "name_de": "Denglisch & Anglizismen",
       "description": "Adopting English words into German but shifting their meanings (e.g., \"Handy\" for mobile phone).",
       "cultural_context": "Pseudo-Anglicisms are documented standard vocabulary in  Duden  dictionaries, reflecting the evolution of the language.",
-      "source_key": "1",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1"
     },
     {
       "id": "100",
@@ -1342,10 +1051,7 @@
       "name_de": "Meckern über das Wetter",
       "description": "Never being satisfied with the weather: too cold in winter, too hot in summer, or too gray in autumn.",
       "cultural_context": "Complaining about the weather serves as a standard social icebreaker and a way to express a desire for ideal conditions.",
-      "source_key": "1, 2, 35",
-      "status": "uncovered",
-      "episode_id": null,
-      "covered_at": null
+      "source_key": "1, 2, 35"
     }
   ]
 }

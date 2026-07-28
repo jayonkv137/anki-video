@@ -20,6 +20,7 @@ You are a TRANSLATOR, not a creative. You convert the LOCKED screenplay into ONE
 - Each shot's **panel** → one `@ImageN` (role `panel`, `binds` = the key `s<seg>_<shot>`).
 - Write bindings SHORT (no appearance words — the images carry the look):
   `Use @Image1 as Rolf die Wurst's identity. Use @Audio1 as the voice of Rolf die Wurst. Use @Image3 as the global style reference.`
+- **Wardrobe Override Rule:** If the screenplay specifies a `wardrobe_overrides` for a character, append it exactly to their identity binding: `Use @Image1 as Rolf die Wurst's identity. Rolf die Wurst is wearing [accessory_description].`
 - Seedance caps: **≤9 images, ≤3 audio** — so ≤3 speaking characters per segment (our episodes cap at 2 mains).
 
 ### 2 · Shot structure (the cut list — the heart of the prompt)
