@@ -30,8 +30,6 @@ The studio strictly maintains the visual identity of these 4 recurring character
   </div>
 </div>
 
-*(Note: Please drop the character profile images into `docs/assets/` named kati.png, bert.png, rolf.png, and muller.png)*
-
 ---
 
 ## 📸 How it Works
@@ -42,7 +40,6 @@ The studio guides the director through a simple, step-by-step process:
 The director searches a library of 100 story ideas and selects the characters for the episode. 
 <br>
 ![Step 02 UI](docs/assets/ui_step2.png) 
-*(Drop the UI screenshot you just shared into docs/assets/ui_step2.png)*
 
 ### 2. Chat with the AI Co-Director
 Instead of guessing prompts, the director chats with an AI assistant to flesh out the scene, location, and comedic angle.
