@@ -39,7 +39,7 @@ The studio guides the director through a simple, step-by-step process:
 ### 1. Pick a Story & Cast
 The director searches a library of 100 story ideas and selects the characters for the episode. 
 <br>
-![Step 02 UI](docs/assets/ui_step2.png) 
+![Step 02 UI](docs/assets/ui_step1.png) 
 
 ### 2. Chat with the AI Co-Director
 Instead of guessing prompts, the director chats with an AI assistant to flesh out the scene, location, and comedic angle.
