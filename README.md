@@ -2,7 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue.svg) ![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-00a393.svg) ![AI: Anthropic/Gemini](https://img.shields.io/badge/AI-Anthropic%20%7C%20Gemini-orange.svg) 
 
-### 🔗 [Watch the 2-Minute Studio Demo Video Here](#) *(Replace this with your video link)*
+### 🔗 [Watch the 2-Minute Studio Demo Video Here](#) 
 
 Welcome to my custom **AI Co-Creation Studio**. I built this tool to make AI filmmaking more controllable, consistent, and scalable. Instead of typing random prompts, human directors use this studio to lock in the story, and the AI handles the heavy lifting of maintaining perfect character consistency across episodes.
 
