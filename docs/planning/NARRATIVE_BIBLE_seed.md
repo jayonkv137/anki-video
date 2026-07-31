@@ -17,4 +17,5 @@ Four characters lived happily in their own bubble-worlds and are suddenly transp
 ## Only these narrative facts are fixed
 1. Season 0 = the four portal intros (above).
 2. After arrival, each character starts **solo**.
-3. Everything else — union timing, arcs, beats, the way-home mystery mechanics, endings — is OPEN and will be co-created in the platform, then matched to curriculum lessons.
+3. **Fluent but foreign (canon):** the characters natively speak German — what they don't know is this WORLD. Bewilderment, not language deficit, produces the simple speech ("Wo bin ich?", "Was ist das?" are what a fluent adult says when reality stops making sense); locals answer them slowly and simply as one does with a lost stranger. Comedy = cultural/situational decoding (stereotype encounters), never grammar mistakes — the bible's voices stay intact at every level.
+4. Everything else — union timing, arcs, beats, the way-home mystery mechanics, endings — is OPEN and will be co-created in the platform, then matched to curriculum atoms via each module's block plan (see `CURRICULUM_v1_universe.md` §1–2: modules are the story-arc units, one lead character each, told in universal 30-second blocks).

@@ -1,25 +1,39 @@
 # CURRICULUM v2 — The Universe's Language Spine (A1 → B1), full lesson list
 
-> **Status: DRAFT FOR LOCK (2026-07-29, v2).** v2 per Jayon's review of v1: **narrative removed entirely** (story lives in `NARRATIVE_BIBLE_seed.md` and is matched later, in-platform) and **every module decomposed into definite LESSONS** — each lesson = ONE 30–45s reel with ONE teachable pattern, so at creation time it is always exactly clear what a reel teaches. Basis: Jayon's four research docs + Goethe/BAMF milestones (A1 word list ≈650, verified) + Nicos Weg scale (~76 micro-lessons/level, verified) + the character bible's vocabulary domains.
+> **Status: DRAFT FOR LOCK (2026-07-29, v2.1).** v2.1 per Jayon: the per-module items are **teaching ATOMS (an inventory), not one-reel-each** — at ideation a module (the story-arc unit, one lead character) gets a **block plan** that packs atoms into universal **30-second blocks** (1–3 related atoms per block, or one atom stretched over 2–3 blocks). v2: narrative removed entirely (story lives in `NARRATIVE_BIBLE_seed.md`, matched in-platform) and every module decomposed into definite atoms so it is always exactly clear what is being taught. Basis: Jayon's four research docs + Goethe/BAMF milestones (A1 word list ≈650, verified) + Nicos Weg scale (~76 micro-lessons/level, verified) + the character bible's vocabulary domains.
 > v1 (superseded): module-level matrix with narrative-affinity column.
 
 ## 0 · Locked design decisions (Jayon)
 1 reel = 1 lesson (schema carries `format: single | mini_arc | campaign` for later expansion) · curriculum is **narrative-free** (matching happens in-platform) · stereotypes = tagged **encounter library** (tags live on the stereotype side, never on modules) · **guardrails not quotas** (skill-2q audits + flags).
 
-## 1 · The 30–45s reality — what ONE reel can actually teach (the Lesson Law)
-The physical container, from the research: at A1 pacing (80–100 WPM) a 30–45s reel holds **~40–75 spoken words ≈ 8–12 short lines** (A2 ~60–95, B1 ~75–110). Micro-learning laws: ONE objective per video · standalone nugget · new-word rate ~1.5/min. Therefore **one lesson =**
-- **ONE target pattern** (a single sentence frame / structure), heard **2–3×** in natural variation (micro-redundancy);
-- **≤3–5 new content words** (A1) / ≤6 (A2) / ≤8 (B1) — *everything else recycled*;
-- one communicative **function** the pattern serves;
-- one **exemplar target line** (the sentence the reel exists to teach — feeds the existing `target_line` contract);
-- ends understood by a drop-in viewer with zero context.
-A grammar **milestone** (e.g. Perfekt) is never one lesson — it spans several lessons chunk → pattern → contrast → productive (the spiral). Each module ends with a **Synthese** lesson: zero new items, pure recycling — these are the natural story-heavy slots.
-**Vocab arithmetic (honest):** ~61 A1 lessons × ~4 new words ≈ **~250 actively taught** words vs the ~650-word Goethe A1 list — the remainder arrives passively (visual context + recycling). We are a comprehension-first series, not exam prep; if full list coverage ever becomes a goal, the `campaign` format absorbs it.
+## 1 · The 30-SECOND BLOCK (the universal production law — Jayon, v2.1)
+**Every reel is a ~30-second block. Always.** (= the existing production unit: one episode of 2×15s Seedance segments — the whole downstream pipeline already runs on exactly this.) Uniform format, fixed cost, no per-reel format decisions. (The pipeline technically supports 45s/3 segments; using it is a rare, explicit exception.)
+Block budget (from the research): at A1 pace (80–100 WPM) one block holds **~40–75 spoken words ≈ 8–12 short lines** (A2 ~60–95, B1 ~75–110), **≤4–5 new words** (A2 ≤6, B1 ≤8), each taught pattern heard **≥2×**, and the block must land for a drop-in viewer with zero context.
 
-## 2 · The unit model
-**Level** (A1/A2/B1) → **Module** (a thematic field + one grammar milestone cluster; 4–7 lessons) → **Lesson** (ONE reel, ONE pattern). Machine schema per lesson: `{id, module, title, pattern, function, exemplar_de, new_vocab_budget, recycles[], format:"single", status:"planned|made", episode_ref}`.
+**The packing law (atoms → blocks, n:m).** The 164 items in §3 are **teaching ATOMS** — the definite inventory of what must be taught, NOT one-reel-each. At ideation, atoms are **packed into blocks** story-first:
+- One block teaches **ONE communicative function**, which may bundle **1–3 tightly-related atoms** (e.g. Moin! + `Ich bin…` + `Wie heißt du?` = one "introduce yourself" scene — one function, three atoms, legit);
+- an atom may also **stretch across 2–3 blocks** when the story needs the room;
+- never stack **unrelated** patterns in one block (that's the cognitive-overload line — the one-objective law applies to the function, not the atom count);
+- module Synthese atoms = zero-new blocks, the natural story-heavy slots.
+**Vocab arithmetic (honest):** ~250 actively taught A1 words vs the ~650-word Goethe list — the rest arrives passively (visuals + recycling). Comprehension-first, not exam prep; the `campaign` format can absorb full coverage later.
 
-## 3 · THE LESSON LIST (the lock: 30 modules → 164 lessons)
+## 2 · The unit model + Casting & Continuity policy
+**Level** → **Module** (thematic field + grammar milestone cluster = the STORY-ARC unit: one scenario, one lead) → **Block plan** (made at ideation: N ≈ 3–6 blocks, each mapped to its atoms) → **Reel** (one 30s block = one episode through the existing pipeline). Machine schema — atom: `{id, module, title, pattern, function, exemplar_de, recycles[], status:"planned|taught", taught_in[]}` · block: `{module, block_no, atoms[], lead, cast[], episode_ref}`.
+
+**Casting & Continuity (locked policy):**
+- **One spine, rotating lead:** the curriculum queue is the only sequence; each module gets a **lead character**, chosen by (1) vocabulary-domain fit (the bible's domains: Rolf city/night · Bert food/festivity · Kati time/order/style · Müller money/Pfand/weather), (2) rotation balance (UNIVERSE_STATE tracks appearances), (3) open story threads. 2–3 characters may join as the story warrants (Seedance ≤2 speakers/segment still applies).
+- **Off-screen parallelism:** the other characters' journeys continue unseen; they surface when they lead, or as Synthese cameos.
+- **Cross-character reinforcement comes from the spiral,** not duplication: later atoms recycle earlier patterns through different characters. NO four-versions-per-module (that's ~650 reels — rejected).
+- **"Same moment, four worlds"** parallel reels = a reserved SPICE format (Season 0; rare montage Syntheses).
+- **Fluent but foreign (canon):** the characters natively speak German; bewilderment, not deficit, produces simple speech. Comedy = cultural/situational decoding — never grammar mistakes.
+
+**The module workflow (how creation actually runs):**
+1. **Showrunner** surfaces the next module: its atoms + exemplars, lead recommendation (+why), 2–3 scenario directions, fitting stereotype encounters, story-so-far.
+2. **Co-creation chat:** Jayon + Strategist develop the module's scenario/mini-arc and the **block plan** (N blocks × atoms each).
+3. **Per block,** the existing pipeline runs unchanged: brief → 30s screenplay (2×15s segments) → guardrail audit (atoms actually taught? caps respected?) → storyboard sheets → Seedance prompts → clips → assemble → subtitles → export.
+4. **UNIVERSE_STATE updates:** atoms → `taught` (+reel ref), appearances, threads, stereotype coverage. → next module.
+
+## 3 · THE TEACHING ATOMS (the lock: 30 modules → 164 atoms — the inventory packed into 30s blocks at ideation)
 
 ### LEVEL A1 — 10 modules · 61 lessons
 **A1.1 Ankunft** — sein (sg) · V2 · W-Fragen | greet, introduce, ask who/where
