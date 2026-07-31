@@ -1,93 +1,332 @@
-# CURRICULUM v1 — The Universe's Language Spine (A1 → B1)
+# CURRICULUM v2 — The Universe's Language Spine (A1 → B1), full lesson list
 
-> **Status: DRAFT FOR LOCK (2026-07-29).** Jayon reviews → edits → we freeze to `resources/curriculum.json` + registry-pin a `CURRICULUM` canon entry. This is the **V4 pivot** artifact: from standalone stereotype reels → a **curriculum-driven story universe** ("Die Brotzeit-Bande", working frame). Basis: Jayon's four research docs (Narrative Language Design · German DaF Syllabus Design · Micro-Learning Architecture · Interactive Story Ideation) + Goethe/BAMF A1–B1 milestones + the Nicos Weg hybrid model (~76 micro-lessons/level, verified) + the existing character bible & pipeline.
+> **Status: DRAFT FOR LOCK (2026-07-29, v2).** v2 per Jayon's review of v1: **narrative removed entirely** (story lives in `NARRATIVE_BIBLE_seed.md` and is matched later, in-platform) and **every module decomposed into definite LESSONS** — each lesson = ONE 30–45s reel with ONE teachable pattern, so at creation time it is always exactly clear what a reel teaches. Basis: Jayon's four research docs + Goethe/BAMF milestones (A1 word list ≈650, verified) + Nicos Weg scale (~76 micro-lessons/level, verified) + the character bible's vocabulary domains.
+> v1 (superseded): module-level matrix with narrative-affinity column.
 
-## 0 · The locked design decisions (Jayon, 2026-07-29)
+## 0 · Locked design decisions (Jayon)
+1 reel = 1 lesson (schema carries `format: single | mini_arc | campaign` for later expansion) · curriculum is **narrative-free** (matching happens in-platform) · stereotypes = tagged **encounter library** (tags live on the stereotype side, never on modules) · **guardrails not quotas** (skill-2q audits + flags).
 
-1. **Lesson unit:** 1 reel = 1 lesson to start; the schema carries `format: single | mini_arc | campaign` so lessons can later expand to 2–3-reel arcs or 5-reel campaigns **without restructuring**. Start small, upgrade-ready.
-2. **Story spine:** ONLY Season 0 (four portal intros) + "each starts solo" is fixed. **Every narrative slot below is OPEN** — co-created with the Showrunner as the series progresses (writers-room model; Jayon = the master/creator; every agent shares full context). Module "narrative affinities" below are *suggestions*, never locks.
-3. **Stereotypes:** a **tagged encounter library** — each of the 100 gets `cefr_band` + `module_affinity` + `encounter_type` tags; the Showrunner *offers* a fitting encounter when a lesson's setting naturally hosts one (characters encounter behaviors as confused newcomers). Coverage tracked, never forced; unused items are fine.
-4. **Strictness:** **guardrails, not quotas** — per-module grammar targets, function sets, lexical domains, MLU caps, prohibited structures, spiral refs. skill-2q AUDITS and FLAGS; nothing hard-blocks except the existing CEFR caps.
+## 1 · The 30–45s reality — what ONE reel can actually teach (the Lesson Law)
+The physical container, from the research: at A1 pacing (80–100 WPM) a 30–45s reel holds **~40–75 spoken words ≈ 8–12 short lines** (A2 ~60–95, B1 ~75–110). Micro-learning laws: ONE objective per video · standalone nugget · new-word rate ~1.5/min. Therefore **one lesson =**
+- **ONE target pattern** (a single sentence frame / structure), heard **2–3×** in natural variation (micro-redundancy);
+- **≤3–5 new content words** (A1) / ≤6 (A2) / ≤8 (B1) — *everything else recycled*;
+- one communicative **function** the pattern serves;
+- one **exemplar target line** (the sentence the reel exists to teach — feeds the existing `target_line` contract);
+- ends understood by a drop-in viewer with zero context.
+A grammar **milestone** (e.g. Perfekt) is never one lesson — it spans several lessons chunk → pattern → contrast → productive (the spiral). Each module ends with a **Synthese** lesson: zero new items, pure recycling — these are the natural story-heavy slots.
+**Vocab arithmetic (honest):** ~61 A1 lessons × ~4 new words ≈ **~250 actively taught** words vs the ~650-word Goethe A1 list — the remainder arrives passively (visual context + recycling). We are a comprehension-first series, not exam prep; if full list coverage ever becomes a goal, the `campaign` format absorbs it.
 
-## 1 · The premise (narrative bible seed — recorded, not locked)
+## 2 · The unit model
+**Level** (A1/A2/B1) → **Module** (a thematic field + one grammar milestone cluster; 4–7 lessons) → **Lesson** (ONE reel, ONE pattern). Machine schema per lesson: `{id, module, title, pattern, function, exemplar_de, new_vocab_budget, recycles[], format:"single", status:"planned|made", episode_ref}`.
 
-Four characters lived happily in their own bubble-worlds and are suddenly transported into a stereotypical Germany. Each believes they alone are different, tries to get home, discovers the others are like them, and together they navigate this new life. **Plot devices:** the Foreigner Persona ×4 (justifies A1 speech naturally) · the way-home mystery (Destinos engine — recaps justify repetition) · newcomer misunderstandings (Extr@ engine — corrections/repetition as comedy) · stereotype encounters (the satire engine, always *shown, never named*).
+## 3 · THE LESSON LIST (the lock: 30 modules → 164 lessons)
 
-**Season 0 — the portal intros (Jayon's sequences, recorded):**
-- **Rolf:** a techno club full of wurst characters partying → mid-dancefloor, one wurst collapses into a plain, lifeless sausage under a spotlight — shock → cut: a real-world sausage factory, sausages on racks → one transforms alive into **Rolf** → he steps out and stands before a (human-world) techno club. His journey starts.
-- **Bert:** a beer-garden world of Maß characters toasting "Prost!" → mid-celebration one becomes a plain glass of beer → cut: a real beer garden, a tap pours a glass → it transforms into **Bert**.
-- **Müller:** a bread-world football match (all bread characters) → mid-match one becomes a plain loaf → cut: a real bakery oven opens → **Müller** bakes out (1. FC Brot).
-- **Kati:** sequence TBD — co-create with the Showrunner (candidate direction: a polished potato-world beauty/pageant or perfection ritual → one becomes a plain potato → cut: a kitchen/market, a potato is peeled → **Kati** steps out immaculate).
-- Season 0 reels are **Quadrant-1 cinema**: near-zero dialogue, maximal hook; language load ≈ 0 by design.
+### LEVEL A1 — 10 modules · 61 lessons
+**A1.1 Ankunft** — sein (sg) · V2 · W-Fragen | greet, introduce, ask who/where
+| id | Lesson | Teaches (ONE pattern) | Exemplar |
+|---|---|---|---|
+| A1.1.1 | Moin! | greetings + `Ich bin [Name]` | „Moin! Ich bin Rolf." |
+| A1.1.2 | Wie heißt du? | `heißen`: question + answer (du) | „Wie heißt du?" — „Ich heiße Kati." |
+| A1.1.3 | Wer bist du? | `du bist` / `Wer …?` | „Wer bist du?" — „Ich bin neu hier." |
+| A1.1.4 | Was ist das? | deixis `Das ist …` | „Was ist das?" — „Das ist Bier." |
+| A1.1.5 | Wo bin ich? | `Wo …?` + `in` + place | „Wo bin ich? Ich bin in Deutschland?!" |
+| A1.1.6 | Woher kommst du? | `kommen aus` | „Woher kommst du?" — „Ähm … von weit weg." |
 
-## 2 · The syllabus model
+**A1.2 Wer bin ich?** — haben · Artikel · Negation · Zahlen | identify, deny, count
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A1.2.1 | der, die, das | gender articles (the color-code debut) | „Der Zug. Die Straße. Das Brot." |
+| A1.2.2 | ein / eine | indefinite article + sein | „Das ist eine Wurst. Ich bin eine Wurst!" |
+| A1.2.3 | Ich habe … | `haben` + object | „Ich habe ein Problem." |
+| A1.2.4 | kein / keine | negation with kein | „Ich habe kein Geld. Ich habe keine Idee." |
+| A1.2.5 | nicht | negation with nicht | „Ich bin nicht wie sie." |
+| A1.2.6 | Zahlen & Alter | numbers 1–100 + `Wie alt …?` | „Wie alt bist du?" — „Zweiundvierzig." |
+| A1.2.7 | **Synthese: Wer bin ich?** | zero new — recycles the module | „Ich bin Bert. Ich bin ein Bier. Na und?" |
 
-**Hybrid spiral** (the Nicos Weg architecture): grammar = the hidden engine (sequenced below), situations = the canvas, functions = the dialogue beats, frequency lexicon = the vocab pools. **The quadrant law** governs every lesson: dramatic peaks use only pre-acquired language; new grammar arrives in calm, familiar settings. **Spiral rule:** every module names ≥1 earlier structure it must recycle (recaps/"story so far" beats do this diegetically). **Micro-learning laws:** one objective per reel · standalone-nugget (drop-in viewers never lost) · ≤5–6 new words per reel · pacing A1 80–100 WPM → A2 100–130 → B1 130–150.
+**A1.3 Essen & Trinken** — Akkusativ · möchten · bestellen | order, ask price, like
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A1.3.1 | Hunger! | chunk `Hunger/Durst haben` | „Ich habe Hunger. Ich habe SO einen Hunger." |
+| A1.3.2 | Ich möchte … | `möchten` + Akk (einen!) | „Ich möchte einen Kaffee." |
+| A1.3.3 | Bitte & Danke | ordering ritual frame | „Einen Kaffee, bitte." — „Danke schön!" |
+| A1.3.4 | Was möchtest du? | möchten question↔answer | „Was möchtest du?" — „Nichts. Egal." |
+| A1.3.5 | Was kostet das? | `kosten` + prices (recycles Zahlen) | „Was kostet das?" — „Drei Euro fünfzig." |
+| A1.3.6 | essen & trinken | present conjugation ich/du | „Ich esse das nicht. Ich trinke nur Bier." |
+| A1.3.7 | **Synthese: Im Café** | zero new — full ordering scene | „Zwei Kaffee und ein Wasser, bitte." |
 
-## 3 · The module matrix (the lock: 3 levels × 10 modules)
+**A1.4 Orientierung** — feste Dativ-Präp. (zu/mit) · es gibt · Richtungen | ask/give the way
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A1.4.1 | Wo ist …? | `Wo ist …?` + hier/da | „Wo ist der Bahnhof?" — „Da." |
+| A1.4.2 | Ich gehe zu … | `gehen zu` + Dat (chunk) | „Ich gehe zum Bahnhof." |
+| A1.4.3 | Mit dem Bus | `fahren mit` + Dat (chunk) | „Ich fahre mit dem Bus." |
+| A1.4.4 | Es gibt … | existence frame | „Hier gibt es einen Club?!" |
+| A1.4.5 | links, rechts, geradeaus | direction words (TPR-friendly) | „Immer geradeaus, dann links." |
+| A1.4.6 | **Synthese: Der Weg** | zero new — asking the way scene | „Entschuldigung, wie komme ich zur Stadt?" |
 
-> Per module: **Grammar** (the milestone cluster) · **Functions** (speech acts) · **Lexical domains** (pools, with character-domain affinity from the bible) · **Spiral** (must recycle) · **Narrative affinity** (OPEN — suggestion only) · **Stereotype affinity** (encounter-library hint). Each module ⇒ 5–8 lessons (reels); lesson detail is co-created in-platform, not pre-written.
+**A1.5 Einkaufen** — Akk-Konsolidierung · Mengen · Sie-Frage | shop, pay, need
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A1.5.1 | Ich brauche … | `brauchen` + Akk | „Ich brauche einen Plan. Und Brot." |
+| A1.5.2 | Wie viel? | quantity + teuer/billig | „Wie viel kostet das? Das ist teuer!" |
+| A1.5.3 | Ich nehme … | decision verb + Akk | „Okay. Ich nehme das." |
+| A1.5.4 | Das Pfand | Pfand system vocab (Flasche, zurück) | „Die Flasche? Das ist Geld!" |
+| A1.5.5 | Haben Sie …? | formal Sie-question in shops | „Haben Sie das auch in Schwarz?" |
+| A1.5.6 | **Synthese: Im Supermarkt** | zero new — shopping run | „Ich brauche nur eine Sache …" |
 
-### LEVEL A1 — Ankommen (survival; the four solo tracks)
-| # | Module | Grammar | Functions | Lexical domains | Spiral | Narrative affinity (OPEN) |
-|---|---|---|---|---|---|---|
-| A1.1 | **Ankunft** | `sein` + personal pronouns; V2 law; W-Fragen (wer/wo/was/wie) | greet, introduce self, ask who/where | greetings (Moin/Servus!), countries, yes/no | — | first hours in the world; first human contact |
-| A1.2 | **Wer bin ich?** | `haben`; der/die/das + ein/kein; negation nicht/kein | say what one is/has/isn't; numbers, age | identity words, numbers 1–100 | A1.1 | identity comedy: "Ich bin eine Wurst!" — nobody blinks |
-| A1.3 | **Essen & Trinken** | accusative (den!); `möchten`; ordering syntax | order, ask price, like/dislike | food/drink (ALL character domains) | A1.2 | first café/kiosk survival; money confusion |
-| A1.4 | **Orientierung** | fixed-dative preps (aus/bei/mit/zu); `es gibt`; wo? | ask/give directions, name places | city places, transport basics | A1.1 | wandering the city; four near-misses possible |
-| A1.5 | **Einkaufen** | accusative consolidation; quantity; wie viel? | shop, pay, weigh options | shops, money, **Pfand** (Müller) | A1.3 | supermarket rituals; first system-shock encounters |
-| A1.6 | **Wohnen** | possessives (mein/dein); `es gibt` + rooms; wohnen/liegen (static) | describe home, say where things are | rooms, furniture | A1.4 | each finds a place to stay (four contrasting homes) |
-| A1.7 | **Mein Tag** | separable verbs (aufstehen/einkaufen/anrufen); clock time; days | tell time, describe routine, make appointments | time, routine verbs (Kati domain: Pünktlichkeit) | A1.5 | routines form — they're settling in without noticing |
-| A1.8 | **Regeln** | modals `können/müssen/dürfen` + Satzklammer; imperative (Sie) | ask permission, state rules, forbid | rules, signs-as-behavior (no rendered text) | A1.7 | THE stereotype-encounter module (Ordnung!) |
-| A1.9 | **Wetter & Small Talk** | es-constructions; exclamations; doch/mal (as chunks) | comment weather, small talk, exclaim | weather (Müller), seasons | A1.6 | shared benches, bus stops — paths crossing |
-| A1.10 | **Zusammen** | spiral review only; Perfekt as UNANALYZED chunks ("Was ist passiert?") | invite, accept/decline, express joy | celebration basics (Bert) | all | **suggested finale: the four discover each other** |
+**A1.6 Wohnen** — Possessive · Zimmer · erste Adjektive | describe home
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A1.6.1 | mein & dein | possessives + sein | „Das ist mein Zimmer. Das ist dein Problem." |
+| A1.6.2 | Ich wohne … | `wohnen in` + rooms | „Ich wohne jetzt hier. In einer Bäckerei." |
+| A1.6.3 | Möbel | furniture nouns + es gibt (recycled) | „Es gibt ein Bett, einen Tisch — fertig." |
+| A1.6.4 | steht & liegt | static position (light chunks) | „Der Schlüssel liegt auf dem Tisch." |
+| A1.6.5 | groß, klein, schön | predicative adjectives | „Das Zimmer ist klein. Aber es ist schön." |
+| A1.6.6 | **Synthese: Meine Wohnung** | zero new — home tour | „Willkommen! Das ist … alles." |
 
-### LEVEL A2 — Zusammenleben (the ensemble; the past arrives)
-| # | Module | Grammar | Functions | Lexical domains | Spiral | Narrative affinity (OPEN) |
-|---|---|---|---|---|---|---|
-| A2.1 | **Was ist passiert?** | **Perfekt** (haben/sein split, Partizip II) | recount, recap, sequence events | event verbs | A1.7 | they retell how they got here (recap engine!) |
-| A2.2 | **Unterwegs** | Wechselpräpositionen (wohin→acc / wo→dat); transit syntax | buy tickets, navigate, complain about delays | trains/transit (punctuality satire) | A1.4 | first joint expedition |
-| A2.3 | **Die WG** | Wechselpräpositionen consolidated (stellen/legen/hängen); dative objects | negotiate space, place things, house rules | furniture, chores | A2.2 | suggested: they move in together (grammar = moving in!) |
-| A2.4 | **Gesundheit** | reflexives (sich fühlen); imperative (du); body + weh tun | describe symptoms, advise, comfort | body, pharmacy | A2.1 | first illness in a foreign body/world |
-| A2.5 | **Arbeit** | `weil`-clauses (verb-final!); wollen/sollen | apply simply, give reasons, refuse | jobs, workplace basics | A1.8 | odd jobs — each in their domain, wrongly |
-| A2.6 | **Feste** | `dass`-clauses; Einladungen; ordinals/dates | invite formally, toast, plan | celebrations (Bert domain) | A1.10 | first German Fest experienced from inside |
-| A2.7 | **Früher & Heute** | Präteritum of sein/haben/modals; damals vs jetzt | narrate the past, compare lives | memory words | A2.1 | **bubble-world flashbacks** (their old lives, in past tense) |
-| A2.8 | **Ämter & Papiere** | sollen/dürfen consolidated; forms vocabulary; polite requests (Konjunktiv II as CHUNK: "Ich hätte gern…") | register, fill forms, wait | bureaucracy I (Anmeldung satire) | A1.8 | they need papers… to exist? to travel home? |
-| A2.9 | **Stil & Vergleich** | comparative/superlative; gern–lieber–am liebsten | compare, prefer, judge kindly | clothing/appearance (Kati domain) | A1.2 | Kati's project: improving the unimprovable |
-| A2.10 | **Der Hinweis** | spiral review; werden (future, light) | speculate, promise, plan | mystery words | all | **suggested finale: the first real clue home** |
+**A1.7 Mein Tag** — Uhrzeit · trennbare Verben · Wochentage | tell time, routines
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A1.7.1 | Wie spät ist es? | clock time (full hours) | „Es ist sieben Uhr." |
+| A1.7.2 | Um sieben Uhr | `um … Uhr` time adverbial | „Ich komme um sieben. Pünktlich!" |
+| A1.7.3 | Ich stehe auf | FIRST separable verb (the bracket!) | „Ich stehe um sechs Uhr auf." |
+| A1.7.4 | einkaufen & anrufen | separables consolidated | „Ich rufe dich an. Später." |
+| A1.7.5 | Die Woche | weekdays + `am` | „Am Montag? Nein. Am Dienstag? Nein." |
+| A1.7.6 | **Synthese: Ein Tag** | zero new — routine montage | „Aufstehen. Kaffee. Arbeiten. Schlafen." |
 
-### LEVEL B1 — Die Entscheidung (independence; the mystery deepens)
-| # | Module | Grammar | Functions | Lexical domains | Spiral | Narrative affinity (OPEN) |
-|---|---|---|---|---|---|---|
-| B1.1 | **Der Plan** | Infinitiv + zu (Es ist wichtig, … zu …) | propose, prioritize, commit | project words | A2.10 | the way-home project begins |
-| B1.2 | **Die Bewerbung** | formal register; relative clauses (nom/acc) | apply, interview, self-present | work/CV | A2.5 | funding the plan: real jobs |
-| B1.3 | **Meinungen** | `obwohl`/`trotzdem`; opinion frames | argue, concede, disagree politely | debate words | A2.6 | stay or go? — the group divides |
-| B1.4 | **Wie es funktioniert** | **Passiv** (wird + Partizip II) | explain processes, describe how things are done | systems/technology | A2.3 | how the portal/machine works (passive = process) |
-| B1.5 | **Der Antrag** | **Genitiv**; wegen/während; official language | handle authorities, appeal, persist | bureaucracy II | A2.8 | the document quest (satire summit) |
-| B1.6 | **Was wäre wenn** | **Konjunktiv II** full (wäre/hätte/würde; wenn-clauses) | dream, hypothesize, regret | feelings/abstract | A2.8 chunk | homesickness: "Wenn ich zu Hause wäre…" (grammar = the longing) |
-| B1.7 | **Medien** | relative clauses (dat); indirect questions | report, summarize, react to news | media/digital | B1.2 | the world notices them (they go viral?) |
-| B1.8 | **Herkunft** | **Plusquamperfekt**; nachdem/seitdem | narrate layered past, reveal | origin/history words | A2.7 | the origin mystery: what had happened before |
-| B1.9 | **Der Streit** | conversational repair; complex connectors (bis, seitdem, damit) | de-escalate, apologize, repair | conflict/emotion | B1.3 | the group's dark night before the finale |
-| B1.10 | **Die Entscheidung** | full spiral synthesis (Konjunktiv II + Passiv + relatives in service of ONE choice) | decide, justify, say goodbye/stay | closure words | all | **suggested finale: home or here?** (the series' question) |
+**A1.8 Regeln** — Modalverben (können/müssen/dürfen) · Imperativ Sie | rules & permission
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A1.8.1 | Ich kann … | `können` + Inf (bracket) | „Ich kann das. Glaube ich." |
+| A1.8.2 | Kannst du …? | können question + negative | „Kannst du helfen?" — „Ich kann nicht." |
+| A1.8.3 | Ich muss … | `müssen` + Inf | „Ich muss nach Hause. Wirklich." |
+| A1.8.4 | Man darf das nicht! | `dürfen` + `man` (the rules engine) | „Man darf hier nicht parken. NIE." |
+| A1.8.5 | Warten Sie! | Imperativ Sie | „Warten Sie! Kommen Sie mit!" |
+| A1.8.6 | **Synthese: Die Regeln** | zero new — rule-encounter gauntlet | „Regeln sind Regeln." |
 
-## 4 · Guardrails (per level — audited by skill-2q, flagged not blocked)
+**A1.9 Wetter & Small Talk** — es-Sätze · gern · Partikel-Chunks | comment, chat
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A1.9.1 | Das Wetter | `Es regnet / Die Sonne scheint` | „Es regnet. Natürlich regnet es." |
+| A1.9.2 | Kalt. | weather adjectives + `Es ist …` | „Es ist kalt." — „Jo. Kalt." |
+| A1.9.3 | Ach so! Doch! | discourse particles as chunks | „Doch!" — „Ne." — „Doch." |
+| A1.9.4 | Ich trinke gern … | `gern` (liking an activity) | „Ich trinke gern Kaffee. Allein." |
+| A1.9.5 | Schönes Wetter, oder? | small-talk frame + tag `oder?` | „Schönes Wetter, oder?" — „…Jo." |
+| A1.9.6 | **Synthese: Die Bushaltestelle** | zero new — small-talk scene | „Der Bus kommt nicht." — „Ich weiß." |
+
+**A1.10 Zusammen** — wir · Einladung · Perfekt-Chunk | invite, accept, meet
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A1.10.1 | Kommst du mit? | `mitkommen` invitation | „Kommst du mit?" |
+| A1.10.2 | Ja, gern! / Leider nicht | accept & decline frames | „Ja, gern!" — „Nein, leider nicht." |
+| A1.10.3 | Wir sind … | FIRST plural `wir` | „Wir sind … gleich?!" |
+| A1.10.4 | Was ist passiert? | Perfekt as unanalyzed CHUNK | „Was ist passiert?!" |
+| A1.10.5 | **Synthese A1: Wir vier** | zero new — level finale | „Wir sind nicht allein." |
+
+### LEVEL A2 — 10 modules · 56 lessons
+**A2.1 Was ist passiert?** — Perfekt | recount & recap
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A2.1.1 | Ich habe … gemacht | Perfekt regular (haben + ge-t) | „Ich habe das nicht gemacht!" |
+| A2.1.2 | gegessen, getrunken, gesehen | Perfekt irregular (common) | „Ich habe alles gesehen." |
+| A2.1.3 | Ich bin gegangen | Perfekt with sein (movement) | „Ich bin einfach gegangen." |
+| A2.1.4 | eingekauft & aufgestanden | separable participles | „Ich bin um sechs aufgestanden!" |
+| A2.1.5 | Was hast du gemacht? | Perfekt questions | „Was hast du gestern gemacht?" |
+| A2.1.6 | **Synthese: Der Rückblick** | zero new — the recap engine debut | „Also: Wir sind hier gelandet, und dann …" |
+
+**A2.2 Unterwegs** — Wechselpräpositionen (wohin/wo) · Transit | navigate, complain
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A2.2.1 | Einmal nach …, bitte | ticket frame + `nach` | „Einmal nach Hamburg, bitte." |
+| A2.2.2 | Wohin? In die Stadt | direction = Akk | „Ich fahre in die Stadt." |
+| A2.2.3 | Wo? In der Stadt | location = Dat (the minimal pair!) | „Ich bin in der Stadt. Schon wieder." |
+| A2.2.4 | Umsteigen | transit verbs + Wo muss ich …? | „Wo muss ich umsteigen?" |
+| A2.2.5 | Verspätung! | delay frames (recycles haben) | „Der Zug hat zehn Minuten Verspätung." |
+| A2.2.6 | **Synthese: Die Reise** | zero new — journey scene | „Falscher Zug. Wieder." |
+
+**A2.3 Die WG** — stellen/legen/hängen vs stehen/liegen/hängen · Dativpronomen | arrange, own
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A2.3.1 | Ich stelle das hierhin | placement + Akk (stellen/legen) | „Ich stelle die Lampe in die Ecke." |
+| A2.3.2 | Es steht da | position + Dat (stehen/liegen) | „Die Lampe steht in der Ecke. Perfekt." |
+| A2.3.3 | hängen | both directions with hängen | „Ich hänge das Bild an die Wand." |
+| A2.3.4 | Wer muss …? | chores + müssen recycled | „Wer muss die Küche putzen?" — Schweigen. |
+| A2.3.5 | Das gehört mir! | Dativ pronouns mir/dir + gehören | „Das gehört mir!" — „Nein, das gehört uns." |
+| A2.3.6 | **Synthese: Einzugstag** | zero new — moving-in scene | „Links mein Bereich. Rechts dein Bereich." |
+
+**A2.4 Gesundheit** — Reflexive · weh tun · Imperativ du | describe symptoms, advise
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A2.4.1 | Mein Kopf tut weh | `weh tun` + body parts | „Mein Kopf tut weh. Alles tut weh." |
+| A2.4.2 | Ich fühle mich … | first reflexive (sich fühlen) | „Ich fühle mich nicht gut." |
+| A2.4.3 | Was fehlt Ihnen? | doctor frame (Dat chunk) | „Was fehlt Ihnen denn?" |
+| A2.4.4 | Du sollst … | `sollen` (advice) | „Du sollst im Bett bleiben." |
+| A2.4.5 | Trink Tee! | Imperativ du | „Trink Tee! Schlaf! Jetzt!" |
+| A2.4.6 | **Synthese: Krank** | zero new — sick-day scene | „Ich bin NICHT krank." — hustet. |
+
+**A2.5 Arbeit** — wollen · weil (Verb-Ende!) | apply, give reasons
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A2.5.1 | Ich arbeite als … | job frame + als | „Ich arbeite jetzt als Bäcker. Ironisch." |
+| A2.5.2 | Ich will … | `wollen` (vs möchten) | „Ich will nach Hause. Ich will das wirklich." |
+| A2.5.3 | …, weil ich Geld brauche | `weil` + VERB-FINAL (the big one) | „Ich arbeite, weil ich Geld brauche." |
+| A2.5.4 | Warum? Weil … | weil-answers practice | „Warum bist du müde?" — „Weil ich arbeite!" |
+| A2.5.5 | Ich suche einen Job | application small frames (recycles) | „Ich suche einen Job. Irgendeinen Job." |
+| A2.5.6 | **Synthese: Der erste Arbeitstag** | zero new | „Der Chef sagt, ich bin zu langsam. Ich? Zu langsam?" |
+
+**A2.6 Feste** — dass · Einladungen · Datum | invite, hope, celebrate
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A2.6.1 | Ich lade dich ein | `einladen` (separable) + Akk | „Ich lade euch alle ein!" |
+| A2.6.2 | Ich hoffe, dass … | `dass` + verb-final | „Ich hoffe, dass du kommst." |
+| A2.6.3 | Am ersten Mai | dates + ordinals | „Das Fest ist am ersten Mai." |
+| A2.6.4 | Prost! | toasting culture frames | „Prost! Auf uns! Auf Dienstag!" |
+| A2.6.5 | Ich schenke dir … | Dat + Akk double object | „Ich schenke dir eine Flasche. Mit Pfand." |
+| A2.6.6 | **Synthese: Das Fest** | zero new — the party | „Das ist … eigentlich schön hier." |
+
+**A2.7 Früher & Heute** — Präteritum (war/hatte/Modalverben) | narrate the past
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A2.7.1 | Ich war … | `war` | „Früher war ich glücklich. Glaube ich." |
+| A2.7.2 | Ich hatte … | `hatte` | „Ich hatte alles. Ich hatte Freunde." |
+| A2.7.3 | konnte, musste, wollte | modal Präteritum batch | „Ich konnte tanzen. Die ganze Nacht." |
+| A2.7.4 | Früher …, jetzt … | contrast frame | „Früher Techno. Jetzt … Fahrpläne." |
+| A2.7.5 | **Synthese: Unsere Welten** | zero new — flashback scene | „Erzähl. Wie war deine Welt?" |
+
+**A2.8 Ämter & Papiere** — Formulare · „Ich hätte gern" (Chunk) · Prozesse | register, request politely
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A2.8.1 | Das Formular | bureaucracy nouns + ausfüllen | „Füllen Sie das Formular aus. In Blockschrift." |
+| A2.8.2 | Ich hätte gern … | Konjunktiv II as POLITENESS CHUNK | „Ich hätte gern einen Termin." |
+| A2.8.3 | Der Termin | appointment frames + warten | „Sie brauchen einen Termin für den Termin." |
+| A2.8.4 | Sie müssen zuerst … | process sequencing (zuerst/dann) | „Sie müssen zuerst zu Schalter B." |
+| A2.8.5 | **Synthese: Der Antrag, Teil 1** | zero new — bureaucracy odyssey | „Nummer 87?" — „JA! Endlich!" |
+
+**A2.9 Stil & Vergleich** — Komparativ/Superlativ · gefallen | compare, prefer, judge
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A2.9.1 | Ich trage … | clothing + tragen | „Ich trage nur Schwarz." |
+| A2.9.2 | schöner als … | comparative | „Das ist schöner als das. Objektiv." |
+| A2.9.3 | am schönsten | superlative | „Und das ist am schönsten. Natürlich meins." |
+| A2.9.4 | gern, lieber, am liebsten | preference scale | „Ich mag Tee gern, Kaffee lieber." |
+| A2.9.5 | Das gefällt mir | `gefallen` + Dat | „Das gefällt mir. Nein. Doch. Nein." |
+| A2.9.6 | **Synthese: Das Umstyling** | zero new — makeover scene | „Nein. Aber nett." |
+
+**A2.10 Der Hinweis** — werden (Futur) · Spekulation | promise, speculate
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| A2.10.1 | Ich werde … | `werden` + Inf (future) | „Ich werde einen Weg finden." |
+| A2.10.2 | Ich verspreche, dass … | promising (recycles dass) | „Ich verspreche, dass wir nach Hause kommen." |
+| A2.10.3 | Vielleicht … | speculation adverbs (vielleicht/bestimmt) | „Vielleicht ist das ein Zeichen. Bestimmt!" |
+| A2.10.4 | **Synthese A2: Der Hinweis** | zero new — level finale | „Da. Schaut. Was IST das?" |
+
+### LEVEL B1 — 10 modules · 47 lessons
+**B1.1 Der Plan** — Infinitiv + zu · um…zu | propose, commit
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| B1.1.1 | Es ist wichtig, … zu … | Infinitiv+zu | „Es ist wichtig, ruhig zu bleiben." |
+| B1.1.2 | Wir versuchen, … zu … | verbs + zu (versuchen/anfangen) | „Wir versuchen, das zu verstehen." |
+| B1.1.3 | um … zu … | purpose clause | „Wir sparen, um nach Hause zu kommen." |
+| B1.1.4 | Zuerst, dann, danach | process ordering (recycled, denser) | „Zuerst der Plan. Dann das Geld. Danach: Heimat." |
+| B1.1.5 | **Synthese: Der Plan steht** | zero new | „Das klappt nie." — „Doch." |
+
+**B1.2 Die Bewerbung** — Relativsätze (Nom/Akk) · formelles Register | apply, self-present
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| B1.2.1 | Sehr geehrte … | formal register frames | „Sehr geehrte Damen und Herren …" |
+| B1.2.2 | Der Mann, der … | relative clause Nominativ | „Ich bin jemand, der nie aufgibt." |
+| B1.2.3 | Der Job, den ich … | relative clause Akkusativ | „Das ist der Job, den ich will." |
+| B1.2.4 | Meine Stärke ist … | self-presentation frames | „Meine Stärke? Ich sage die Wahrheit." |
+| B1.2.5 | **Synthese: Das Vorstellungsgespräch** | zero new | „Wo sehen Sie sich in fünf Jahren?" — „Zu Hause." |
+
+**B1.3 Meinungen** — obwohl/trotzdem · zustimmen/widersprechen | argue politely
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| B1.3.1 | Ich finde, dass … | opinion frames (recycles dass) | „Meiner Meinung nach ist das falsch." |
+| B1.3.2 | …, obwohl … | `obwohl` (concessive, verb-final) | „Ich bleibe ruhig, obwohl das Unsinn ist." |
+| B1.3.3 | Trotzdem | contrast adverb pair | „Es ist schwer. Trotzdem machen wir weiter." |
+| B1.3.4 | Ich stimme dir zu | agree/disagree + Dat | „Da bin ich anderer Meinung." |
+| B1.3.5 | **Synthese: Die Debatte** | zero new — bleiben oder gehen? | „Abstimmung. Wer will bleiben?" |
+
+**B1.4 Wie es funktioniert** — Passiv | explain processes
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| B1.4.1 | So macht man das | `man`-process (bridge, recycled) | „So macht man das hier. Immer so." |
+| B1.4.2 | Es wird gemacht | Passiv Präsens | „Brot wird hier um vier Uhr gebacken." |
+| B1.4.3 | Es muss gemacht werden | Passiv + Modal | „Das muss zuerst geprüft werden." |
+| B1.4.4 | Es wurde gemacht | Passiv Präteritum | „Die Tür wurde geschlossen. Von wem?" |
+| B1.4.5 | **Synthese: Die Maschine** | zero new — process explained | „Und DANN wird der Strom eingeschaltet." |
+
+**B1.5 Der Antrag** — Genitiv · wegen/während | handle authorities
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| B1.5.1 | des & der | Genitiv possession | „Das ist der Anfang der Geschichte." |
+| B1.5.2 | wegen | `wegen` + Gen | „Wegen des Wetters? Wirklich?" |
+| B1.5.3 | während | `während` + Gen | „Während der Woche? Unmöglich." |
+| B1.5.4 | Antrag stellen | official verbs (stellen/ablehnen/genehmigen) | „Ihr Antrag wurde abgelehnt." (recycles Passiv!) |
+| B1.5.5 | **Synthese: Der Antrag, Teil 2** | zero new — the document quest | „Formular 12b. Natürlich." |
+
+**B1.6 Was wäre wenn** — Konjunktiv II (voll) | dream, hypothesize, regret
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| B1.6.1 | Ich wäre / ich hätte | KII sein/haben | „Ich wäre jetzt im Club. Ich hätte Ruhe." |
+| B1.6.2 | Ich würde … | würde + Inf | „Ich würde alles anders machen." |
+| B1.6.3 | Wenn …, dann … | full conditional | „Wenn ich zu Hause wäre, würde ich tanzen." |
+| B1.6.4 | Ich wünschte … | wish frame | „Ich wünschte, ihr wärt alle da gewesen." |
+| B1.6.5 | **Synthese: Heimweh** | zero new — the KII heart | „Und wenn es keinen Weg zurück gibt?" |
+
+**B1.7 Medien** — Relativsatz Dativ · indirekte Fragen | report, react
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| B1.7.1 | …, dem ich … | relative clause Dativ | „Der Typ, dem ich geholfen habe, hat gefilmt." |
+| B1.7.2 | Ich weiß nicht, ob … | indirect questions (ob/wann/wo) | „Ich weiß nicht, ob das gut ist." |
+| B1.7.3 | Es wird berichtet, dass … | media frames (recycles Passiv+dass) | „Im Internet wird berichtet, dass wir … seltsam sind." |
+| B1.7.4 | **Synthese: Berühmt?** | zero new | „Eine Million Views." — „Von was?!" |
+
+**B1.8 Herkunft** — Plusquamperfekt · nachdem/seitdem | layered past, reveal
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| B1.8.1 | Ich hatte … gemacht | Plusquamperfekt | „Ich hatte so etwas noch nie gesehen." |
+| B1.8.2 | Nachdem … | `nachdem` + Plusq. | „Nachdem wir gelandet waren, war alles anders." |
+| B1.8.3 | Seitdem | `seit/seitdem` | „Seitdem wir hier sind, träume ich laut." |
+| B1.8.4 | **Synthese: Was vorher geschah** | zero new — the origin reveal | „Es hat nicht bei euch angefangen." |
+
+**B1.9 Der Streit** — Konfliktsprache · damit · Reparatur | de-escalate, repair
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| B1.9.1 | Du hast immer … | accusation frames + Entschuldigung | „Es tut mir leid, dass ich laut war." |
+| B1.9.2 | Was meinst du damit? | misunderstanding repair | „Was meinst du damit?" — „Ich meinte nur …" |
+| B1.9.3 | …, damit … | `damit` (purpose, verb-final) | „Ich sage das, damit wir zusammenbleiben." |
+| B1.9.4 | Lass uns … | reconciliation frame | „Lass uns nochmal von vorn anfangen." |
+| B1.9.5 | **Synthese: Der Streit** | zero new — the dark night | Schweigen. Dann: „Bleibst du?" |
+
+**B1.10 Die Entscheidung** — Abwägen · Synthese der Stufe | decide, justify, close
+| id | Lesson | Teaches | Exemplar |
+|---|---|---|---|
+| B1.10.1 | Einerseits … andererseits | weighing frame | „Einerseits Heimat. Andererseits … ihr." |
+| B1.10.2 | Ich habe mich entschieden | `sich entscheiden` + zu (recycles) | „Ich habe mich entschieden, zu bleiben." |
+| B1.10.3 | Abschied & Bleiben | farewell/staying frames | „Das hier ist jetzt auch ein Zuhause." |
+| B1.10.4 | **GRANDE SYNTHESE: Die Entscheidung** | zero new — series question answered in full spiral (KII + Passiv + Relativ) | „Wenn wir gehen würden — was wäre dann mit allem, was hier gebaut wurde?" |
+
+**Totals: A1 = 61 · A2 = 56 · B1 = 47 → 164 lessons (+ Season 0 intro reels ≈ 168–170 total).**
+
+## 4 · Guardrails (per level; skill-2q audits + flags)
 | | A1 | A2 | B1 |
 |---|---|---|---|
+| Spoken words / reel (at pace) | ~40–75 | ~60–95 | ~75–110 |
 | MLU (max words/sentence) | 8 | 12 | 15 |
-| Speech pace (WPM) | 80–100 | 100–130 | 130–150 |
-| New words / reel | ≤5 | ≤6 | ≤8 |
-| Prohibited (until introduced) | Perfekt*, subclauses, Genitiv, Passiv, KII* | Genitiv, Passiv, KII (beyond chunks), Plusquamperfekt | — |
-| Proper-noun rule | fixed cast + ≤1 new name/module | same | same |
-*chunks allowed where the matrix says so (spiral: chunk → analyzed → productive).
+| Pace (WPM) | 80–100 | 100–130 | 130–150 |
+| New active words / lesson | ≤5 | ≤6 | ≤8 |
+| Target pattern repetitions | ≥2 | ≥2 | ≥2 |
+| Prohibited until introduced | Perfekt*, Nebensätze, Genitiv, Passiv, KII* | Genitiv, Passiv, KII (beyond „hätte gern"), Plusquamperfekt | — |
+| Proper nouns | fixed cast; ≤1 new name/module | same | same |
+*Chunks allowed exactly where the lesson list says so (spiral: chunk → analyzed → productive).
 
-## 5 · Stereotype encounter library (tagging schema)
-Each of the 100 stereotypes gains: `cefr_band` (earliest level it can land visually) · `module_affinity` (module ids whose setting hosts it) · `encounter_type` (rule / ritual / food / social / bureaucratic / transit …) · existing coverage tracking stays. The Showrunner surfaces 0–3 fitting encounters as OPTIONS during lesson ideation. (Batch-tagging all 100 = an in-platform AI job after lock, human-reviewed.)
+## 5 · Stereotype encounter library
+Tags live on the STEREOTYPE side (never on modules): `cefr_band` · `module_affinity` (module ids whose *setting* hosts it) · `encounter_type` (rule/ritual/food/social/bureaucratic/transit/…). Showrunner offers 0–3 fitting encounters during lesson ideation; coverage tracked; unused is fine. Batch-tagging = an in-platform AI job after lock, human-reviewed.
 
-## 6 · How it feeds the platform (build plan after lock — nothing built yet)
-1. **`resources/curriculum.json`** (this matrix, machine-readable; lessons array starts EMPTY per module and fills as we create) + registry-pinned `CURRICULUM` canon note.
-2. **`UNIVERSE_STATE`** (new first-class artifact): story-so-far per character · lessons/vocab/grammar covered · stereotypes encountered · open threads · established world facts. Updated at every episode finalize; injected into every agent. (Evolves the current series-memory digest.)
-3. **The Showrunner** (the "Mission Goal Agent"): reads curriculum + universe state + bible + coverage; proposes "next lesson" options + story directions; the Strategist chat then co-creates that lesson's scenario with Jayon (existing flow, now curriculum-aware); skill-2q gains the guardrail audit. Step 01 becomes "Next lesson" (stereotype pick becomes an *offer* inside it).
-4. Everything downstream (screenplay lock → sheets → Seedance → subtitles → Director) **unchanged** — the production line already fits.
+## 6 · Post-lock build plan (unchanged)
+`resources/curriculum.json` (this list, machine-readable, `status: planned|made` per lesson) + registry pin → `UNIVERSE_STATE` artifact → Showrunner agent (proposes next lesson + story options; Strategist chat consumes them) → Step 01 becomes "Next lesson" → skill-2q guardrail audit → stereotype batch-tagging.
 
-## 7 · Open items (explicitly NOT locked here)
-- Kati's portal intro · union timing (A1.10 is a *suggestion*) · all narrative beats · subtitle policy per level (research conflict: static clause + dual L1/L2 at A1–A2 recommended vs current karaoke word-reveal — decide when we touch the subtitle engine) · season/branding names · posting cadence.
+## 7 · Open (deliberately)
+All narrative (see `NARRATIVE_BIBLE_seed.md`) · Kati's intro · subtitle policy per level (static-clause vs karaoke conflict — decide at subtitle-engine revisit) · posting cadence · exemplar lines are *seeds*, freely rewritable at creation time.
