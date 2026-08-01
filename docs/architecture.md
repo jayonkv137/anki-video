@@ -1,54 +1,119 @@
-# Architecture
+# Architecture — how this system works, and why
 
-> Living doc — updated after every structural change. **Rewritten 2026-07-29** to reflect the complete V3 system (previous version described the V2/E-phase state). Companion detail docs: `planning/DESIGN_v3_data_flow.md` (stage contracts) · `planning/DESIGN_cocreation_stage.md` · `planning/DESIGN_story_ideation_and_overseer.md` · `planning/DESIGN_subtitle_and_assembly.md` · `planning/RESEARCH_storyboard_sheet_method.md`.
+> Living doc · rewritten 2026-07-29. **This is the human-facing companion to `prompts/canon/PIPELINE.md`.** The canon file defines the station *contracts* (and is read by agents); this file explains **the whole machine, the reasoning behind its design, and what is actually built today.** If you are new here — or returning after a break — read this first.
 
-## The one principle
+---
 
-**The screenplay is the LOCK; everything after it is a COMPILER.** Every creative + pedagogical decision is made once (brief → screenplay); storyboard and video prompts are deterministic compiles that attach the asset spine (character sheets/portraits/voices, style, panels). Every edit therefore has a well-defined recompile set — which is what makes the Overseer tractable.
+## 1 · What this is
 
-```
-stereotype pick → cast+seed → co-creation chat → STORY BRIEF → SCREENPLAY (lock)
-   → storyboard SHEETS (1 gen/segment → slice → per-shot panels)
-   → Seedance prompts (1/segment, ≤9 @Image + ≤3 @Audio)
-   → [human generates clips in Nano Banana Pro / Seedance manually]
-   → assemble (ffmpeg concat) → subtitles.json (word-level, color-coded) → burn → final.mp4
-```
+**The product:** a serialized German-learning series. Four recurring characters, dropped into Germany, learning to live there — published as short vertical episodes that carry a learner from **A1 to B1** across roughly 170 of them.
 
-## The stage spine (what happens where)
+**The platform:** a co-creation studio where one person and a crew of specialised agents make those episodes, one at a time. The human brings the story; the agents carry everything else — the curriculum, the world, the craft rules, the visual system, the technical limits — so none of it has to be re-explained per episode.
 
-| # | Stage | UI step | Endpoint | Skill / logic | Artifact |
-|---|---|---|---|---|---|
-| 1 | Stereotype pick | 01 | `GET /api/stereotypes/all` (searchable library; `options`/`summary` also exist) | `pipeline/stereotypes.py` over `resources/stereotypes_library.json` (100 items · categories · `status:covered` + `episode_id` coverage log) | selection in JS state |
-| 2 | Cast & seed | 02 | — (client-side) | roles main/side/guest/bg from the 4-character roster; human seed text; CEFR pick | JS state |
-| 3 | Co-creation chat | 03 | `POST /api/co-creation/chat` | **skill-1-story-strategist** (Socratic; Hook→Arc→Beats→Verify phases; option-widgets; Elenchus constraint checks; `ready_to_commit` signal). Context server-injected per turn: MISSION + series digest (RCP) + stereotype + cast + bible + seed + CEFR | chat transcript (JS) |
-| 4 | Commit → Brief | 03→04 | `POST /api/v3/commit` | **inline prompt in app.py** (NOT skill-1c) extracts `STORY_BRIEF_SCHEMA` from the chat; creates/reuses run (ledger UUID or stereotype-match); writes brief; `mark_covered` | `brief.json` |
-| 5 | Screenplay | 05 | `POST …/screenplay` | **skill-2 v2.2+** — brief → episode→segments→shots with the **director layer** (`shot_size/camera_angle/camera_move/action/blocking/gaze/expression/duration_s` + dialogue); STRICT SHOT MAPPING + DIALOGUE ENFORCEMENT when `director_notes`/beats carry a breakdown; `global_aesthetic_rules` + per-segment `time_and_weather` (Jayon 07-28); `validate_screenplay` (shape, ~15s sums, CEFR caps, readability floor) — problems returned, **not gating** | `screenplay.json` |
-| 6 | Storyboard | 06 | `POST …/storyboard-prompts` + `POST …/sheet/{seg}` (upload→auto-slice) | **skill-2b v2.0+** — ONE multi-panel **sheet prompt per segment** (reference-binding-first → sheet format + style_clause → coordinate-based panels → constraints; gutter-only labels; cells always 9:16; layout law in `providers/image.py:sheet_grid`); cross-segment **chaining** (`continuity_ref` + prev sheet attached); presence-based char refs (`_segment_characters`) | `storyboard.json` + `storyboard/sheet_sNN.png` → sliced `panel_sNN_MM.png` |
-| 7 | Video prompts | 07 | `POST …/video-prompts` | **skill-3 v4+** — ONE thin Seedance prompt per segment in canon order (bindings → timecoded shot list with exact `{German}` transcripts → lip-sync line → constraints; ≤3000 chars; wardrobe-override rule); `build_refs_manifest` resolves binds → files (identity=sheet+portrait, voice=mp3, panel=sliced file, style=pending) | `prompts.json` + `prompts/segment_NN.seedance.json` + `refs_manifest.json` |
-| 8 | Assembly & subtitles | 07 (studio) | `POST …/assemble` · `GET/POST …/subtitles` · `POST …/export` · `GET …/video/{joined\|final}` · `POST …/mock-clips` | `pipeline/subtitles.py` — ffmpeg concat → **`subtitles.json`** (frame-based declarative state; cues+words; colors computed from `target_vocab` gender: der=blue/die=red/das=green, grammar=yellow; screenplay-derived word timing) → live DOM-overlay preview (no re-render) + cue editor → ASS render (`\k` karaoke, `\c` colors, `\pos(540,1150)`, box) → libass burn | `assembly/joined.mp4` · `subtitles.json` · `assembly/final.mp4` |
+**The bet:** consistency at scale is what makes a universe compound. Any single AI video is easy; 170 that look, sound and feel like one show is the hard part, and it is the whole engineering problem.
 
-**Manual-generation contract:** the studio produces *prompts + reference lists*; the human generates images (Nano Banana Pro primary, GPT Image 2 alternate) and video (Seedance 2.0 `reference-to-video` on fal) externally and uploads results back (`/sheet/{seg}` auto-slices; `/clips/{seg}` stores segment MP4s). `FAL_KEY`-gated adapters exist in `providers/image.py` + `providers/video.py` (`⚠ confirm`-flagged, never called live). Mock providers (`mock` images, `mock_clip`) prove the whole chain without keys.
+## 2 · Why it is built this way
 
-## Cross-cutting systems
+This section exists because every one of these decisions will look arbitrary in six months, and somebody (possibly a future me) will try to "improve" it.
 
-- **Canon + governance:** `prompts/canon/` (MISSION 1.0 · canon_blocks 1.0 — STYLE_BLOCK + per-character PBR material CHAR_BLOCKs + AVOID list · seedance guidelines 2.2 — first-30-words, ≤3000 chars, `@ImageN`/`@AudioN` binding syntax, prompt-mirroring, live-action-integration rule, one-action rule, camera syntax, voice-ref lip-sync method) + `resources/Characters-Main-Sheet.md` v1.3 (belief+wound per character, voice flavors, cast dynamics, pipeline rules). All hash-pinned in `REGISTRY.md`; `rcp.verify_canon()` aborts on mismatch. Skills are versioned but NOT hash-pinned.
-- **RCP (`rcp.py`):** per-run "creator's mind" — `for_story_stage()` = MISSION + series-memory digest (last 5 episodes from Supabase, with "do not repeat" aggregates); `for_screenplay_stage()` = MISSION; `for_prompt_stage()` = MISSION + Seedance/Omni guidelines. Injected as the system-prompt prefix of every LLM stage.
-- **LLM:** all stages on **Gemini** (`stages._call_gemini`; `GEMINI_MODEL=gemini-3.6-flash`; retry ×2 on 503/429 then raise — Jayon 07-28). ⚠ JSON mode only — the JSONSchema args are **not enforced** (no `response_schema`); output shape is governed by skill prose. Anthropic path exists as fallback (credits exhausted).
-- **Ledger (Supabase):** runs / run_events / episodes; short-prefix→UUID resolution + all calls non-fatal (Jayon 07-28). Coverage additionally in the stereotypes library itself.
-- **Overseer ("Director"):** floating window on every step (`index.html`) → `POST /api/overseer/plan` (Gemini structured plan: typed ops + summary; graph computes the recompile set) → human confirm-with-diff → `POST /api/overseer/apply` (deterministic edits + targeted recompiles + ledger log). Ops: `edit_shot` · `rewrite_segment` · `edit_brief` (full rebuild) · subtitle leaf ops `recolor_word`/`edit_subtitle`/`shift_subtitles` · `answer_only`. `pipeline/overseer.py` + `skill-5-overseer.md`.
-- **Frontend (`dashboard/static/index.html`, vanilla JS):** 7-step wizard + sidebar blueprint; state in globals (`selectedStereotype/Cast`, `chatMessages`, `activeRunId/Brief/Screenplay/Storyboard/VideoPrompts/Subtitles`); resume via `GET /api/v3/runs/{id}` + `localStorage.activeRunId` (auto-jumps to the furthest artifact); searchable stereotype library (Jayon 07-28).
-- **Legacy surfaces (dormant):** V2 per-scene pipeline (`stage_generate`/`stage_finalize`/`assemble.py`/`providers/video.py` old `scenes[]` shape — Phase 6 never done, superseded by the manual V3 path); `/api/co-creation/{align,diverge,chat/extract}` endpoints + skill-1a/1b/1c + skill-1-story-selector/1a-story-options/1b-story-expand (not called by the UI); n8n B0/B1 workflows; Omni guidelines (dual-engine dropped in V3).
+### 2.1 Why 30 seconds
+Four independent constraints converge on the same number, which is why it is a law rather than a preference:
+1. **The video model generates in ~15-second units.** Two segments is exactly one natural production call.
+2. **At A1 pacing (~80 WPM) a 30-second block holds ~40 spoken words** — precisely one teachable pattern, heard two or three times. Longer overflows working memory; shorter can't land the pattern.
+3. **It is the platform-native reel length.**
+4. **A fixed unit means fixed cost and predictable production** across a very long series.
 
-## Known gaps (audited 2026-07-29 — the fix backlog feeding Jayon's change wave)
+### 2.2 Why the screenplay is a "lock" and everything after is a "compiler"
+Generative models are stateless. If each stage were free to re-decide, drift would compound at every step and nothing would be reproducible. So **every creative decision is made once**, in the screenplay, and each later stage only *translates* it. The payoff is concrete: an edit has a **knowable recompile set**, so changing one shot rebuilds one sheet and one prompt — not the episode. Without this, an "always-present editor" like the Director would be impossible.
 
-1. **UI storyboard path misses `{{CANON_BLOCKS}}`** — `app.py:v3_storyboard` substitutes only bible+screenplay, so skill-2b's "mechanically merge STYLE_BLOCK" instruction gets a literal placeholder → the style_clause is **improvised per run** (CLI `stage_storyboard` has the substitution; the UI doesn't). Direct cause of style inconsistency concerns.
-2. **No global style anchor:** the style plate is still `pending — C1 style-lock`; cross-segment consistency rests on sheet-chaining alone, and skill-3 still numbers a nonexistent `@Image2` style ref.
-3. **`@ImageN` numbering contract is fictional:** identity resolves to TWO files (sheet+portrait), style is pending — so the prompt's numbering ≠ what the human actually attaches; no UI showing "attach these files in this order" for either NBP sheets (Image 1=Portrait, Image 2=Sheet is implicit) or Seedance.
-4. **Schema non-enforcement drift:** Gemini returns extra/renamed fields (`bg` vs `background`, ghost `lighting_mood` — the stale mention in skill-2's v2.2 header line leaks into output). Fix = `response_schema` in `_call_gemini` + purge stale skill text.
-5. **`director_notes` never captured:** `v3_commit`'s inline prompt (the one actually used) predates the field; only unused skill-1c asks for it. The chat's specific creative decisions are being dropped at commit — which then defeats skill-2's STRICT SHOT MAPPING.
-6. **No quality gate in the studio:** skill-2q exists but only the old CLI runs it; `validate_screenplay` problems render as a banner but blocks nothing; environment coherence isn't validated at all (fresh run drifted indoors against the one-environment law).
-7. **Sheet slicing is blind:** equal-division crop assumes a perfect grid; no gutter detection, no post-slice visual check; imperfect NBP grids will cut through content.
-8. **Prompt-mirroring drift in skill-3 output** (binding-line phrasing varies between segments) and skill-2 output pacing collapses to uniform 3×5s shots.
-9. **Stale remnants:** screenplay view renders removed `seg.setting` (shows "undefined"); overseer `SHOT_FIELDS`/skill-5 still list `lighting_mood`; skill-2 header still names it; legacy endpoints/skills above.
-10. **Opaque 500s:** stage endpoints surface raw `Internal Server Error` (e.g. transient Gemini overload after retries — the 07-28 screenplay failure; note the model fallback list de-dupes to a single model, so there is no real fallback).
-11. Real-model unknowns: `FAL_KEY` adapters unverified; subtitle timing is screenplay-derived (Deepgram precision is a designed-not-built upgrade); no Overseer undo UI; publish adapter (Gate 2) not built.
+### 2.3 Why canon is hash-pinned
+The pipeline's behaviour is defined by documents, not just code. Hashing them means an accidental edit **aborts the run** instead of silently changing the show. It also forces the discipline that keeps documents honest: change one thing for one reason, bump the version, record why.
+
+### 2.4 Why there are human gates
+Because generation costs money and taste cannot be automated. Gates sit exactly where a bad decision becomes expensive: before generation effort, before video credits, before publication. **A station that waits for a person is doing its job, not failing.**
+
+### 2.5 Why no fine-tuning
+Character consistency comes from **locked reference images** (a multi-angle sheet plus a portrait per character) and prompt discipline. This is documented practice at production quality, it costs nothing, it updates instantly when a character changes, and it avoids a training pipeline we would then have to maintain forever.
+
+### 2.6 Why storyboards are generated as one sheet per segment
+Generating each shot separately means N independent generations with no shared context — and characters drift between them. Generating **all of a segment's shots in one image** holds them in one context, so wardrobe, lighting and identity stay identical; the sheet is then sliced back into per-shot panels. This was a real bug we hit and fixed.
+
+### 2.7 Why lesson-first, not stereotype-first
+The earlier design started from a cultural stereotype and found a lesson to fit. That produces charming episodes with no learning spine. Now the **curriculum decides what an episode teaches**, and the stereotype library serves as a *bank of real situations* the method can draw on — which is exactly what the story method needs anyway (§2.8).
+
+### 2.8 Why "reverse scenario generation"
+Picking a setting and forcing grammar into it produces scenes where a rule is demonstrated. Starting from the structure and asking *what real situation naturally demands this?* produces scenes where the grammar is unavoidable — and therefore invisible, and therefore learned.
+
+### 2.9 Why retrieval is deterministic, never semantic
+Memory is resolved by typed relationships (this shot → these characters → their approved references), not vector similarity. Semantic search returns *near-misses*, which in a consistency system is worse than returning nothing.
+
+### 2.10 Why ffmpeg and not a rendering stack
+Assembly and subtitles run on ffmpeg with a declarative subtitle state. A React/Remotion/Lambda stack was researched and rejected: it buys parallel-render scale we do not need at one episode at a time, and costs a second toolchain. Same ideas — declarative state, instant preview, non-destructive editing — at zero infrastructure.
+
+## 3 · The knowledge layer (canon)
+
+Six documents carry everything the agents know. Each answers exactly one question, and no two overlap.
+
+| Document | Answers |
+|---|---|
+| `MISSION.md` | What are we making, for whom, at what bar? *(injected into every call)* |
+| `SHOW_BIBLE.md` | Who are these characters and what is this universe becoming? |
+| `STORY_SYSTEM.md` | How do I turn a lesson + the story so far into a scene? |
+| `PEDAGOGY.md` | Does this actually teach — and how do I check? |
+| `TREATMENT.md` | How does it look and sound? |
+| `PIPELINE.md` | Which station am I, and what must I not decide? |
+| *(+ curriculum)* | What is taught, in what order? |
+| `prompting_guidelines_seedance.md` | Engine syntax and limits |
+
+**Design rules that apply to all of them:** every line must be checkable · each splits **HARD** (blocks; kept very short) from **SOFT** (flags; advisory) · they exist so the creator does *not* have to hold them · they are corrected by evidence when real episodes disagree.
+
+## 4 · The stage spine
+
+| Stage | Produces | Notes |
+|---|---|---|
+| Curriculum → module | the atoms this block teaches | the spine; lesson-first |
+| **Showrunner** | framing, lead, situation options, block plan | *designed, not built* |
+| **Strategist chat** | the agreed scenario | asks before it offers |
+| **Commit** | `brief.json` | extracts; never invents |
+| **Screenplay** | `screenplay.json` — **the lock** | all creative decisions land here |
+| **Quality check** | verdict + flags | judges, never rewrites |
+| **Storyboard sheets** | one sheet prompt per segment | human generates → upload → auto-sliced into panels |
+| **Video prompts** | one prompt + reference manifest per segment | human generates clips → upload |
+| **Assembly / subtitles / export** | joined cut → `subtitles.json` → `final.mp4` | subtitles are a separate post layer, never in-frame |
+| **Publish** | — | *not built* |
+| **The Director** | typed edits + targeted recompiles | floats over every stage |
+
+**Generation is currently manual by design:** the studio produces prompts and reference lists; the creator generates images and video externally and uploads the results. The station contracts are unaffected by that later becoming automatic.
+
+## 5 · Cross-cutting systems
+- **RCP (Run Context Pack)** — assembles the per-call context: mission, canon, series memory. Verifies every canon hash at run start; a mismatch aborts.
+- **Ledger (Supabase)** — runs, per-stage events with artifact hashes, and episodes. Non-fatal by design: audit logging never breaks a working pipeline.
+- **The Director / overseer** — `plan → confirm-with-diff → apply`. Plans come from structured output; the **dependency graph** (not the model) decides what recompiles; edits are deterministic Python.
+- **Artifacts** — every stage writes to disk before the next runs. The artifact is the contract; no stage reads another's reasoning.
+- **The studio UI** — a 7-step wizard over a FastAPI backend; state resumes by run id.
+
+**Stack:** Python · FastAPI · vanilla-JS single page · Gemini (structured output) · ffmpeg · Supabase · JSON artifacts on disk. Image generation: Nano Banana Pro. Video: Seedance 2.0 reference-to-video.
+
+## 6 · Build status (this is the part that changes)
+
+**Working and verified:** the studio UI · stereotype library + search · Strategist chat · commit → brief · screenplay · storyboard sheet prompts + upload + auto-slice · video prompts + reference manifest · assembly + colour-coded subtitles + export · the Director (plan/apply with targeted recompiles) · canon verification · the ledger.
+
+**Designed, not built:** the **Showrunner** · **`UNIVERSE_STATE`** (the persistent project memory — Directions and Canon Facts have no home until it exists) · `curriculum.json` · QC inside the studio flow · publishing.
+
+**Not yet wired:** the six canon documents exist and verify, but **the skills do not read them yet** — they still carry their own prose and improvise a style clause. This is the immediate next task.
+
+**Unproven:** no `FAL_KEY`, so the real Nano Banana Pro and Seedance calls have never executed; mock providers prove the plumbing end-to-end.
+
+## 7 · Known gaps
+1. **Skills don't read the new canon** (the wiring step) — includes folding `canon_blocks.md` into `TREATMENT` and deleting `global_aesthetic_rules` from the screenplay schema.
+2. **No style plate and no location plates** — the global look has no visual anchor; deferred deliberately until real episodes exist.
+3. **Gemini structured output is not schema-enforced** (`response_schema` is unset), so field drift is possible.
+4. **`director_notes` is never captured at commit**, so specific creative decisions from the chat can be lost.
+5. **QC never runs in the studio flow**; validator problems are shown but block nothing.
+6. **Sheet slicing is blind** — equal-division crop with no gutter detection.
+7. **Subtitles need two corrections** — static clauses instead of word-by-word karaoke, and `das` → `#10B981`.
+8. **Canon updates are manual** (hand-computed hashes) — friction that already caused one document to rot.
+9. **Clip trimming, Deepgram precision timing, an Overseer undo button, and publishing** are all unbuilt.
+
+## 8 · Where the reasoning lives
+Decisions and their evidence: `docs/planning/` — the `DESIGN_*` files hold conclusions, `RESEARCH_*` files hold the evidence they came from, `PLAN_*` and `BLUEPRINT_*` hold work in progress. `docs/changelog.md` is chronological. Session handoffs are in `docs/handoffs/`.
