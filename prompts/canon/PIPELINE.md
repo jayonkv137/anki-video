@@ -1,6 +1,6 @@
 # PIPELINE — the stations, their contracts, and the handoffs
 
-> version: 1.0 · canon file · 2026-07-29
+> version: 1.1 · canon file · 2026-07-29
 > **What each station is, what it receives, what it produces, and — most importantly — what it must NOT decide because a later station owns that.** This is the map that keeps a pipeline of specialists from turning into four agents all writing the same episode badly.
 > **Agents read their own row and their immediate neighbours — never the whole document.** Knowing too much is a failure mode here (§7).
 > Contracts are stable and live here. **Current build status is not canon** and lives in `docs/architecture.md`.
@@ -32,8 +32,23 @@ curriculum ─▶ SHOWRUNNER ─▶ STRATEGIST (with the creator) ─▶ COMMIT 
                                                                                     │
                                                               ASSEMBLY ─▶ SUBTITLES ─▶ EXPORT ─▶ publish
 
-  THE DIRECTOR (overseer) floats over every station · UNIVERSE_STATE is read by all, written at the gates
+  UNIVERSE_STATE is read by every station and written at the gates
 ```
+
+## 2.1 · THE STUDIO LAYER — five phases, four agents
+The stations above are the **internal** contracts. The creator never sees nine of anything. They move through **five phases**, talking to **four agents**, in **one continuous conversation** that never resets — the phase decides which system prompt answers, and the whole history stays visible to whoever is speaking.
+
+| Phase | Agent | Stations it covers | The creator's question |
+|---|---|---|---|
+| **Idea** | **Showrunner** | §3.1 | *What are we making today?* |
+| **Script** | **Writer** | §3.2 · §3.3 · §3.4 | *Write it.* |
+| **Vision** | **Director** | §3.6 | *Show me what it looks like.* |
+| **Shoot** | **Director** *(same agent)* | §3.7 | *Make the video.* |
+| **Post** | **Editor** | §3.8 | *Finish it.* |
+
+- **Quality check (§3.5) is never a speaker.** It runs automatically and surfaces as notes attached to the artifact — a linter, not a participant.
+- **There is no separate overseer window.** The always-present conversation *is* the Director of §3.9: any instruction, at any phase, is proposed → shown with its recompile set → confirmed → applied.
+- **Agent boundaries collapse; the seams do not.** Every artifact in §3 remains separate and separately gated — `brief.json` is still its own artifact even though the Writer produces both it and the screenplay. **The lock is a property of the artifact, not of who wrote it**, and each phase still loads only the canon its stations need (§7).
 
 ## 3 · THE STATIONS
 
@@ -87,6 +102,7 @@ curriculum ─▶ SHOWRUNNER ─▶ STRATEGIST (with the creator) ─▶ COMMIT 
 - **MUST NOT decide.** New framing, blocking, action or story — **it compiles what the screenplay already decided** · the style clause (assembled mechanically from `TREATMENT`, never improvised) · anything about video or audio.
 - **Consumed by.** The creator (who generates the sheet), then the slicer, then the video-prompt compiler.
 - **Failure.** A shot's fields are too thin to compile → flag it upstream rather than inventing the missing detail.
+- **Iterating on a generated sheet — the routing rule.** The panel is not the final product; it is a **reference fed to the video model**, and it is only useful while it *agrees* with the screenplay. Therefore: **anything the screenplay describes must be changed in the screenplay; anything it does not describe may be fixed in the image.** The station's job when the creator objects to a panel is **diagnosis** — classify the change and route it: the screenplay was wrong (edit the lock, recompile) · the prompt lost something the screenplay had (re-run the compilation; if it recurs, fix the skill) · the model simply failed (regenerate, or edit that panel only — the *only* case where direct image editing is legitimate) · or it is a new idea, which belongs to the screenplay if it carries meaning and to the location layer if it is set dressing. **A detail that lives only in a panel vanishes when the video is generated.** Full reasoning: `DESIGN_board_iteration.md`.
 
 ### 3.7 VIDEO PROMPT COMPILER
 - **Role.** Compiles each segment into one multi-shot generation prompt with its references.
@@ -154,4 +170,5 @@ A station is given its own contract, its inputs, and the canon it needs. It is *
 Tier 1 canon: changed only by deliberate human decision via the `/tune` ritual (`SHOW_BIBLE.md` §15.2). **A new station, or a change to any station's "MUST NOT decide" list, is a Tier-1 edit** — those lists are the seams that hold the pipeline apart.
 
 ### Revision history
+- **v1.1 — 2026-07-29.** Added §2.1 (the studio layer: five phases — Idea · Script · Vision · Shoot · Post — mapped onto the nine stations, four agents, one continuous chat; QC never speaks; no separate overseer window). Added the **board-iteration routing rule** to §3.6. Station contracts unchanged.
 - **v1.0 — 2026-07-29.** Created. The lock-and-compiler principle, the flow, nine station contracts (each with an explicit *must not decide*), the handoff law, the human gates, the dependency graph (previously implicit in code), and the context-scoping rule.

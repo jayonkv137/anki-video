@@ -1,6 +1,6 @@
 # Canon Registry
 
-> version: 1.12 · Updated: 2026-07-29 (NEW: PIPELINE.md v1.0 — station contracts + dependency graph)
+> version: 1.13 · Updated: 2026-07-29 (PIPELINE → v1.1: studio layer — 5 phases / 4 agents; board-iteration routing)
 >
 > Every canon file used by the pipeline is listed here with its version and SHA-256 hash.
 > The RCP builder verifies these at run start — if a hash doesn't match, the run aborts.
@@ -8,7 +8,7 @@
 
 | File | Version | SHA-256 |
 |---|---|---|
-| `prompts/canon/PIPELINE.md` | 1.0 | `d3ccd107d8205ec839d7f9223b04aea7b9e632b3f6f3d2d187b73241fb7c0500` |
+| `prompts/canon/PIPELINE.md` | 1.1 | `25ad16b4f29792a00920bb71644b8f6ea1ad4c35db585cb4459a20a4f3a08f21` |
 | `prompts/canon/PEDAGOGY.md` | 1.0 | `e8652b038aab31fb5497759f1aee5221e5eeee93219169a33d6305fc262f815d` |
 | `prompts/canon/STORY_SYSTEM.md` | 1.0 | `e319ccad7c130b5de856ce820763fd14621000bd173d6357591e822542c0a987` |
 | `prompts/canon/SHOW_BIBLE.md` | 1.1 | `4aaa98250a19cedaa7695a7c371119084010d348efd1e7ee3687dbf2ac212a46` |
