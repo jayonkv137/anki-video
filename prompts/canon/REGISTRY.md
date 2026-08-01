@@ -1,6 +1,6 @@
 # Canon Registry
 
-> version: 1.8 · Updated: 2026-07-29 (SHOW_BIBLE → v1.1: §15 Maintenance — tiers, permissions, update paths)
+> version: 1.9 · Updated: 2026-07-29 (NEW: STORY_SYSTEM.md v1.0 — how a scene comes into being)
 >
 > Every canon file used by the pipeline is listed here with its version and SHA-256 hash.
 > The RCP builder verifies these at run start — if a hash doesn't match, the run aborts.
@@ -8,6 +8,7 @@
 
 | File | Version | SHA-256 |
 |---|---|---|
+| `prompts/canon/STORY_SYSTEM.md` | 1.0 | `e319ccad7c130b5de856ce820763fd14621000bd173d6357591e822542c0a987` |
 | `prompts/canon/SHOW_BIBLE.md` | 1.1 | `4aaa98250a19cedaa7695a7c371119084010d348efd1e7ee3687dbf2ac212a46` |
 | `prompts/canon/TREATMENT.md` | 1.1 | `d9fa6e1a37c64474ae3faabd68c05ec830553b96fe62764c02e5bfa8e8897690` |
 | `prompts/canon/MISSION.md` | 1.0 | `98e53819367797ae7d658181e5dab7ca8ec8e323ac4c2ca3aa03a92b2411fcb3` |
