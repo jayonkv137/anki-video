@@ -1,6 +1,6 @@
 # SHOW BIBLE — "Stereotypical German"
 
-> version: 1.0 · canon file · 2026-07-29
+> version: 1.1 · canon file · 2026-07-29
 > **The universe and its people.** Who these characters are, what world they are in, and where the story might go. Read by the Showrunner at ideation, by the screenplay agent whenever a character speaks, and by the storyboard agent to know who is present.
 > **This document describes people, not permissions.** It contains no speech budgets, no grammar assignments and no "this character teaches X" rules — deliberately. See §5.
 > Supersedes `resources/Characters-Main-Sheet.md` v1.3 and the four per-character bibles, which it merges. Companions: `TREATMENT.md` (how it looks and sounds) · `STORY_SYSTEM.md` (how a scene is built) · `PEDAGOGY.md` (the teaching floor) · `CURRICULUM` (what is taught).
@@ -179,3 +179,38 @@ Full canonical names, always: **Rolf die Wurst · Bert das Bier · Kati die Kart
 ## 14 · ⧖ OPEN
 - **Kati's arrival sequence** (§9).
 - **Formalised voice-direction lines** for Rolf, Bert and Kati — a single copy-verbatim line describing accent, pitch, rhythm and articulation for the voice model. Müller's exists: *"MÜLLER speaks only German, in a strong, firm northern voice — hard crisp consonants, definite sentences with falling intonation, commanding but calm."*
+
+---
+
+## 15 · MAINTENANCE — how this document changes
+A bible that cannot be updated becomes a lie the pipeline still believes. This section is the protocol. **Its three parts change at completely different speeds, so they have three different update paths — and three different permissions.**
+
+### 15.1 The three tiers
+| Tier | What | Changes | Who may write | Where it lives |
+|---|---|---|---|---|
+| **1 · IDENTITY** | §1–9, §12, §13 — premise, conceit, tone, the cast, dynamics, casting policy, arrivals, world rules, naming | **Rarely, deliberately** | **Jayon only.** Agents may *propose*, never write | this file, hash-pinned |
+| **2 · DIRECTIONS** | §10 — ideas, open questions, threads to plant, characters they might meet | **Constantly, casually** | Jayon freely; agents may *suggest additions* | `UNIVERSE_STATE` (§15.3) |
+| **3 · CANON FACTS** | §11 — what episodes have actually established | **Automatically, per episode** | the pipeline, on human confirmation | `UNIVERSE_STATE` |
+
+**Why the split:** hash-pinning exists to detect tampering with rules the pipeline depends on. A half-formed idea Jayon is toying with is not that, and forcing a hash ceremony every time he has one guarantees he stops writing them down. Identity is slow and protected; everything living moves to state.
+
+### 15.2 Changing Tier 1 (the `/tune` ritual)
+Editing identity is a deliberate act, and the hash makes it impossible to do by accident:
+1. Make the edit. **Change exactly one thing for one reason.**
+2. Bump the version header and add a dated line to §15.5.
+3. Recompute the SHA-256, update `REGISTRY.md`, run `verify_canon()` → must be green.
+4. Commit the edit, the registry and the changelog **together**.
+An agent that believes Tier 1 is wrong **raises it** — it never edits. The Director's propose→confirm→apply flow is the interface: it shows the diff and what the change would affect, Jayon confirms, and the ritual above runs.
+
+### 15.3 Changing Tiers 2–3 (continuous, no ceremony)
+Directions and Canon Facts move into **`UNIVERSE_STATE`**, the persistent project memory (see `DESIGN_universe_state.md`), which is built for continuous writes. §10 and §11 above remain in this document as the **human-readable window** onto that state — the definitions of what belongs there and the rules for using it — while the accumulating content itself is written and read there.
+- **Adding a direction:** Jayon says it in the studio (or types it); the Showrunner writes it to Directions, tagged as a possibility. No version bump, no hash.
+- **Establishing a fact:** when an episode is finalised, candidate facts are extracted, **checked for contradiction against existing canon**, and — on Jayon's confirmation — written to Canon Facts. A contradiction halts the write and asks rather than silently overwriting.
+- **Graduating a direction:** when an idea becomes real in a made episode, it moves from Directions → Canon Facts, and becomes binding.
+
+### 15.4 When production and the bible disagree
+If a generated episode contradicts this document, exactly one of two things is true, and **Jayon decides which**: either the *episode* is wrong (fix the episode) or the *bible* is stale (propose a Tier-1 change). The QC gate reports the conflict; it never resolves it on its own, and it never quietly bends the character to match what was generated. **Drift is a decision, never an accident.**
+
+### 15.5 Revision history
+- **v1.0 — 2026-07-29.** Created. Merges `Characters-Main-Sheet.md` v1.3 and the four per-character bibles. Per Jayon: all speech constraints removed (grammar habits, "teaches:" assignments, word budgets); Müller's core belief reframed from *"Words are expensive"* to *"Feelings are private. What you do is public."*; vocabulary domains reframed as interests. Adds the fluent-but-foreign conceit, world rules, the Directions section and Canon Facts.
+- **v1.1 — 2026-07-29.** Added §15 Maintenance (three tiers, permissions, the `/tune` ritual, the state split, and the drift-resolution rule).
