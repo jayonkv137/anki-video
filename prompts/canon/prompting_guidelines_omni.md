@@ -1,3 +1,7 @@
+> ⚠ **DEPRECATED — NOT CANON.** Omni was dropped in the V3 reshape (skill-3 v4 is Seedance-only).
+> Removed from `REGISTRY.md` and from the Run Context Pack on 2026-07-29. Kept for reference only;
+> nothing in the pipeline reads this file. Do not inject it into any prompt.
+
 # Prompting Guidelines — Gemini Omni Flash
 
 > version: 1.2 · canon file · v1.2 (2026-07-21): per-character fixed voice identity

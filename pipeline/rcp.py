@@ -127,7 +127,6 @@ class RunContextPack:
         self.character_bible = _load("resources/Characters-Main-Sheet.md")
         self.canon_blocks = _load("prompts/canon/canon_blocks.md")
         self.guidelines_seedance = _load("prompts/canon/prompting_guidelines_seedance.md")
-        self.guidelines_omni = _load("prompts/canon/prompting_guidelines_omni.md")
 
         episodes = _fetch_series_memory(limit=5)
         self.series_digest = _build_digest(episodes)
@@ -148,6 +147,5 @@ class RunContextPack:
         """Context for prompt writing — includes video model guidelines."""
         return (
             f"# PROJECT MISSION\n{self.mission}\n\n"
-            f"# SEEDANCE GUIDELINES\n{self.guidelines_seedance}\n\n"
-            f"# OMNI GUIDELINES\n{self.guidelines_omni}\n"
+            f"# SEEDANCE GUIDELINES\n{self.guidelines_seedance}\n"
         )
