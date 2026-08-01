@@ -1,6 +1,6 @@
 # Canon Registry
 
-> version: 1.11 · Updated: 2026-07-29 (MISSION → v2.0 for the story universe; prompting_guidelines_omni RETIRED)
+> version: 1.12 · Updated: 2026-07-29 (NEW: PIPELINE.md v1.0 — station contracts + dependency graph)
 >
 > Every canon file used by the pipeline is listed here with its version and SHA-256 hash.
 > The RCP builder verifies these at run start — if a hash doesn't match, the run aborts.
@@ -8,6 +8,7 @@
 
 | File | Version | SHA-256 |
 |---|---|---|
+| `prompts/canon/PIPELINE.md` | 1.0 | `d3ccd107d8205ec839d7f9223b04aea7b9e632b3f6f3d2d187b73241fb7c0500` |
 | `prompts/canon/PEDAGOGY.md` | 1.0 | `e8652b038aab31fb5497759f1aee5221e5eeee93219169a33d6305fc262f815d` |
 | `prompts/canon/STORY_SYSTEM.md` | 1.0 | `e319ccad7c130b5de856ce820763fd14621000bd173d6357591e822542c0a987` |
 | `prompts/canon/SHOW_BIBLE.md` | 1.1 | `4aaa98250a19cedaa7695a7c371119084010d348efd1e7ee3687dbf2ac212a46` |
