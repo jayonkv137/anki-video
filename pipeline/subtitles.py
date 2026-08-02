@@ -26,12 +26,14 @@ MAX_LINE_CHARS = 24                  # what actually fits 1080px at 64pt bold (t
 MAX_CUE_SECONDS = 6
 FONT_SIZE = 64
 
-# colourLabel → (CSS hex for the UI overlay, ASS &HAABBGGRR for the burn)
+# colourLabel → (CSS hex for the UI overlay, ASS &HAABBGGRR for the burn).
+# Values are PEDAGOGY §5.3 VERBATIM — `pipeline canon-audit` fails if they drift.
+# (das and grammar were wrong here until 2026-08-02; the audit caught both.)
 COLORS = {
     "der":     ("#3B82F6", "&H00F6823B"),   # masculine — blue
     "die":     ("#EF4444", "&H004444EF"),   # feminine  — red
-    "das":     ("#22C55E", "&H005EC522"),   # neuter    — green
-    "grammar": ("#FBBF24", "&H0024BFFB"),   # target grammar — yellow
+    "das":     ("#10B981", "&H0081B910"),   # neuter    — green
+    "grammar": ("#F59E0B", "&H000B9EF5"),   # target structure — yellow
     "":        ("#FFFFFF", "&H00FFFFFF"),   # default   — white
 }
 
@@ -189,11 +191,16 @@ def render_ass(state: dict) -> str:
     for cue in state.get("subtitles", []):
         start = _ass_ts(cue["startFrame"], fps)
         end = _ass_ts(cue["endFrame"], fps)
+        # PEDAGOGY §5.2: the whole clause appears at once, colour-coded. The colour
+        # key is the retention win and stays; the word-by-word reveal is dropped —
+        # it destroys the reader's perceptual span (their natural forward preview)
+        # and forces reading at exactly the speaker's pace. Per-word timing stays in
+        # the STATE (the editor and the Director still address single words); it just
+        # no longer drives the render.
         parts = [f"{{\\pos({SAFE_X},{SAFE_Y})}}"]
         for wd in cue["words"]:
             ass_color = COLORS.get(wd.get("colorLabel", ""), COLORS[""])[1]
-            k = max(1, round((wd["endFrame"] - wd["startFrame"]) * 100 / fps))  # karaoke centiseconds
-            parts.append(f"{{\\c{ass_color}\\k{k}}}{wd['word']} ")
+            parts.append(f"{{\\c{ass_color}}}{wd['word']} ")
         ev.append(f"Dialogue: 0,{start},{end},DE,,0,0,0,,{''.join(parts).rstrip()}")
     return "\n".join(head + ev) + "\n"
 

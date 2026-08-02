@@ -351,6 +351,18 @@ def validate_screenplay_v4(sp: dict, curriculum: dict,
         if (v.get("gender") or "") not in ("der", "die", "das", "—"):
             flags.append(f"target_vocab '{v.get('german')}': gender '{v.get('gender')}' "
                          f"not der/die/das/—")
+    # PEDAGOGY §8.3 — vocabulary is taught by being USED. A word declared in
+    # target_vocab but never spoken teaches nothing, and it also silently disables
+    # its subtitle colour-coding (the colour map is built from target_vocab, so an
+    # unspoken word is a colour that never renders). Advisory, not blocking:
+    # German inflects, so exact-match absence is evidence rather than proof.
+    spoken = " ".join((d.get("german") or "") for d in lines).lower()
+    for v in sp.get("target_vocab", []):
+        content = [t for t in (v.get("german") or "").lower().split()
+                   if t not in ("der", "die", "das", "ein", "eine")]
+        if content and not any(t[:max(4, len(t) - 2)] in spoken for t in content):
+            flags.append(f"target_vocab '{v.get('german')}' never appears in the dialogue "
+                         f"— it teaches nothing and its subtitle colour will never render")
     return {"blocks": blocks, "flags": flags}
 
 
@@ -372,7 +384,8 @@ def _selftest():
                 atmosphere="haze", atmosphere_density="light",
                 props=[], contact_shot=False, needs_blocking_reference=False,
                 negative_prompt="", revision_prompt="hold the frame, re-render",
-                dialogue=[{"speaker": "Rolf die Wurst", "german": "Warum?", "english": "Why?"}])
+                dialogue=[{"speaker": "Rolf die Wurst", "german": "Die Ampel ist rot.",
+                           "english": "The traffic light is red."}])
     shot2 = {**shot, "shot_number": 2, "duration_s": 7,
              "dialogue": [{"speaker": "Rolf die Wurst", "german": "Man darf hier nicht gehen.",
                            "english": "You may not walk here."}]}

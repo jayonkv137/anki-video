@@ -51,6 +51,16 @@ def _get(table: str, params: dict) -> list[dict]:
     return resp.json()
 
 
+def _delete(table: str, filters: dict) -> int:
+    """Delete rows matching PostgREST filters. Used by the spine test to clean up
+    its own namespaced rows — production writes are append-only by design."""
+    if not filters:
+        raise ValueError("refusing to delete without a filter")
+    resp = requests.delete(_url(table), headers=HEADERS, params=filters, timeout=15)
+    resp.raise_for_status()
+    return len(resp.json()) if resp.content else 0
+
+
 def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 

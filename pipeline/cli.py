@@ -167,6 +167,12 @@ def cmd_context(args):
                 print(f"          {name:12s} {tok:6d}{scoped}")
 
 
+def cmd_canon_audit(args):
+    """Cross-layer consistency audit: canon ↔ curriculum ↔ code."""
+    from . import canon_audit
+    sys.exit(canon_audit.main(verbose=args.verbose))
+
+
 def cmd_state_verify(args):
     """Check the UNIVERSE_STATE tables + show what state currently knows."""
     from . import universe_state as st
@@ -218,9 +224,14 @@ def main():
 
     sub.add_parser("state-verify", help="Check UNIVERSE_STATE tables + show what state knows")
 
+    p_aud = sub.add_parser("canon-audit", help="Cross-layer consistency audit (canon ↔ curriculum ↔ code)")
+    p_aud.add_argument("-v", "--verbose", action="store_true", help="Show passing checks too")
+
     args = parser.parse_args()
 
-    if args.command == "curriculum":
+    if args.command == "canon-audit":
+        cmd_canon_audit(args)
+    elif args.command == "curriculum":
         cmd_curriculum(args)
     elif args.command == "context":
         cmd_context(args)

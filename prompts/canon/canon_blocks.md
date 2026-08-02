@@ -1,6 +1,8 @@
 # Canon blocks — v1.0 (photorealistic CGI live-action integration)
 
-> version: 1.0 · canon file · 2026-07-21 pivot from interim puppet aesthetic (Jayon's CGI Integration research)
+> **RETIRED 2026-08-02 — NOT CANON.** Its material laws live verbatim in `TREATMENT.md` §10 and the STYLE_BLOCK is assembled from `TREATMENT` §1–§3. Unpinned from `REGISTRY.md`; superseded. This file remains on disk ONLY because the legacy V3 wizard still substitutes `{{CANON_BLOCKS}}`, and it is **deleted with that wizard at Phase 3.5**. Do not read it, do not cite it, do not edit it — note that it still contains the word "felt", which `TREATMENT` §14 bans.
+>
+> version: 1.0 · 2026-07-21 pivot from interim puppet aesthetic (Jayon's CGI Integration research)
 > Substituted MECHANICALLY into video prompts by the pipeline (skill 3 emits placeholders). Edit here = changes every future prompt. Never let an LLM paraphrase these.
 > **CONSTANTS ONLY.** Lighting, depth of field, and environment are per-scene VARIABLES written by skill-3 (the virtual Director of Photography) — never hardcode them here.
 

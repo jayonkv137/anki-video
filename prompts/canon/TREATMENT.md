@@ -1,6 +1,7 @@
 # TREATMENT — "Stereotypical German" · the directorial rule system
 
-> version: 1.3 · canon file · 2026-08-02
+> version: 1.4 · canon file · 2026-08-02
+> v1.4 (2026-08-02): the last five invideo guides absorbed (ledger: `RESEARCH_invideo_production_guides.md`). **§16.3 the style anchor is now a two-stage strategy** — the plate bootstraps, a *graded episode segment* supersedes it (footage is a lossless style reference; prose is a lossy one) via the `@VideoN` slot our Seedance canon documents and we have never used. **§6.3 tonal modes carry hex tints** (a named mode with unnamed tints is not reusable). **§16.6 the pre-return frame gate** — generated frames are checked against this document *before* they are shown.
 > v1.3 (2026-08-02): absorbs the four invideo production guides that were supplied but never read in full (`AI Script Breakdown`, `AI Shot Planning`, `Diegetic Sound Cues`, `AI Micro-Drama`) — closing the "12 parameters per shot: we cover ~7" gap logged in `DESIGN_agent_crew_and_treatment.md` §2 on 2026-07-29. New: **§3.1 depth of field per shot** · **§6.5 the tonal mode is declared per segment** · **§8.1 atmosphere layers** · **§8.2 the two pre-generation reference duties** (fused sheet for contact, mock blocking reference for POV/complex camera) · **§8.3 the density stress-test** (the screenplay agent argues with the page *before* credits are spent) · **§13 sound is anchored to the visual beat** · **§9.6 turnaround-sheet hygiene**.
 > v1.2 (2026-08-02): **§9 corrected to the image model's real reference mechanics** (typed slots 5 human / 6 object / 3 style; characters FIRST, style LAST — the v1.1 order was contradicted by the model) · **image-prompt identity TOKENS** (`Character-X`) added as the naming law's one fenced exception (§9.4, §19) · §14 stage-scoped (the negative list is video language; the image model uses a constraints block) · §9.5 asset-gap note withdrawn (Jayon: Rolf's set is correct as-is, `PLAN_production_canon` §7) · `canon_blocks.md` formally retired from the registry — §10 is the sole source (the retired file still said "felt"). Basis: `prompting_guidelines_nanobanana.md` v1.0.
 > **This is the controlling document of the production.** The screenplay is the narrative source of truth; THIS is the execution source of truth. Every visual stage (storyboard sheets, video prompts) reads it and every generated frame is gated against it. **Rules, not descriptions** — every line below must be checkable against a frame. If a line cannot be checked, it does not belong here.
@@ -66,7 +67,7 @@ Every shot **states its DOF** — `deep` (environment legible, the default for t
 All four are **warm earth tones** — a material fact of what they are, never adjusted.
 
 ### 6.3 Tonal modes — a GROWING LIBRARY ⧖ OPEN
-- A **mode** is a named, reusable colour+light condition recording: **name · named source(s) · ratio · shadow tint · highlight tint · saturation note · how §6.1 separation is achieved here.**
+- A **mode** is a named, reusable colour+light condition recording: **name · named source(s) · ratio · shadow tint (hex) · highlight tint (hex) · saturation note · how §6.1 separation is achieved here.** Tints are written as **hex values, not adjectives** — "cool shadows" is a description two people render differently; `#1E2A38` is a mode. A named mode whose tints are unnamed is not reusable, which defeats the point of naming it.
 - **Created the first time a condition appears; reused identically every time it recurs.** The constraint is *"once named, always rendered the same"* — never *"only these modes exist."* No ceiling.
 - Library **starts empty**, fills from real episodes, lives in `UNIVERSE_STATE` beside locations.
 
@@ -191,9 +192,14 @@ These are the reason identity survives. They are **PBR/VFX material specificatio
 Not oversights — decisions that require real footage rather than theory (Jayon, 2026-07-29). Method: `WORKFLOW_visual_identity_lock.md`.
 1. **Tonal-mode library** (§6.3) — starts empty, fills from real episodes.
 2. **Reference palettes** — 15–25 real film/photography frames → `resources/style_references/`, from which the value/saturation/tint discipline is extracted.
-3. **The style plate** — one locked canonical frame generated in Nano Banana Pro, attached to every later generation. Until it exists, the style slot resolves as `pending`.
+3. **The style anchor — a two-stage strategy.**
+   - **Stage 1 (bootstrap, until a graded episode exists):** one locked canonical frame generated in Nano Banana Pro — the **style plate** — attached to every later generation. Until it exists, the style slot resolves as `pending`.
+   - **Stage 2 (once a graded episode exists):** the plate is superseded as the primary anchor by **a representative graded segment of a finished episode**, attached as a video reference (`prompting_guidelines_seedance.md` §4: `@VideoN`, ≤3, ≤15s total — which is why the reference is *one 15s segment*, never a whole 30s episode). A written description of a look is a lossy translation of footage; the footage is lossless. It transfers **camera angles, camera movement, environment logic and tonal feel — never character identity**, which stays with the sheets (§9). The reference must be the **final graded cut**: an ungraded rough cut transfers an ungraded look. The current reference segment is recorded in `UNIVERSE_STATE` and changes only by deliberate decision.
 4. **Location plates** — accumulated one per recurring location.
 5. **Identity validation** — the C1 win condition: the same character generated twice, independently, in different environments, must read as unmistakably the same character in the same show.
+
+### 16.6 The pre-return frame gate
+A generated frame is checked **against this document before it is shown**, not after it is chosen: the quick-reference card (§18) is run over every returned sheet and clip, and a frame failing a line is surfaced *with the failing line named*. Catching a violation at return costs one regeneration; catching it at assembly costs everything built on top of it. The same discipline applies to a finished cut — read it back against the screenplay and this document rather than scrubbing a timeline by eye.
 
 ## 17 · FORMAT & DELIVERY (fixed)
 9:16 vertical · 1080 × 1920 · 30 fps · one episode ≈ **30 s** = 2 × 15 s generated segments (45 s = 3 segments is an explicit exception) · burned subtitles are a **separate post layer**, never generated in-frame, positioned in the §7 safe zone, colour-coded **der = blue · die = red · das = green · target grammar = yellow**.
