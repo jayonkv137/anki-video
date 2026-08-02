@@ -20,7 +20,7 @@
 
 ## 1 · Who arrives here, and what they need in five seconds
 
-Six users, and they are not variations of one person. The screen is only right if all six are served **without adding anything**.
+**Eleven arrivals, not six** (expanded on Jayon's instruction). They are not variations of one person, and the screen is only right if all of them are served **without adding anything**.
 
 | # | Who | Their state of mind | What they need first |
 |---|---|---|---|
@@ -30,6 +30,13 @@ Six users, and they are not variations of one person. The screen is only right i
 | 4 | **Jayon, late** (ep 120) | "where does the series stand" | the story so far, the shape of the whole |
 | 5 | **A new person he hires** | "what IS this? what do I do?" | orientation without a manual |
 | 6 | **LinkedIn / a client** | "is this real? is this any good?" | **the universe** — craft, characters, world |
+| 7 | **Jayon after a month away** | "what was I doing? what did I decide?" | not just *where* he stopped — *why*. The decision trail, not the file list. |
+| 8 | **A collaborator with one job** (a voice actor, an editor, a translator) | "what do I need, and only that" | a direct route to their piece without learning the studio |
+| 9 | **A learner or fan** who somehow sees it | "what is this show?" | the story and characters — zero production language |
+| 10 | **Future Jayon at episode 160** | "what's left, and does it still hold together?" | the shape of the whole, and what is unfinished |
+| 11 | **Someone auditing it** (a partner, a platform, a grant) | "is this rigorous or is it vibes?" | that decisions are recorded and traceable — the journal is the answer |
+
+**The pattern across all eleven:** every one of them is asking about **the work** or **their next action**. Not one of them is asking about our pipeline's internals. That single observation decides everything cut in §2.
 
 **The tension, named honestly:** 1–4 want a tool; 6 wants a showcase; 5 wants orientation. The wrong resolution is to add a marketing header to a dashboard.
 
@@ -66,17 +73,41 @@ What it can do:
 
 Design consequences: it is an *input*, not a transcript wall — it opens as one line with the history one scroll away. Series-level changes are **proposals**, never silent writes, because this chat can touch canon and state.
 
-### 3.2 CONTINUE — only when it exists
-One card, only if something is unfinished. What it is, where it stopped, in plain words: *"Lesson 8, episode 2 — the script is drafted and waiting for you."* Nothing else. If nothing is unfinished, **the card is not there** (not an empty state with a sad face — simply absent).
+### 3.2 CONTINUE — the last action, shown, not just named
+**Expanded on Jayon's instruction.** "You're on Script" is a location, not a memory. Returning after a day — or a month (user 7) — the question is *what was actually done, and what was decided*.
+
+So Continue carries four things:
+1. **Where** — lesson, episode, phase, in words: *"Lesson 8, episode 2 of 3 — Vision."*
+2. **The last real action, with a timestamp** — *"You approved the screenplay 3 days ago."* / *"2 storyboard sheets generated, waiting for your look."*
+3. **The visual state of the work** — and this is the part that makes it feel like a studio rather than a task list: **the actual artifact, at whatever fidelity exists.** Boards generated → the panels. Clips → a frame. Only a script → the hook line and the German. Nothing yet → the lesson's own art. **Never a progress bar where a picture could be.**
+4. **One next action**, named as a verb: *Look at the boards* · *Finish the script* · *Accept the clips*.
+
+The phase reached defines what is shown:
+
+| Reached | Continue shows |
+|---|---|
+| Plan only | the block plan: 3 episodes, what each covers |
+| Brief locked | the premise in one line + the lead |
+| Script drafted / locked | the hook line, the German, the flag count |
+| Boards generated | **the panels themselves** |
+| Clips accepted | a frame + duration |
+| Subtitles / export | the cut, playable |
+
+**Absent beats empty:** if nothing is unfinished, there is no card at all.
 
 ### 3.3 START THE NEXT LESSON — minimal
 Jayon's instruction, taken literally: *the German lesson number and a description. That's all.*
 
-> **Lesson 8 — Regeln**
-> Rules and permission: what you may and may not do.
-> *2 of 3 episodes made.*
+**Correction (Jayon, 2026-08-02): minimal is not bare.** He must be able to tell what the lesson *is about* from this card — enough to decide "yes, today" or "not that one". So: the number, the name, a real one-sentence description, what it teaches in **plain German-learner language** (never atom codes), and the episode relationship.
 
-No grammar codes, no lead recommendation, no mode toggles, no atom list. All of it is available on the Curriculum page for whoever wants it; none of it belongs on the first screen. **Starting is one click, and the conversation about *what* this episode is happens where it belongs — in the Idea phase, with the Showrunner.**
+> **Lesson 8 — Regeln** · A1
+> What you may and may not do — rules, permission, and being told off.
+> *Teaches: "man darf hier nicht…", können / müssen / dürfen, the formal imperative.*
+> **6 topics · 2 of 3 episodes made**
+
+What is still cut: `A1.8.4`, "block 3 of 4", the lead recommendation, the mode toggles, the atom list. The rule is not "less information" — it is **no information that only makes sense if you built the system**. Codes live on the Curriculum page, where they are the subject.
+
+**Note the dependency:** "2 of 3 episodes" requires the **lesson layer** (`DESIGN_studio_chat.md` §1.1), which does not exist yet. Until it is built, this card cannot honestly show a count — and it must show nothing rather than a guess.
 
 ### 3.4 THE UNIVERSE — the showcase layer, which is also the orientation layer
 The four characters, present and beautiful. Not avatars in a settings row — the actual world. Plus one line of *story so far*.
