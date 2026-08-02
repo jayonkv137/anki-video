@@ -160,9 +160,10 @@ The math sides with PEDAGOGY: at A1 pace (~80 WPM) with PEDAGOGY §3's ⅓-silen
 2.1 `pipeline/studio.py` — thread store, phase router, view compiler, compaction-on-lock, change-protocol engine (rehomed overseer + idempotency + modify hook).
 2.2 Clickable greyscale wireframe → **Jayon reviews** → corrections. The screenplay stage pane follows `DESIGN_screenplay_document.md` (draft view + the locked sheet).
 2.3 The real shell: Home + Workspace (rail/stage/chat/chips), proposal cards, salvaged panes. Old wizard still runnable until 3.5.
+2.4 **Two working modes** (`DESIGN_autopilot.md` v2) — per-phase Co-create/Draft toggle on the rail · the four gate actions (approve · edit-then-approve · reject-with-note · switch to Co-create) · decision-journal cards · cost shown *before* every generate click. **Every gate stays human in both modes**; no canon change required.
 
 **Phase 3 — THE AGENTS, one vertical slice each, live-tested before the next** *(4–6 sessions)*
-3.1 **Idea/Showrunner** — curriculum front door, module framing, lead rec + rotation, 2–3 scenario directions, block plan; stereotype filter (3.1b: the one-time AI tagging pass over the 100 + a review screen for Jayon); brief extraction (never invents, fails loudly). Anti-sycophancy pack in every skill from here on.
+3.1 **Idea/Showrunner** — *(each phase agent ships BOTH entry points: the conversational one and `draft()`, which decides everything itself and emits a decision journal + attached assumptions.)*  curriculum front door, module framing, lead rec + rotation, 2–3 scenario directions, block plan; stereotype filter (3.1b: the one-time AI tagging pass over the 100 + a review screen for Jayon); brief extraction (never invents, fails loudly). Anti-sycophancy pack in every skill from here on.
 3.2 **Script/Writer** — reverse-scenario method + acceptance test + load-balance law + voices + ceilings + filmability; QC = PEDAGOGY's 12-point audit as chips; the lock gate.
 3.3 **Vision/Director** — sheet compiler per nanobanana canon (binding formula, 2K, white gutters, constraints block, C7 split rule) · exact-offset slicer · native-API provider · board iteration via A/B/C/D chat routing + the M-metric edit-vs-regenerate rule.
 3.4 **Shoot/Director** — video prompt compiler (skill-3 core survives; C5 ref order; wardrobe rule out), refs manifest, Seedance adapter unchanged.
