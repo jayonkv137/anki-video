@@ -158,7 +158,9 @@ The math sides with PEDAGOGY: at A1 pace (~80 WPM) with PEDAGOGY §3's ⅓-silen
 
 **Phase 2 — THE SHELL** *(2 sessions)*
 2.1 `pipeline/studio.py` — thread store, phase router, view compiler, compaction-on-lock, change-protocol engine (rehomed overseer + idempotency + modify hook).
-2.2 Clickable greyscale wireframe → **Jayon reviews** → corrections. The screenplay stage pane follows `DESIGN_screenplay_document.md` (draft view + the locked sheet).
+2.2 ✅ Clickable greyscale wireframe → **Jayon reviewed → REJECTED the design** (dense, flat, no hierarchy, no design system; it rendered the data model instead of designing a screen). Structure/IA confirmed correct; presentation to be rebuilt.
+2.3a ✅ **Backend first, layout-agnostic** — `dashboard/studio_api.py` at `/api/studio/*`. Built ahead of the UI precisely because the API surface does not change with the layout, so design and wiring proceed in parallel.
+2.3b **The UI rebuild, screen by screen, with Jayon leading** — a screen brief per screen (its one job · the decision it supports · primary/secondary/on-demand · every state), then a real **design system** (`claude.ai/design` project + a local component library synced with `DesignSync`), then variants. Research prompt: `DEEP_RESEARCH_PROMPT_design_system_workflow.md`.
 2.3 The real shell: Home + Workspace (rail/stage/chat/chips), proposal cards, salvaged panes. Old wizard still runnable until 3.5.
 2.4 **Two working modes** (`DESIGN_autopilot.md` v2) — per-phase Co-create/Draft toggle on the rail · the four gate actions (approve · edit-then-approve · reject-with-note · switch to Co-create) · decision-journal cards · cost shown *before* every generate click. **Every gate stays human in both modes**; no canon change required.
 
