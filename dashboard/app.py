@@ -806,6 +806,13 @@ def overseer_apply(req: OverseerApplyReq):
     return overseer.apply(req.run_id, req.operations, _get_rcp())
 
 
+@app.get("/wireframe")
+def wireframe():
+    """Phase 2.2 — the clickable greyscale wireframe of the V4 studio.
+    Structure and interaction only; no backend, fake data, no spend."""
+    return HTMLResponse((STATIC / "wireframe.html").read_text(encoding="utf-8"))
+
+
 @app.get("/")
 def index():
     return HTMLResponse((STATIC / "index.html").read_text(encoding="utf-8"))
