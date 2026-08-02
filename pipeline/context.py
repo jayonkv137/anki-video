@@ -43,13 +43,24 @@ PHASE_CANON = {
     "post":   ["MISSION", "PEDAGOGY", "TREATMENT"],
 }
 
-# Section-level scoping (PIPELINE §7: a station gets the canon it needs, not more).
-# PIPELINE §3.4 gives the Writer "TREATMENT (what is filmable)" and forbids it from
-# deciding style, colour, lens, grade, reference bindings or prompt syntax — so the
-# Writer never sees those sections. The Vision/Shoot compilers get TREATMENT whole.
-DOC_SECTIONS = {
-    ("script", "TREATMENT"): ["4", "5", "7", "8", "12", "13", "17"],
-}
+# Section-level scoping — deliberately EMPTY (corrected 2026-08-02, Jayon).
+#
+# An earlier version sliced TREATMENT for the Writer, reading PIPELINE §3.4's
+# "TREATMENT (what is filmable)" + its MUST-NOT-DECIDE list as a scoping rule.
+# That was wrong twice over:
+#   1. "must not DECIDE x" ≠ "must not KNOW x". The Writer fills `camera_move`
+#      (§2 holds its hard limits), must satisfy §15's per-shot specification (its
+#      own output contract), writes speaker names (§19 naming law), must keep §1's
+#      banned vocabulary out of the screenplay (§1 names the screenplay explicitly),
+#      must never write text into frame (§14), and can only write filmable action
+#      if it knows what these bodies physically ARE (§10 silhouette + materials).
+#   2. The cut was triggered by a token-budget warning, i.e. a metric drove a
+#      canon-correctness decision. Scoping must be justified by the station
+#      contract alone; if a section is ever cut, the reason goes here in words.
+#
+# Phase-level scoping (PHASE_CANON) still applies and is contract-driven: QC never
+# reads TREATMENT, Shoot never reads STORY_SYSTEM, and so on.
+DOC_SECTIONS: dict[tuple[str, str], list[str]] = {}
 
 # PIPELINE.md stations each phase owns (§2.1). Every phase also gets §1 (the lock
 # principle) and §3.9 (the change protocol — available at every phase by design).
@@ -152,6 +163,12 @@ def module_order() -> list[str]:
 
 # ── Assembly + budget ────────────────────────────────────────────
 
+# Real input limit of the studio model (verified against the API, 2026-08-02:
+# gemini-3.6-flash = 1,048,576 in / 65,536 out). Kept as a named fact so no future
+# budget is invented from a research paper's example again.
+MODEL_INPUT_LIMIT = 1_048_576
+
+
 def estimate_tokens(text: str) -> int:
     return (len(text) + 3) // 4  # honest chars/4 estimate (no Gemini tokenizer offline)
 
@@ -169,9 +186,15 @@ def canon_context(phase: str) -> str:
     return "\n\n---\n\n".join(blocks)
 
 
-def budget_report(phase: str, budget_tokens: int = 32000) -> dict:
-    """Measure the hot block against the phase budget; warn past 60% (the research
-    threshold where static rules start crowding out working context)."""
+def budget_report(phase: str, budget_tokens: int = MODEL_INPUT_LIMIT) -> dict:
+    """Measure the hot canon block. **Informational, not a constraint.**
+
+    This never decides what canon a phase gets — the station contract does
+    (see DOC_SECTIONS). It exists to catch a real future problem: Tier 2/3
+    (the conversation) growing until the canon is lost in the middle. Against
+    the model's actual 1M-token window, five canon documents are ~1.5% of
+    context, so the old "60% of 32k" alarm was measuring an invented ceiling.
+    """
     ctx = canon_context(phase)
     per_doc = {name: estimate_tokens(doc_for_phase(phase, name))
                for name in PHASE_CANON[phase]}
@@ -181,6 +204,8 @@ def budget_report(phase: str, budget_tokens: int = 32000) -> dict:
         "per_doc_tokens": per_doc,
         "hot_total_tokens": total,
         "budget_tokens": budget_tokens,
-        "hot_share": round(total / budget_tokens, 3),
-        "warn": total > 0.6 * budget_tokens,
+        "hot_share": round(total / budget_tokens, 5),
+        # advisory only: a hot block this large would mean canon has genuinely
+        # sprawled, not that a phase should be given less of it.
+        "warn": total > 150_000,
     }

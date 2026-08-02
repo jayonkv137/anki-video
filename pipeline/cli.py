@@ -155,10 +155,12 @@ def cmd_curriculum(args):
 def cmd_context(args):
     """Per-phase Tier-1 canon budget report (the context contracts)."""
     from . import context as ctx
+    budget = args.budget or ctx.MODEL_INPUT_LIMIT
+    print(f"(hot canon per phase · model input window {budget:,} tokens · informational)")
     for ph in ([args.phase] if args.phase else ctx.PHASES):
-        r = ctx.budget_report(ph, args.budget)
-        print(f"{ph:7s} {r['hot_total_tokens']:6d} tok  {r['hot_share'] * 100:5.1f}%  "
-              f"{'⚠ WARN >60%' if r['warn'] else 'ok'}")
+        r = ctx.budget_report(ph, budget)
+        print(f"{ph:7s} {r['hot_total_tokens']:6d} tok  {r['hot_share'] * 100:5.2f}% of window  "
+              f"{'⚠ canon has sprawled' if r['warn'] else 'ok'}")
         if args.verbose:
             for name, tok in r["per_doc_tokens"].items():
                 scoped = " (scoped)" if (ph, name) in ctx.DOC_SECTIONS else ""
@@ -210,7 +212,8 @@ def main():
 
     p_ctx = sub.add_parser("context", help="Per-phase canon budget report")
     p_ctx.add_argument("phase", nargs="?", help="idea|script|qc|vision|shoot|post (default: all)")
-    p_ctx.add_argument("--budget", type=int, default=32000, help="Token budget (default 32000)")
+    p_ctx.add_argument("--budget", type=int, default=None,
+                       help="Override the window size (default: the model's real limit)")
     p_ctx.add_argument("-v", "--verbose", action="store_true", help="Per-document breakdown")
 
     sub.add_parser("state-verify", help="Check UNIVERSE_STATE tables + show what state knows")
