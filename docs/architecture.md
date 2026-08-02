@@ -72,7 +72,8 @@ Six documents carry everything the agents know. Each answers exactly one questio
 | Stage | Produces | Notes |
 |---|---|---|
 | Curriculum → module | the atoms this block teaches | the spine; lesson-first |
-| **Showrunner** | framing, lead, situation options, block plan | *designed, not built* |
+| **Lesson Plan** *(new, per lesson)* | `lesson.json` — the block plan: N episodes, topics per episode, the through-line | *shell built, agent not* |
+| **Showrunner** *(per episode)* | framing, lead, situation options | *designed, not built* |
 | **Strategist chat** | the agreed scenario | asks before it offers |
 | **Commit** | `brief.json` | extracts; never invents |
 | **Screenplay** | `screenplay.json` — **the lock** | all creative decisions land here |
@@ -96,13 +97,15 @@ Six documents carry everything the agents know. Each answers exactly one questio
 
 ## 6 · Build status (this is the part that changes)
 
-**Working and verified:** the studio UI · stereotype library + search · Strategist chat · commit → brief · screenplay · storyboard sheet prompts + upload + auto-slice · video prompts + reference manifest · assembly + colour-coded subtitles + export · the Director (plan/apply with targeted recompiles) · canon verification · the ledger.
+*(rewritten 2026-08-02)*
 
-**Designed, not built:** the **Showrunner** · **`UNIVERSE_STATE`** (the persistent project memory — Directions and Canon Facts have no home until it exists) · `curriculum.json` · QC inside the studio flow · publishing.
+**Built and tested (V4):** `curriculum.json` (30 lessons · 164 topics, registry-pinned) · `llm.py` (schema-enforced, loud failures — the old Gemini path accepted a schema and silently ignored it) · `context.py` (per-phase canon from PIPELINE §3 read-lists) · `universe_state.py` (strata 2–4 live in Supabase; teaching status DERIVED from the progression log) · `schemas.py` (lesson/brief/screenplay v4 + HARD/SOFT validators) · `studio.py` (the episode thread · phase router · **view compiler** · the six gates) · `lessons.py` (the block plan, the coverage invariant, re-planning) · `canon_audit.py` (the cross-layer drift detector) · `dashboard/studio_api.py` (`/api/studio/*`, layout-agnostic). **169 assertions green** across four suites.
 
-**Not yet wired:** the six canon documents exist and verify, but **the skills do not read them yet** — they still carry their own prose and improvise a style clause. This is the immediate next task.
+**Designed, not built:** every **agent** (Phase 3 — `studio.py` is the shell) · the **studio chat** control centre · stereotype tagging + `suggest_for_lesson` · publishing · the `ui-audit` token-drift detector.
 
-**Unproven:** no `FAL_KEY`, so the real Nano Banana Pro and Seedance calls have never executed; mock providers prove the plumbing end-to-end.
+**Rejected and being rebuilt:** the **UI**. The 2.2 wireframe's information architecture was confirmed; its presentation was not (dense, flat, no hierarchy, no design system). Method in `DESIGN_system_ui.md`, screen 01 brief in `DESIGN_screen_home.md`.
+
+**Unproven — the honest headline:** **nothing has ever been generated.** One Nano Banana Pro test (abstract shapes, not characters) proved the API works on the existing `GOOGLE_API_KEY`, so **images need no FAL_KEY**. No Seedance call has ever run, so German lip-sync is unsolved and the per-clip price is unknown. The C1 identity test — the same character twice, independently, reading as the same character — has been pending since 2026-07-15.
 
 ## 7 · Known gaps
 1. **Skills don't read the new canon** (the wiring step) — includes folding `canon_blocks.md` into `TREATMENT` and deleting `global_aesthetic_rules` from the screenplay schema.
