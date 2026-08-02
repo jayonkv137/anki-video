@@ -1,6 +1,7 @@
 # PIPELINE — the stations, their contracts, and the handoffs
 
-> version: 1.2 · canon file · 2026-08-02
+> version: 1.3 · canon file · 2026-08-02
+> v1.3: **the LESSON layer.** A lesson (a curriculum module) is the unit of *planning*; an episode is the unit of *production*. New station **§3.0 LESSON PLAN**, running once per lesson **before** any episode's brief, producing `lesson.json` — the block plan. Closes a real gap: `block_no` existed on every episode while nothing declared how many blocks a lesson has, so the system could not say "2 of 3" and nothing guaranteed a lesson's episodes formed an arc. The five episode phases and every station contract below are **unchanged**. Design: `DESIGN_lesson_layer.md`.
 > **What each station is, what it receives, what it produces, and — most importantly — what it must NOT decide because a later station owns that.** This is the map that keeps a pipeline of specialists from turning into four agents all writing the same episode badly.
 > **Agents read their own row and their immediate neighbours — never the whole document.** Knowing too much is a failure mode here (§7).
 > Contracts are stable and live here. **Current build status is not canon** and lives in `docs/architecture.md`.
@@ -35,11 +36,12 @@ curriculum ─▶ SHOWRUNNER ─▶ STRATEGIST (with the creator) ─▶ COMMIT 
   UNIVERSE_STATE is read by every station and written at the gates
 ```
 
-## 2.1 · THE STUDIO LAYER — five phases, four agents
-The stations above are the **internal** contracts. The creator never sees nine of anything. They move through **five phases**, talking to **four agents**, in **one continuous conversation** that never resets — the phase decides which system prompt answers, and the whole history stays visible to whoever is speaking.
+## 2.1 · THE STUDIO LAYER — one lesson phase, five episode phases, four agents
+The stations above are the **internal** contracts. The creator never sees ten of anything. They plan a **lesson** once, then move each of its episodes through **five phases**, talking to **four agents**, in **one continuous conversation** that never resets — the phase decides which system prompt answers, and the whole history stays visible to whoever is speaking.
 
 | Phase | Agent | Stations it covers | The creator's question |
 |---|---|---|---|
+| **Plan** *(per LESSON, once)* | **Showrunner** | §3.0 | *What is this lesson, and how many episodes is it?* |
 | **Idea** | **Showrunner** | §3.1 | *What are we making today?* |
 | **Script** | **Writer** | §3.2 · §3.3 · §3.4 | *Write it.* |
 | **Vision** | **Director** | §3.6 | *Show me what it looks like.* |
@@ -52,13 +54,24 @@ The stations above are the **internal** contracts. The creator never sees nine o
 
 ## 3 · THE STATIONS
 
-### 3.1 SHOWRUNNER
-- **Role.** Opens a module: presents what must be taught, where the story stands, who should lead, and what situations could work.
+### 3.0 LESSON PLAN — *once per lesson, before any episode*
+- **Role.** Turns a curriculum module into a **block plan**: how many episodes this lesson is, which topics go in each, and what holds them together.
+- **Reads.** `MISSION` · `SHOW_BIBLE` · `STORY_SYSTEM` · `PEDAGOGY` · the curriculum module · `UNIVERSE_STATE` (rotation, story so far, standing decisions) · the stereotype library · the seed bank.
+- **Receives.** The next lesson (or the creator's choice of one).
+- **Produces.** `lesson.json` — the block plan · the lead · the world · the through-line · the encounter, if one fits · explicitly deferred atoms with a reason.
+- **Decides.** The **split** — how many episodes and which atoms in which — and the through-line that makes them a lesson rather than unrelated 30-second gags.
+- **MUST NOT decide.** The scenario, beats, button, dialogue or shots of any episode — **the plan is a skeleton, one line per episode; beats belong to §3.2** · anything a later station owns · which stereotype is *forced* (it offers, and zero is a valid answer).
+- **Invariant it must satisfy.** Every atom of the lesson appears in exactly one block, **or** in `deferred_atoms` with a reason. Nothing is silently lost between episodes.
+- **Consumed by.** Every phase of every episode of that lesson — `lesson.json` is a standing input, like canon but lesson-scoped.
+- **Failure.** The atoms will not fit the planned episode count → say so and propose a different split, rather than overfilling a 30-second block.
+
+### 3.1 SHOWRUNNER — *per episode*
+- **Role.** Opens one **episode** of a planned lesson: presents what this block must teach, where the story stands, and what situations could work.
 - **Reads.** `MISSION` · `SHOW_BIBLE` · `STORY_SYSTEM` · `PEDAGOGY` · curriculum · `UNIVERSE_STATE` · the stereotype library.
-- **Receives.** The next module (or the creator's choice of one).
-- **Produces.** A framing of the lesson · the story so far · a recommended lead with reasons · 2–3 scenario directions · 0–3 fitting stereotype options · the **block plan** (how atoms pack into 30-second blocks).
+- **Receives.** `lesson.json` and which block of it this episode is.
+- **Produces.** A framing of **this episode's** block — the atoms `lesson.json` assigned it, where the story stands, and 2–3 scenario directions that fit the lesson's through-line.
 - **Decides.** What to *propose*, and in what order.
-- **MUST NOT decide.** The scenario itself (the creator does, in conversation) · dialogue · shots, framing or visuals · anything already locked in canon. **It proposes; it never authors.**
+- **MUST NOT decide.** The scenario itself (the creator does, in conversation) · dialogue · shots, framing or visuals · anything already locked in canon · **the block plan — §3.0 owns it, and this station works inside it** (if the assigned atoms genuinely will not fit one 30-second block, say so and send it back to the plan rather than quietly dropping one).
 - **Consumed by.** The creator, and then the Strategist conversation.
 - **Failure.** No good stereotype match → say so plainly. Curriculum and story pulling apart → surface the conflict, don't resolve it silently.
 
@@ -137,6 +150,7 @@ The stations above are the **internal** contracts. The creator never sees nine o
 ## 5 · THE GATES (where a human decides)
 | Gate | What is being approved | Why it exists |
 |---|---|---|
+| **Lesson plan** | the split — how many episodes, and what each teaches | every episode of the lesson inherits it; it is cheapest to be wrong here |
 | **Brief lock** | the concept | before any generation effort is spent |
 | **Screenplay confirm** | the episode itself | this is the lock; everything downstream inherits it |
 | **Sheet approval** | the visual interpretation | before video credits are spent |
@@ -147,9 +161,11 @@ The stations above are the **internal** contracts. The creator never sees nine o
 
 ## 6 · THE DEPENDENCY GRAPH — what recompiles when something changes
 ```
-brief ──▶ screenplay ──┬──▶ storyboard sheet (per segment) ──▶ panels
-                       └──▶ video prompt   (per segment)
-screenplay ──▶ subtitle timing        clips ──▶ assembly ──▶ export
+lesson.json ──▶ EVERY episode of that lesson  (the block plan is a standing input)
+      │
+      └──▶ brief ──▶ screenplay ──┬──▶ storyboard sheet (per segment) ──▶ panels
+                                  └──▶ video prompt   (per segment)
+           screenplay ──▶ subtitle timing     clips ──▶ assembly ──▶ export
 ```
 | Change | Recompiles |
 |---|---|
@@ -157,6 +173,7 @@ screenplay ──▶ subtitle timing        clips ──▶ assembly ──▶ e
 | a whole **segment** | the same, for that segment |
 | the **brief** | the screenplay → **all** sheets and **all** prompts |
 | a **subtitle** (text, timing, colour) | nothing — it is a leaf; re-export only |
+| the **lesson plan** (a block's atoms) | that block's episode, from the brief down. **A lesson's already-made episodes are NOT invalidated** — reality outranks the plan, so the default is to correct the plan and mark the episode stale, with re-making offered as the deliberate alternative. |
 | a **clip** re-generated | assembly → export |
 **The graph decides the recompile set — never a model's judgement.** Anything outside the set is left untouched, and the set is shown to the human before it runs.
 
@@ -172,6 +189,7 @@ A station is given its own contract, its inputs, and the canon it needs. It is *
 Tier 1 canon: changed only by deliberate human decision via the `/tune` ritual (`SHOW_BIBLE.md` §15.2). **A new station, or a change to any station's "MUST NOT decide" list, is a Tier-1 edit** — those lists are the seams that hold the pipeline apart.
 
 ### Revision history
+- **v1.3 — 2026-08-02.** Added §3.0 **LESSON PLAN** — a lesson (curriculum module) is the unit of planning, an episode the unit of production; the plan runs once, before any brief, and is a standing input to every phase of every episode in that lesson. Added the lesson-plan gate (§5) and the lesson row in the dependency graph (§6), including the rule that a made episode is never invalidated by a re-plan. Every existing station contract is unchanged. Closes the gap where `block_no` existed with no declaration of how many blocks a lesson has.
 - **v1.2 — 2026-08-02.** §3.9 renamed **THE CHANGE PROTOCOL** — propose→confirm→apply is a capability of the continuous conversation, not an agent; "Director" now names only the Vision/Shoot phase agent (resolves the three-way name collision with the old floating window). Added the idempotency guarantee and the modify-before-confirm hook (basis: the agent-implementation research). Station contracts unchanged.
 - **v1.1 — 2026-07-29.** Added §2.1 (the studio layer: five phases — Idea · Script · Vision · Shoot · Post — mapped onto the nine stations, four agents, one continuous chat; QC never speaks; no separate overseer window). Added the **board-iteration routing rule** to §3.6. Station contracts unchanged.
 - **v1.0 — 2026-07-29.** Created. The lock-and-compiler principle, the flow, nine station contracts (each with an explicit *must not decide*), the handoff law, the human gates, the dependency graph (previously implicit in code), and the context-scoping rule.
