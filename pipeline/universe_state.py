@@ -29,7 +29,7 @@ DECISIONS = "universe_decisions"
 
 ENTITY_TYPES = ("character", "location", "relationship", "tonal_mode",
                 "direction", "canon_fact", "world")
-PROGRESSION_KINDS = ("episode_made", "atom_taught", "appearance",
+PROGRESSION_KINDS = ("lesson_planned", "episode_made", "atom_taught", "appearance",
                      "story_beat", "stereotype_encounter", "thread")
 
 

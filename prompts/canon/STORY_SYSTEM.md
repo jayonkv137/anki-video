@@ -1,6 +1,7 @@
 # STORY SYSTEM — how a scene comes into being
 
-> version: 1.0 · canon file · 2026-07-29
+> version: 1.1 · canon file · 2026-08-02
+> v1.1: **§7.1 the narrative episode** — the shape for episodes where the story is the priority, and the rule that when the constraints relax, judgement must tighten. Design: `DESIGN_narrative_episodes.md`.
 > **The method for turning a lesson, the story so far, and a cast into a scene worth filming.** This is the brain of the platform: everything downstream compiles what this produces.
 > **A method and a toolkit — not a template.** Nothing here is a form to fill in. The escalation shapes and typologies in §7 are offers the agent may make; the writing stays free. Sourcing: `BLUEPRINT_story_system.md`.
 > Companions: `SHOW_BIBLE.md` (who) · `PEDAGOGY.md` (the teaching floor and its numbers — never duplicated here) · `TREATMENT.md` (how it looks and sounds) · `CURRICULUM` (what is taught) · `DESIGN_stereotype_integration.md` (the situation bank).
@@ -74,9 +75,22 @@ When a scene needs a spine, these are available. The agent may **suggest** one; 
 - **The escalation shape:** base reality → the first unusual thing → framing ("if this is true, then…") → escalation by logical doubling → the button.
 - **Recurring situation types** that have proven productive in this world: a rule being enforced on someone · a ritual performed without explanation · an expectation quietly failed · a system being navigated. Each implies a different scene shape and a different grammar family.
 
+### 7.1 · The narrative episode — when the story is the priority
+Some episodes carry no new language: the Season-0 arrivals, and occasionally one inside a lesson that plants a thread, changes a relationship, or pays something off. They are declared in the lesson plan (`format: narrative | season_zero`) and **must state what they move** — a scene that moves nothing is decoration, however good it looks.
+
+**What opens up — and it is visual, never verbal:**
+- **One legible environment may be broken** (§10.3) when the story genuinely crosses worlds — a portal sequence is two places by design.
+- **The button may become a reveal, a cliffhanger, or a held image** instead of a turn (§6).
+- **The optional shapes (§7) are set aside.** This is where invention belongs.
+
+**What does not open up:** the model's real limits (`TREATMENT` §8, §8.3 — declaring an episode narrative buys no extra cuts, and eighteen cuts in fifteen seconds fails for a story reason too) · identity, the material laws and the naming law · comprehensibility (`PEDAGOGY` §2.1 — the language gets *less*, not more) · the hook readable muted, which here is the entire job.
+
+> **When the constraints relax, judgement must tighten.** In a teaching episode the ceilings catch a great deal of weak work. Here nothing catches it except taste — so this is the mode in which an agreeable agent is most dangerous. The right behaviour is more options and bolder ones, critique aimed at whether the beat is *earned* rather than whether a rule was met, and a plain refusal to call a scene finished because it is pretty.
+
 ## 8 · ARC & CONTINUITY
 - **Continuity is pedagogy, not bookkeeping.** A stable cast, world and situation keep the viewer's *content schema* fixed, which frees working memory for language. Every time we reuse a place, a relationship or a running joke, comprehension gets cheaper.
 - **A module advances the journey.** Each module is a story-arc unit; by its end something about the characters' situation has moved. The curriculum supplies the language; the arc supplies the reason to watch the next one.
+- **A lesson's episodes share a through-line** (recorded in its plan) and each may reference the ones before it — but **the standalone rule (§6) outranks the arc**: an episode may reference an earlier one, never *require* it, because most viewers will see exactly one.
 - **Plant and pay off.** An object, a person or an unresolved line introduced in one module should return. Planted threads are recorded in state; paying one off is always a stronger option than inventing something new.
 - **The story so far is a creative asset.** Ask what is already true before inventing: an established location costs nothing, an established relationship carries meaning for free, and an unresolved thread is a scene waiting to happen.
 - **Never contradict established facts.** If a new idea conflicts with what an episode already established, either the idea changes or the conflict is raised for a human decision (`SHOW_BIBLE` §15.4). Never silently overwrite.
@@ -119,4 +133,5 @@ Language models collapse toward the statistically average trope; across 170 epis
 Tier 1 canon: changed only by deliberate human decision, via the `/tune` ritual described in `SHOW_BIBLE.md` §15.2 (one change for one reason → version bump + revision line → rehash + `REGISTRY` → `verify_canon` green → commit together). Agents may **propose** a change; they never write one. When a real episode teaches us something this document got wrong, that is a Tier-1 edit, not a quiet drift.
 
 ### Revision history
+- **v1.1 — 2026-08-02.** Added §7.1, the narrative episode: what opens up (environment, the button, the shapes) and what never does (model limits, identity, comprehensibility, the muted hook), plus the governing rule that judgement tightens as constraints relax. Also notes that a lesson's episodes share a through-line while the standalone rule (§6) still outranks it.
 - **v1.0 — 2026-07-29.** Created. Reverse scenario generation as the method; the load-balance law; engines left open pending the series' own device; scene craft; the 30-second block; optional shapes; arc and continuity; the variety engine and five failure modes. Per Jayon: no modal-particle curriculum spine (superseded by the locked A1–B1 atom curriculum), and no standing repetition engine declared.

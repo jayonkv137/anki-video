@@ -1,6 +1,7 @@
 # Canon Registry
 
-> version: 1.18 · Updated: 2026-08-02 (**PIPELINE → 1.3**: the LESSON layer — new station §3.0 LESSON PLAN, run once per lesson before any episode brief, producing the block plan; lesson-plan gate; dependency-graph row incl. 'a made episode is never invalidated by a re-plan'. Design: `DESIGN_lesson_layer.md`.)
+> version: 1.19 · Updated: 2026-08-02 (**PEDAGOGY → 1.1 · STORY_SYSTEM → 1.1**: the NARRATIVE EPISODE — PEDAGOGY §2.1 (the ceilings are about comprehensibility, not teaching load, so they still bind when no atoms are carried) and STORY_SYSTEM §7.1 (what opens up is visual, never verbal; and judgement tightens as constraints relax). Design: `DESIGN_narrative_episodes.md`.)
+> version: 1.18 · 2026-08-02 (**PIPELINE → 1.3**: the LESSON layer — new station §3.0 LESSON PLAN, run once per lesson before any episode brief, producing the block plan; lesson-plan gate; dependency-graph row incl. 'a made episode is never invalidated by a re-plan'. Design: `DESIGN_lesson_layer.md`.)
 > version: 1.17 · 2026-08-02 (**curriculum.json re-pinned** — source doc gained the LESSON=MODULE naming note (Jayon): a lesson is a module (30), a topic is an atom (164), an episode is one of N per lesson decided at the brief. Data unchanged; source hash moved.)
 > version: 1.16 · 2026-08-02 (**TREATMENT → 1.4**: the last five invideo guides absorbed — §16.3 two-stage style anchor (plate bootstraps, a graded 15s segment supersedes it via the unused `@VideoN` slot) · §6.3 tonal-mode tints as hex · §16.6 the pre-return frame gate. Ledger: `RESEARCH_invideo_production_guides.md`.)
 > version: 1.15 · 2026-08-02 (**TREATMENT → 1.3**: absorbs the four invideo production guides supplied but never read in full — closes the "12 parameters per shot, we cover ~7" gap logged 2026-07-29. Adds §3.1 per-shot depth of field · §6.5 tonal mode declared per segment · §8.1 atmosphere layers · §8.2 the two pre-generation reference duties · §8.3 the density stress-test · §9.5 turnaround-sheet hygiene · §13 sound anchored to the visual beat · §15 rewritten as the complete per-shot/per-segment brief.)
@@ -13,8 +14,8 @@
 | File | Version | SHA-256 |
 |---|---|---|
 | `prompts/canon/PIPELINE.md` | 1.3 | `44b8f3166faac0b7523b479e293cdb704abc08198ac4eafe4ada78784b9c9977` |
-| `prompts/canon/PEDAGOGY.md` | 1.0 | `e8652b038aab31fb5497759f1aee5221e5eeee93219169a33d6305fc262f815d` |
-| `prompts/canon/STORY_SYSTEM.md` | 1.0 | `e319ccad7c130b5de856ce820763fd14621000bd173d6357591e822542c0a987` |
+| `prompts/canon/PEDAGOGY.md` | 1.1 | `d30ae07cbb20538c34f59df55da08d560dfc8802fa72374120aa3819a9993991` |
+| `prompts/canon/STORY_SYSTEM.md` | 1.1 | `74240e6f30e07c86e504f80dd58289826164ad7dfd777c0d2f0bae70a378fda2` |
 | `prompts/canon/SHOW_BIBLE.md` | 1.2 | `63e40def803262fdc686d9bd52fe284ced760ff3eb5772055d21d39942b41229` |
 | `prompts/canon/TREATMENT.md` | 1.4 | `91a22f52f5aabe4bfd6842d75a6f032ae30c83953b53d275d87de74665f28ed7` |
 | `prompts/canon/MISSION.md` | 2.1 | `5ca0c0a4c6cb4a9a6a34a8a95b3a0d06c4a11f2a737f5e00c94e59355d511dd8` |

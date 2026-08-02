@@ -23,6 +23,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from pipeline import context as ctx
+from pipeline import lessons as L
 from pipeline import studio as S
 from pipeline import universe_state as st
 
@@ -307,6 +308,99 @@ def consume_seed(key: str, episode_id: str):
     return {"key": key, "used_by": episode_id}
 
 
+# ── Lessons — the layer above episodes (PIPELINE §3.0) ───────────
+
+class NewPlan(BaseModel):
+    module_id: str
+
+
+class SavePlan(BaseModel):
+    lesson: dict
+
+
+class Replan(BaseModel):
+    blocks: list
+    deferred_atoms: list | None = None
+    deferred_reason: str = ""
+    confirmed: bool = False
+
+
+def _lguard(fn):
+    try:
+        return fn()
+    except L.LessonError as e:
+        raise HTTPException(409, str(e))
+
+
+@router.get("/lessons")
+def list_lessons():
+    return L.list_plans()
+
+
+@router.post("/lessons")
+def create_lesson(body: NewPlan):
+    """Scaffold a plan from the curriculum. Deliberately INVALID until planned —
+    it cannot be approved before anyone has decided anything."""
+    return _lguard(lambda: L.create(body.module_id))
+
+
+@router.get("/lessons/{module_id}")
+def get_lesson(module_id: str):
+    lesson = _lguard(lambda: L.load(module_id))
+    return {"lesson": lesson, "validation": L.validate(lesson),
+            "progress": L.progress(module_id)}
+
+
+@router.put("/lessons/{module_id}")
+def save_lesson(module_id: str, body: SavePlan):
+    if body.lesson.get("module_id") != module_id:
+        raise HTTPException(400, "module_id mismatch")
+    L.save(body.lesson)
+    return {"validation": L.validate(body.lesson), "progress": L.progress(module_id)}
+
+
+@router.post("/lessons/{module_id}/approve")
+def approve_lesson_plan(module_id: str):
+    """The Plan gate. Blocks on the coverage invariant — nothing is silently lost."""
+    return _lguard(lambda: L.approve_plan(module_id))
+
+
+@router.get("/lessons/{module_id}/progress")
+def lesson_progress(module_id: str):
+    """'2 of 3 episodes' — the number that did not exist before the lesson layer."""
+    return _lguard(lambda: L.progress(module_id))
+
+
+@router.post("/lessons/{module_id}/replan-preview")
+def replan_preview(module_id: str, body: Replan):
+    """A READ. Shows the blast radius BEFORE the change — including that a made
+    episode is never deleted or overwritten by a re-plan."""
+    return _lguard(lambda: L.replan_preview(
+        module_id, body.blocks, deferred_atoms=body.deferred_atoms,
+        deferred_reason=body.deferred_reason or None))
+
+
+@router.post("/lessons/{module_id}/replan")
+def replan(module_id: str, body: Replan):
+    if not body.confirmed:
+        raise HTTPException(409, "a re-plan must be confirmed after seeing the preview")
+    return _lguard(lambda: L.replan(module_id, body.blocks,
+                                    deferred_atoms=body.deferred_atoms,
+                                    deferred_reason=body.deferred_reason, confirmed=True))
+
+
+@router.get("/lessons/{module_id}/context")
+def lesson_context(module_id: str, episode_no: int = 0):
+    """What an episode's agents actually receive from the lesson: the plan, and
+    sibling episodes as summaries (never transcripts)."""
+    def _sp(episode_id: str):
+        p = S.EPISODES / episode_id / "screenplay.json"
+        return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
+    plan = _lguard(lambda: L.plan_block(module_id))
+    sibs = L.siblings_block(module_id, episode_no, _sp) if episode_no else ""
+    return {"plan_block": plan, "siblings_block": sibs}
+
+
 # ── Health ───────────────────────────────────────────────────────
 
 @router.get("/health")
@@ -320,6 +414,7 @@ def health():
         "state_ready": all(tables.values()),
         "phases": S.PHASE_ORDER,
         "modes": [S.CO_CREATE, S.DRAFT],
+        "lessons_planned": len(L.list_plans()),
         "agents_built": False,   # Phase 3
         "fal_key": bool(__import__("os").environ.get("FAL_KEY")),
     }

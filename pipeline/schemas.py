@@ -43,7 +43,11 @@ LEVEL_CEILINGS = {  # level → (max total words, max words per sentence, max ne
     "B1": (80, 15, 8),
 }
 
-EPISODE_FORMATS = ("lesson", "synthese", "season_zero")
+EPISODE_FORMATS = ("lesson", "synthese", "narrative", "season_zero")
+# narrative = the story is the priority and no NEW language is taught; it must
+# declare what it MOVES (DESIGN_narrative_episodes.md). season_zero = a portal
+# intro, outside the curriculum, near-zero dialogue.
+NO_NEW_ATOM_FORMATS = ("synthese", "narrative", "season_zero")
 LIGHT_RATIO_RE = re.compile(r"^\d{1,2}:\d{1,2}$")
 DEFAULT_BANNED_TOKENS = ["lernen", "bedeutet", "grammatik", "vokabel", "lektion"]
 
@@ -58,7 +62,9 @@ BLOCK = _schema(
     recycles=_arr(STR),        # previously-taught atoms deliberately spiralled back
     working_title=STR,
     shape=STR,                 # ONE line. A skeleton, never beats — beats are the Idea phase.
-    format=STR,                # lesson | synthese | season_zero
+    moves=STR,                 # narrative/season_zero: the STORY job in one line. "a cool
+                               # scene" is not a job; empty on a narrative block is a BLOCK.
+    format=STR,                # lesson | synthese | narrative | season_zero
     episode_id=STR,            # "" until an episode is started from this block
     state=STR,                 # planned | in_progress | made
 )
@@ -120,11 +126,17 @@ def validate_lesson_v4(lesson: dict, curriculum: dict) -> dict:
             blocks_out.append(f"block {b.get('episode_no')}: state '{b.get('state')}' invalid")
         if b.get("format") not in EPISODE_FORMATS:
             blocks_out.append(f"block {b.get('episode_no')}: format '{b.get('format')}' invalid")
-        if b.get("format") == "lesson" and not b.get("atom_ids"):
+        fmt = b.get("format")
+        if fmt == "lesson" and not b.get("atom_ids"):
             blocks_out.append(f"block {b.get('episode_no')}: a 'lesson' block must teach "
-                              f"at least one atom (use format 'synthese' for a zero-new block)")
-        if b.get("format") == "synthese" and b.get("atom_ids"):
-            blocks_out.append(f"block {b.get('episode_no')}: synthese teaches zero NEW atoms")
+                              f"at least one atom (use 'synthese' or 'narrative' for zero-new)")
+        if fmt in NO_NEW_ATOM_FORMATS and b.get("atom_ids"):
+            blocks_out.append(f"block {b.get('episode_no')}: format '{fmt}' teaches zero NEW "
+                              f"atoms — put recycled language in `recycles`")
+        if fmt in ("narrative", "season_zero") and not (b.get("moves") or "").strip():
+            blocks_out.append(f"block {b.get('episode_no')}: a '{fmt}' block must declare what "
+                              f"it MOVES (a thread planted, a relationship changed, a fact "
+                              f"established). Without one it is decoration, not a block.")
         if len(b.get("atom_ids", [])) > 3:
             blocks_out.append(f"block {b.get('episode_no')}: more than 3 atoms — the packing "
                               f"law bundles at most 3 tightly-related atoms per 30s block")
@@ -155,6 +167,13 @@ def validate_lesson_v4(lesson: dict, curriculum: dict) -> dict:
     stray = deferred - module_atoms
     if stray:
         blocks_out.append(f"deferred atoms not in this module: {sorted(stray)}")
+    # "exactly one" cuts both ways: an atom cannot be taught AND deferred. This is
+    # the shape a re-plan produces when an atom is re-homed into a new block but
+    # never removed from deferred — the plan then claims two contradictory things.
+    both = set(assigned) & deferred
+    if both:
+        blocks_out.append(f"atom(s) both assigned to a block and deferred: {sorted(both)} "
+                          f"— a plan cannot say it teaches something and defers it")
 
     enc = lesson.get("encounter", {})
     if enc.get("mode") not in ENCOUNTER_MODES:
@@ -169,6 +188,14 @@ def validate_lesson_v4(lesson: dict, curriculum: dict) -> dict:
     if len(blocks) > 4:
         flags.append(f"{len(blocks)} episodes for one lesson — rarely justified by the "
                      f"atom count; check the split")
+    # The escape-hatch guard: narrative is a legitimate choice, never a way to avoid a
+    # hard atom. The coverage invariant already forces the atoms somewhere visible; this
+    # makes the balance itself visible too.
+    teaching = sum(1 for b in blocks if b.get("format") == "lesson")
+    story = sum(1 for b in blocks if b.get("format") in ("narrative", "season_zero"))
+    if story and story >= teaching and lesson.get("module_id") != "S0":
+        flags.append(f"{story} story episode(s) vs {teaching} teaching — the curriculum did "
+                     f"not advance much here; confirm that is deliberate")
     if not (lesson.get("through_line") or "").strip() and len(blocks) > 1:
         flags.append("no through_line — episodes of one lesson should relate to each other")
     return {"blocks": blocks_out, "flags": flags}
@@ -589,6 +616,7 @@ def _selftest():
     # ── LESSON layer: the coverage invariant ──
     mod = next(m for m in cur["modules"] if m["id"] == "A1.8")
     ids = [a["id"] for a in mod["atoms"]]              # A1.8.1 … A1.8.6 (last is Synthese)
+    module_ids_all = list(ids)
     lesson = dict(
         module_id="A1.8", level="A1", title="Regeln",
         why="What you may and may not do.", topics=ids,
@@ -636,9 +664,43 @@ def _selftest():
     no_reason = _json.loads(_json.dumps(lesson))
     no_reason["deferred_reason"] = ""
     assert any("needs a reason" in b for b in validate_lesson_v4(no_reason, cur)["blocks"])
+
+    # ── narrative episodes (DESIGN_narrative_episodes.md) ──
+    narr = _json.loads(_json.dumps(lesson))
+    narr["blocks"][2].update(format="narrative", atom_ids=[],
+                             moves="plants the photo Müller keeps in his jacket")
+    nr = validate_lesson_v4(narr, cur)
+    assert nr["blocks"] == [], f"valid narrative block rejected: {nr['blocks']}"
+
+    # a narrative block with no story job is decoration, not a block
+    no_moves = _json.loads(_json.dumps(narr))
+    no_moves["blocks"][2]["moves"] = "  "
+    assert any("must declare what it MOVES" in b
+               for b in validate_lesson_v4(no_moves, cur)["blocks"]), "empty `moves` not caught"
+
+    # narrative teaches ZERO new atoms — recycled language goes in `recycles`
+    narr_atoms = _json.loads(_json.dumps(narr))
+    narr_atoms["blocks"][2]["atom_ids"] = [ids[0]]
+    assert any("teaches zero NEW" in b
+               for b in validate_lesson_v4(narr_atoms, cur)["blocks"]), "narrative+atoms not caught"
+
+    # the escape-hatch guard: story episodes outnumbering teaching ones is FLAGGED
+    mostly_story = _json.loads(_json.dumps(narr))
+    mostly_story["blocks"][1].update(format="narrative", atom_ids=[],
+                                     moves="Rolf and Kati acknowledge each other")
+    mostly_story["deferred_atoms"] = list(module_ids_all)
+    mostly_story["blocks"][0]["atom_ids"] = []
+    mostly_story["blocks"][0].update(format="narrative", moves="the arrival")
+    ms = validate_lesson_v4(mostly_story, cur)
+    assert any("curriculum did not advance" in f for f in ms["flags"]), \
+        f"escape-hatch guard silent: {ms}"
+
+    # Season 0 modelled as a lesson with everything deferred needs no special case
+    assert "season_zero" in EPISODE_FORMATS and "narrative" in EPISODE_FORMATS
     print("schemas v4 self-test: PASS "
           f"(valid clean · invalid caught {len(bad_r['blocks'])} blocks/{len(bad_r['flags'])} flags "
-          f"· lesson layer: coverage invariant + duplicate-atom + HOST + deferred-reason enforced)")
+          f"· lesson: coverage/duplicate/HOST/deferred enforced "
+          f"· narrative: `moves` required, zero-new-atoms, escape-hatch flagged)")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 # PEDAGOGY — the teaching floor and the check
 
-> version: 1.0 · canon file · 2026-07-29
+> version: 1.1 · canon file · 2026-08-02
+> v1.1: **§2.1 the narrative episode** — which of these rules still bind when an episode teaches nothing new (Season 0 intros; story episodes inside a lesson). Design: `DESIGN_narrative_episodes.md`.
 > **What this is:** the smallest set of numbers and principles that keep an episode *teachable*, plus the checklist used to audit one. **What this is not:** a specification for how to write. Most of it is advisory and fires **after** the writing, not during it.
 > **Read by:** the QC agent (primary — this is its checklist) · the screenplay agent (as a ceiling it stays under) · the Showrunner (when framing a lesson) · the subtitle engine (colour and placement).
 > Companions: `STORY_SYSTEM.md` (how a scene is built — craft lives there, not here) · `CURRICULUM` (what is taught, in what order) · `TREATMENT.md` (rendering) · `SHOW_BIBLE.md` (who).
@@ -27,6 +28,17 @@ The one place this document blocks rather than advises. A block that exceeds its
 | Structures not yet introduced | — | — | — |
 
 **The prohibition rule:** a block may not use a structure the curriculum has not yet introduced, *except* as a deliberate unanalysed chunk where the curriculum says so (e.g. *"Ich hätte gern…"* at A2 long before Konjunktiv II is taught at B1). The curriculum is the authority on what is available; this table is the authority on how much.
+
+### 2.1 · The narrative episode — what still binds when nothing is taught
+Some episodes exist to move the story, not to teach: the Season-0 portal intros, and occasionally one episode inside a lesson (`format: narrative | season_zero`). They carry **no new atoms**. What changes, and what does not:
+
+- **The word ceiling still binds — and should be spent far under it.** It is a ceiling on *comprehensibility*, not on teaching: a viewer at A1 cannot parse sixty words whether or not we are teaching them. Season 0 targets **near-zero dialogue**; a narrative episode that talks more is less watchable, not more cinematic.
+- **Not applicable:** the target structure appearing twice · new-word budgets · "the block's atoms actually appear" (there are none).
+- **Binds harder:** *meaning must be visible on screen* (§1). With less language, the image carries everything, and a narrative episode whose story cannot be followed muted has failed completely rather than partly.
+- **Unchanged:** no character explains language · no translation line · no text in frame · the prohibition rule (a narrative episode may not sneak in an unintroduced structure just because it is "not teaching").
+- **The audit (§8) branches on format:** checks 1, 4, 5 and 6 still apply; checks 2, 3, 7 and 10 do not; the rest are read as story questions.
+
+**The rule underneath:** relaxing what an episode *teaches* never relaxes what a viewer can *understand*.
 
 ## 3 · PACING AND PAUSES — *soft*
 German runs ~130–150 WPM natively; learners need less. With a syllable-to-word ratio of ≈ 1.7 (German compounds), the target rate is:
@@ -127,4 +139,5 @@ Run **after** a block is written. Each item is either **BLOCK** (must be fixed) 
 Tier 1 canon: changed only by deliberate human decision via the `/tune` ritual (`SHOW_BIBLE.md` §15.2). Agents may propose; they never write. **When real episodes contradict a number here, the number is wrong — correct it from evidence rather than defending it.**
 
 ### Revision history
+- **v1.1 — 2026-08-02.** Added §2.1, the narrative episode: the level ceilings are about comprehensibility rather than teaching load, so they still bind (and should be spent far under) when an episode carries no atoms; the audit branches on format. Per Jayon: Season 0 and occasional in-lesson story episodes take their liberty **visually**, never linguistically.
 - **v1.0 — 2026-07-29.** Created. Level ceilings, pacing formula and pause architecture, exposure window, the subtitle finding and format decision, high-yield structures, failure modes, and the 12-point QC audit. Per Jayon: written as a floor and a check rather than a writing specification, with only six HARD items. Subtitle format resolved to **static colour-coded clauses** — keeping the colour key (the source of the retention gain) and dropping the word-by-word reveal (which costs the perceptual span). Requires a change to `pipeline/subtitles.py`, which currently renders word-by-word karaoke and uses `#22C55E` for *das* rather than the sourced `#10B981`.
