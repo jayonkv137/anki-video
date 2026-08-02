@@ -90,7 +90,48 @@ Two flags are drawn on the block itself, because they carry a **pre-generation o
 - **⌖ BLOCKING REF** — POV or complex camera; needs a phone-mock reference.
 A flagged shot is not blocked from existing — it is blocked from being *generated* until its reference exists. The sheet shows the obligation at the point of decision.
 
-### 3.5 The foot — the subtitle preview
+### 3.5 The continuity strip — what will keep this shot consistent
+*(Added 2026-08-02 after auditing the doc against the invideo guides: this is the axis that makes a shot plan AI-native, and the first version omitted it.)*
+
+> *"An AI shot plan records all of that **plus the reference assets each shot must carry** … The shot list is the skeleton; the locked references are what keep shot 14 looking like shot 13."*
+
+A shot approved without seeing its continuity inputs is approved blind. So each shot block carries a strip naming **the references that will be attached when it is generated**, resolved live from `TREATMENT` §9 — not free text, and not the compiler's private business:
+
+```
+  REFS  Character-Rolf sheet ✓ · portrait ✓   │  panel s01_01 ✓
+        style: graded segment ep_A1.8.1 s02 ✓  │  location plate — ⚠ none
+```
+
+Rules the strip makes visible at a glance:
+- **A missing reference is shown as a warning, not an omission.** "No location plate" is information; a blank row is a trap.
+- **It resolves per stage** — the Vision row shows the sheet's refs (`TREATMENT` §9.2 order), the Shoot row shows the clip's. Same shot, two different budgets.
+- **The §8.2 flags connect here.** A `⚯ CONTACT` shot whose fused sheet does not exist shows the ref as missing and the generate action stays disabled — the flag and its obligation are one thing, not two.
+
+### 3.6 Generation order — because order is context order
+The screenplay does not only say what the shots *are*; it implies **the order they will be generated in**, and in AI production that order carries meaning: each generation inherits context from the one before it.
+
+For us most of this is settled by the production shape and should simply be *shown* rather than decided per episode:
+- **All shots in a segment come from ONE sheet generation** — which is exactly why identity holds across them. The shot blocks inside a segment are therefore drawn as one group, not as independent items.
+- **Segments generate in order**, and segment 2's sheet attaches segment 1's sheet as a continuity reference. The sheet draws that dependency (`SEG 2 ← chains from SEG 1`), so re-rolling segment 1 visibly invalidates what followed.
+- **A segment with ≥5 shots splits into two chained sheets** (`TREATMENT` §8.2 / C7). The split is a *generation* fact, not a story fact — the screenplay still reads as one segment; the sheet shows where the generation boundary falls.
+
+### 3.7 Per-shot state — and the fact that one shot is many takes
+*(This is the correction that most changes the Shoot phase.)*
+
+The first version of this document assumed **one shot = one generation**. Documented production says otherwise: roughly **25% of generated clips are kept**, a single 15-second generation typically yields **4–7 usable candidates**, and finished shots are routinely assembled from more than one take — *"MOST SHOTS AREN'T ONE SHOT."*
+
+So a shot block carries a **state**, and a segment carries **takes**:
+
+`planned → boarded → generated → accepted`
+
+- **Takes are a list, not a slot.** A segment holds every generation it has produced; **one is marked the keeper** and the rest stay with the reason they were rejected (`DESIGN_board_iteration` §5 — rejects are evidence about what the prompt or the treatment failed to convey).
+- **The state is per shot, the takes are per segment** — because the generation unit is the segment, and one generation contains several shots' worth of usable material. Marking *which beat inside the clip is the keeper* is a real editorial act, and it needs somewhere to live.
+- **Overgeneration is a planned budget line, not a surprise.** The sheet showing "3 takes, 1 accepted" is normal, and a UI that treats a second take as an error state is lying about the medium.
+
+### 3.8 Changes made outside the studio must be logged back
+If a file is edited by hand, a clip swapped in the folder, or a panel replaced outside the flow, **the change is written back into the artifact** — otherwise the agents' picture of the episode silently diverges from what exists on disk, and every later proposal is reasoning about a film that isn't there. The sheet is the place this surfaces: an artifact whose on-disk state disagrees with its record shows as **stale**, with a one-click reconcile.
+
+### 3.9 The foot — the subtitle preview
 After the last segment: the German, in cue order, colour-coded as it will burn (`PEDAGOGY` §5.3 — der blue · die red · das green · target yellow). This is where the creator sees **the lesson as the learner will meet it**, which is the only view that answers "does this actually teach?" at a glance.
 
 ## 4 · The completeness contract
@@ -133,4 +174,4 @@ The Writer receives an agreed brief and works **downward**, never field-by-field
 
 - **Print/export.** A PDF or Markdown export of the locked sheet is obvious and cheap; deferred until the sheet exists on screen.
 - **Diff view.** Showing what changed between two locked versions of a screenplay would make the change protocol's blast radius concrete. Wanted; not Phase 2.
-- **Per-shot generation status.** Once boards and clips exist, each shot block will want a small state marker (planned → boarded → generated → accepted). The layout above leaves the shot block's right edge free for it.
+- **Where takes live on disk.** §3.7 says a segment holds many takes with one keeper; the directory contract (`clips/segment_01/take_03.mp4` + a keeper marker vs. a flat file) is a Phase 3.4 decision, made with the Shoot phase.
