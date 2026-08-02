@@ -2,6 +2,28 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-07-29 — THE V4 PIVOT + the production canon (six hash-pinned documents)
+
+**The pivot.** From "daily standalone stereotype reels" → a **curriculum-driven serialized story universe**: four characters pulled from their own worlds into Germany, taught across **A1→B1** in ~170 × 30-second episodes. Basis: four research docs Jayon supplied (narrative SLA design, DaF syllabus taxonomy, micro-learning cognition, story-ideation architecture) + twelve invideo production guides.
+
+**The curriculum** (`CURRICULUM_v1_universe.md`, awaiting lock) — 3 levels × 10 modules × **164 teaching atoms**. Atoms are an *inventory*, not one-reel-each: at ideation a module (the story-arc unit, one lead character) gets a **block plan** packing 1–3 related atoms into universal **30-second blocks**. Casting = one spine, rotating lead. Canon: characters are **fluent-but-foreign** — bewilderment, not deficit, makes their speech simple.
+
+**The production canon — six documents, each answering one question, all hash-pinned and `verify_canon` GREEN:**
+- **`MISSION.md` v2.0** — rewritten. The old one was V2-era and *actively harmful*: injected into every call while describing "ten words → ten scenes → ten clips" and calling the cast "food-puppet characters" — a word `TREATMENT` bans. Now one page whose only job is aligning judgement, built on **the two things that must always be true** (it must teach; it must be worth watching — and that tension *is* the work).
+- **`SHOW_BIBLE.md` v1.1** — the universe and its people. Merges the four character bibles. **Every speech constraint deleted** per Jayon (grammar habits, "teaches: X", word budgets); Müller's belief reframed from *"Words are expensive"* to *"Feelings are private. What you do is public."* — argued as **required**, since a "shortest sentences" rule makes B1 impossible for that character. Adds the fluent-but-foreign conceit, world rules, a living **Directions** section for Jayon's evolving arc ideas, **Canon Facts**, and §15 Maintenance (three tiers, three update paths, and the rule that *drift is a decision, never an accident*).
+- **`STORY_SYSTEM.md` v1.0** — how a scene comes into being. **Reverse scenario generation**: structure → the situation that naturally demands it → the scene, with the acceptance test *"would a real person here produce this more than once, unprompted?"* — if no, **change the situation, never bend the grammar**. Plus the load-balance law, engines (ours left OPEN), scene craft, the 30s block, the variety engine, five failure modes.
+- **`PEDAGOGY.md` v1.0** — the teaching floor and a 12-point QC audit, written as a bar to clear rather than a mould. Level ceilings, pacing formula, pauses as structure, the 3–7 exposure window (*informative context beats raw repetition*). **Resolves the subtitle conflict** between two of Jayon's own research docs: keep the colour key (the retention win), drop word-by-word karaoke (destroys the perceptual span) → **static colour-coded clauses**.
+- **`TREATMENT.md` v1.1** — the directorial rule system, written to "rules, not descriptions". **Lighting = named source + ratio**, never mood words. **Colour = a hierarchy rule, not a hue rule** ("the cast always wins the frame") — corrected after Jayon caught that the earlier northern-Germany justification contradicted the cast's own regional spread. Camera/angles reframed from prohibitions to **defaults + vocabulary**. New §9 **reference-asset contract** (attachment-order law + per-stage budgets) — the gap Jayon spotted.
+- **`PIPELINE.md` v1.1** — nine station contracts, each with an explicit **must NOT decide**; the handoff law (*the artifact is the contract*); the six human gates; and **the dependency graph written down for the first time** (previously implicit in `overseer.py`). §2.1 adds the studio layer.
+
+**Retired:** `prompting_guidelines_omni.md` — dead since the V3 reshape yet still hash-verified *and injected into every prompt-stage call*.
+
+**Studio redesign** (`DESIGN_studio_ux.md`) — nine engineering stations collapse to **four agents across five phases** (Idea · Script · Vision · Shoot · Post) in **one continuous chat** that never resets. QC becomes inline notes, never a speaker. **The separate overseer window dissolves** — once the chat is always present with full context, "an agent you can talk to at any time" *is* the chat. Agent boundaries collapse; artifact seams do not.
+
+**Also designed:** `DESIGN_universe_state.md` (the memory layer, from a deep-research teardown of invideo's context system) · `DESIGN_stereotype_integration.md` (the library is the *answer bank* for reverse scenario generation; HOST/TEXTURE/RUNNER modes; the curriculum and the library already overlap) · `DESIGN_board_iteration.md` (edit routing: *anything the screenplay describes changes in the screenplay*) · `AUDIT_visual_identity.md` · `WORKFLOW_visual_identity_lock.md` · `architecture.md` rewritten as the human-facing "how it works and **why**".
+
+**⚠ Nothing is wired.** All six documents are correct, verified and hash-pinned — and **no skill reads any of them yet.** That is the next job, and it is now the same job as the studio rebuild.
+
 ## 2026-07-24 (latest) — Dynamic Text-Based Wardrobe Overrides
 
 - **Pipeline Update:** Implemented a non-breaking architecture to allow users to add dynamic clothing and accessories to characters without requiring image uploads.
