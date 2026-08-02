@@ -288,23 +288,33 @@ def recompile_set(phase: str) -> list:
 # ── Compaction (Tier 3) ──────────────────────────────────────────
 
 def _compact(t: Thread, phase: str) -> None:
-    """On lock, a phase's conversation collapses to one digest line. The ARTIFACT
-    carries the detail — so the thread stays readable at episode 170 and the
-    context stays bounded (three-tier architecture, Tier 3)."""
+    """On lock, a phase's AGENT turns collapse to one digest line. The artifact
+    carries the detail, so a later agent is not re-reading exploratory chatter and
+    being invited to re-decide what is locked (Tier 3).
+
+    **The creator's own turns are never compacted.** Rule 1 outranks compaction:
+    an agent's turn is working-out, but a human's turn is intent — 'keep Rolf
+    silent as long as you can' is guidance the Writer, the Director and the Editor
+    all need, and the brief may well have flattened it away. Volume is not a
+    concern here: a person types far less than an agent, and a thread is one
+    episode long.
+    """
     turns = [m for m in t.messages
              if m["phase"] == phase and m["kind"] in ("chat", "journal")]
     if not turns:
         return
-    human_turns = sum(1 for m in turns if m["sender"] == "human")
+    agent_turns = [m for m in turns if m["sender"] != "human"]
+    human_turns = len(turns) - len(agent_turns)
     decisions = [m["content"] for m in turns if m["kind"] == "journal"]
     digest = (f"[{phase.upper()} LOCKED · {t.mode(phase)}] "
-              f"{len(turns)} turns ({human_turns} from the creator)"
+              f"{len(turns)} turns ({human_turns} from the creator, kept in full)"
               + (f" · decisions: {'; '.join(decisions[:6])}" if decisions else "")
               + f" · detail lives in {PHASE_ARTIFACT[phase]}")
-    for m in turns:
+    for m in agent_turns:
         m["meta"]["compacted"] = True
     t.append("system", "system", phase=phase, kind="handoff", content=digest,
-             meta={"compaction": True, "turns": len(turns)})
+             meta={"compaction": True, "turns": len(turns),
+                   "agent_turns_compacted": len(agent_turns)})
 
 
 # ── The view compiler (anti-role-bleed) ──────────────────────────

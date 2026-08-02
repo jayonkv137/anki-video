@@ -136,8 +136,10 @@ def main():
           "[APPROVED IDEA]" in blob and "brief.json is locked" in blob)
     check("the locked phase's conversation is compacted to a digest",
           "[IDEA LOCKED" in blob and "3 turns" in blob)
-    check("the locked phase's raw turns are gone",
-          "something about a crossing at 3am" not in blob)
+    check("the locked phase's AGENT turns are compacted away",
+          "Which lesson — A1.8.4" not in blob)
+    check("the creator's own words survive compaction (rule 1 outranks it)",
+          "something about a crossing at 3am" in blob)
     check("the creator's note on approval rides forward (it is a human instruction)",
           "good, ship it" in blob)
     check("QC from another phase is not shown", "QC blocked" not in blob)

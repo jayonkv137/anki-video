@@ -806,6 +806,11 @@ def overseer_apply(req: OverseerApplyReq):
     return overseer.apply(req.run_id, req.operations, _get_rcp())
 
 
+from dashboard.studio_api import router as studio_router  # noqa: E402
+
+app.include_router(studio_router)
+
+
 @app.get("/wireframe")
 def wireframe():
     """Phase 2.2 — the clickable greyscale wireframe of the V4 studio.
