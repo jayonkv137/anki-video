@@ -1,6 +1,6 @@
 # DESIGN — The two working modes: Co-create and Draft
 
-> **Status: PROPOSAL for Jayon's confirmation (2026-08-02, v2).**
+> **Status: APPROVED (Jayon, 2026-08-02) — v2.** Confirmed: the axis (§1), the money rule (§2), the per-phase defaults (§3: Idea + Script = Co-create · Vision/Shoot/Post = Draft), and `auto_reroll_on_technical_failure = 0` (nothing generates twice without a human). Building in Phase 2.
 > **v2 supersedes v1 entirely on Jayon's correction.** v1 proposed a trust ladder ending in full autopilot (agents signing gates, generating images and video unattended). **Rejected, correctly:** unattended generation spends money on work nobody has seen. v2 keeps **every gate human, always** — what becomes optional is the *conversation*, never the *approval*.
 > Companions: `PIPELINE.md` §5 (the gates — unchanged) · `MISSION.md` §5 (unchanged, and that is the point) · `DESIGN_studio_ux.md` · `DESIGN_screenplay_document.md`.
 
@@ -118,3 +118,5 @@ Small, because the pipeline is untouched:
 1. Confirm the axis (§1) and the money rule (§2).
 2. Confirm the per-phase defaults (§3) — **Script defaults to Co-create; Vision/Shoot/Post default to Draft**, since their contracts already forbid invention.
 3. Set `auto_reroll_on_technical_failure`: **0** (nothing generates twice without you) or **1** (one silent re-roll on an objective render fault only). Recommend starting at 0 and revisiting once real generation costs are known.
+
+**→ ALL THREE CONFIRMED by Jayon, 2026-08-02.** Defaults: `idea=co_create · script=co_create · vision=draft · shoot=draft · post=draft`, `auto_reroll_on_technical_failure=0`.
