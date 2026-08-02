@@ -65,244 +65,13 @@ def get_stereotype_summary():
     return stereotypes.coverage_summary()
 
 
-class AlignReq(BaseModel):
-    stereotype: dict
-    cast: dict
-    seed: str = ""
-    cefr: str = "A1"
-
-
-@app.post("/api/co-creation/align")
-def api_align(req: AlignReq):
-    st_name = req.stereotype.get("name_de", "")
-    st_en = req.stereotype.get("name_en", "")
-    st_desc = req.stereotype.get("description", "")
-    st_cat = req.stereotype.get("category", "")
-    main_char = req.cast.get("main", "Rolf die Wurst")
-    side_char = req.cast.get("side", "")
-
-    # 1. Try live LLM (Gemini or Anthropic) first if API key is active
-    google_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
-    if google_key:
-        try:
-            from pipeline.stages import _call_gemini, ALIGN_SCHEMA, _load_skill
-            from pipeline.rcp import RunContextPack
-            rcp = RunContextPack()
-            skill = _load_skill("skill-1a-align.md")
-            skill = (skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
-                     .replace("{{STEREOTYPE_JSON}}", json.dumps(req.stereotype, ensure_ascii=False))
-                     .replace("{{SEED}}", req.seed or "(none)")
-                     .replace("{{CAST_JSON}}", json.dumps(req.cast, ensure_ascii=False))
-                     .replace("{{CEFR_LEVEL}}", req.cefr))
-            system = rcp.for_story_stage() + "\n\n" + skill
-            parsed, t_in, t_out = _call_gemini(system, "Produce alignment JSON now.", ALIGN_SCHEMA)
-            return parsed
-        except Exception as e:
-            print(f"[Live LLM align failed ({e}); using smart context matching fallback]")
-
-    # 2. Smart Contextual Matcher Fallback
-    text_corpus = f"{st_name} {st_en} {st_desc} {st_cat}".lower()
-
-    if any(k in text_corpus for k in ["bier", "maß", "bierzelt", "oktoberfest", "trinken", "folk"]):
-        locations = [
-            {
-                "setting_type": "INT.",
-                "environment": "MUNICH OKTOBERFEST BIERZELT (BEER TENT) & LONG WOODEN BENCH",
-                "time_of_day": "EVENING",
-                "tag": "🎪 Festival · High Energy",
-                "why": f"The quintessential setting for {st_name}. Perfect for {main_char} demonstrating 1-liter Maß chugging etiquette."
-            },
-            {
-                "setting_type": "INT.",
-                "environment": "TRADITIONAL BAVARIAN WIRTSHAUS & WOOD-PANELLED BAR",
-                "time_of_day": "NIGHT",
-                "tag": "🍺 Wirtshaus · Traditional",
-                "why": f"High-friction indoor setting where {main_char} and {side_char or 'guests'} debate proper toast protocols."
-            },
-            {
-                "setting_type": "EXT.",
-                "environment": "OUTDOOR BEER GARDEN UNDER CHESTNUT TREES",
-                "time_of_day": "DAY",
-                "tag": "🌳 Outdoor · Gemütlichkeit",
-                "why": f"Classic Bavarian atmosphere where casual drinking meets strict unwritten rules."
-            }
-        ]
-        lessons = [
-            {
-                "kind": "particle",
-                "lesson": "Modal Particle: aber",
-                "pragmatic_function": "Expressing Authentic Bavarian Enthusiasm & Surprise",
-                "pop_up_grammar": "aber adds strong emotional emphasis in exclamations.",
-                "target_line_tease": "Das ist aber eine schöne Maß!",
-                "why": f"Matches {main_char}'s booming celebration register."
-            },
-            {
-                "kind": "structure",
-                "lesson": "Toast & Exclamation: Prost! / Auf uns!",
-                "pragmatic_function": "Ritualistic Social Drinking Phrases",
-                "pop_up_grammar": "Standard German toast structures used in group settings.",
-                "target_line_tease": "Ganz einfach: Prost zusammen!",
-                "why": f"Essential spoken German for {st_name} scenarios."
-            }
-        ]
-    elif any(k in text_corpus for k in ["lüften", "fenster", "luft"]):
-        locations = [
-            {
-                "setting_type": "INT.",
-                "environment": "LIVING ROOM WINDOW FACING DRAFTY COURTYARD",
-                "time_of_day": "MORNING",
-                "tag": "🪟 Apartment · High Airflow",
-                "why": f"The exact battleground for {st_name} at 7:00 AM."
-            },
-            {
-                "setting_type": "INT.",
-                "environment": "SHARED OFFICE SPACE WITH WIDE OPEN WINDOWS",
-                "time_of_day": "DAY",
-                "tag": "💼 Office · Cold Draft",
-                "why": "High social tension between pro-ventilation and freezing colleagues."
-            }
-        ]
-        lessons = [
-            {
-                "kind": "particle",
-                "lesson": "Modal Particle: ja",
-                "pragmatic_function": "Stating Obvious Facts About Health & Air Quality",
-                "pop_up_grammar": "ja indicates a fact everyone ought to know.",
-                "target_line_tease": "Frischluft ist ja gesund!",
-                "why": "Perfect for defending 5-minute shock ventilation."
-            }
-        ]
-    elif any(k in text_corpus for k in ["bürokratie", "behörde", "fax", "papier", "formular", "amt"]):
-        locations = [
-            {
-                "setting_type": "INT.",
-                "environment": "MUNICH BÜRGERAMT WAITING ROOM (WAITING NUMBER #42)",
-                "time_of_day": "DAY",
-                "tag": "🏛️ Bureaucracy · High Friction",
-                "why": "The ultimate shrine of official documentation and stamp authority."
-            },
-            {
-                "setting_type": "INT.",
-                "environment": "DOCTOR'S OFFICE RECEPTION DESK",
-                "time_of_day": "MORNING",
-                "tag": "📋 Administration · Formal",
-                "why": "Strict compliance environment requiring wet signatures and paper proofs."
-            }
-        ]
-        lessons = [
-            {
-                "kind": "particle",
-                "lesson": "Modal Particle: halt",
-                "pragmatic_function": "Resignation to Unchangeable Bureaucratic Rules",
-                "pop_up_grammar": "halt signals inevitable acceptance of a rule.",
-                "target_line_tease": "Das ist halt das Gesetz.",
-                "why": f"Fits {main_char} explaining bureaucratic reality."
-            }
-        ]
-    else:
-        # Default fallback for general stereotypes
-        locations = [
-            {
-                "setting_type": "INT.",
-                "environment": f"{main_char.split()[0].upper()}'S LIVING ROOM TABLE",
-                "time_of_day": "NIGHT",
-                "tag": "🏠 Indoor · Intimate",
-                "why": f"High-friction setting where {st_name} erupts between {main_char} and {side_char or 'guests'}."
-            },
-            {
-                "setting_type": "EXT.",
-                "environment": "LOCAL NEIGHBORHOOD SPÄTI & BENCH",
-                "time_of_day": "NIGHT",
-                "tag": "🍺 Public · Urban",
-                "why": f"Brings the micro-behavior of {st_name} into public view under streetlights."
-            },
-            {
-                "setting_type": "INT.",
-                "environment": "SHARED APARTMENT KITCHEN (WG-KÜCHE)",
-                "time_of_day": "EVENING",
-                "tag": "🍳 Residential · High Contact",
-                "why": f"Intimate communal space where {st_name} causes immediate social friction."
-            }
-        ]
-        lessons = [
-            {
-                "kind": "particle",
-                "lesson": "Modal Particle: doch",
-                "pragmatic_function": "Contradiction & Insisting on Obvious Shared Facts",
-                "pop_up_grammar": "doch adds subtle insistence or contradiction in Mittelfeld.",
-                "target_line_tease": "Das steht doch fest!",
-                "why": f"Ideal for {main_char} asserting rules during {st_name}."
-            },
-            {
-                "kind": "structure",
-                "lesson": "Eye Contact & Toasting Structure: In die Augen schauen!",
-                "pragmatic_function": "Imperative Demand for Unbroken Eye Contact",
-                "pop_up_grammar": "Infinitival imperative structure used for direct demands.",
-                "target_line_tease": "Beim Anstoßen in die Augen schauen!",
-                "why": f"Directly teaches spoken German for {st_name} scenarios."
-            }
-        ]
-
-    return {
-        "location_options": locations,
-        "lesson_options": lessons,
-        "comedic_angle_suggestion": f"Escalation of {st_name} with {main_char}."
-    }
-
-
-class DivergeReq(BaseModel):
-    stereotype: dict
-    cast: dict
-    seed: str = ""
-    location: str
-    lesson: str
-    oblique: str = "Escalation of Trivial Grievance"
-
-
-@app.post("/api/co-creation/diverge")
-def api_diverge(req: DivergeReq):
-    main_char = req.cast.get("main", "Rolf die Wurst")
-    side_char = req.cast.get("side", "")
-    st_name = req.stereotype.get("name_de", "Stereotype")
-    loc = req.location
-    
-    google_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
-    if google_key:
-        try:
-            from pipeline.stages import _call_gemini, DIVERGE_SCHEMA, _load_skill
-            from pipeline.rcp import RunContextPack
-            rcp = RunContextPack()
-            skill = _load_skill("skill-1b-diverge.md")
-            skill = (skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
-                     .replace("{{STEREOTYPE_JSON}}", json.dumps(req.stereotype, ensure_ascii=False))
-                     .replace("{{SEED}}", req.seed or "(none)")
-                     .replace("{{CAST_JSON}}", json.dumps(req.cast, ensure_ascii=False))
-                     .replace("{{LOCATION}}", req.location)
-                     .replace("{{LESSON}}", req.lesson))
-            system = rcp.for_story_stage() + "\n\n" + skill
-            parsed, t_in, t_out = _call_gemini(system, "Brainstorm divergent comedic angles now.", DIVERGE_SCHEMA, temperature=1.0)
-            parsed["oblique_constraint"] = req.oblique
-            return parsed
-        except Exception as e:
-            print(f"[Live LLM diverge failed ({e}); using fallback]")
-
-    # Fallback to hardcoded array if LLM fails
-    angles = [
-        {
-            "label": "Angle A: The Strict Escalation",
-            "operator": "Heightened Absurdity",
-            "premise": f"{main_char} insists on enforcing the rule at {loc} despite obvious complications.",
-            "game": f"The absurd physical endurance and social pressure of {st_name}.",
-            "lesson_integration": f"Delivers '{req.lesson}' with booming enthusiasm.",
-            "button": f"{side_char or 'Someone'} quietly surrenders to the chaos."
-        }
-    ]
-
-    return {
-        "oblique_constraint": req.oblique,
-        "options": angles
-    }
-
+# ── Removed 2026-08-02 (Phase 1 quarantine) ─────────────────────────────
+# `/api/co-creation/align` and `/api/co-creation/diverge` are deleted. They were
+# dead (index.html never called them) and each carried ~80 lines of HARDCODED
+# creative content — invented locations, lessons and target lines returned
+# silently whenever the model call failed. That violates PIPELINE §3.3 ("it
+# extracts; it does not invent") and could put fabricated pedagogy into a brief.
+# Recover with: git show v3-wizard-archive:dashboard/app.py
 
 class ChatMessage(BaseModel):
     role: str
@@ -681,39 +450,24 @@ def v3_commit(req: CommitReq):
     brief, _, _ = _call_gemini(system, "Produce the locked Story Brief JSON now.",
                                STORY_BRIEF_SCHEMA, temperature=0.3)
     
-    # Fallback post-processing to guarantee NO field displays as empty '—'
-    if not brief.get("title_de"):
-        brief["title_de"] = st_title
-    if not brief.get("stereotype_name"):
-        brief["stereotype_name"] = st_title
-    if not brief.get("cefr_level"):
-        brief["cefr_level"] = req.cefr
-    
-    if not isinstance(brief.get("cast"), dict):
-        brief["cast"] = {}
-    if not brief["cast"].get("main"):
-        brief["cast"]["main"] = main_char
-    if not brief["cast"].get("side"):
-        brief["cast"]["side"] = side_char or "None"
-
-    if not brief.get("location"):
-        brief["location"] = "EXT. SCRIPT LOCATION - DAY"
-        
-    if not isinstance(brief.get("lesson"), dict):
-        brief["lesson"] = {}
-    if not brief["lesson"].get("particle") and not brief["lesson"].get("structure"):
-        brief["lesson"]["particle"] = "doch"
-        brief["lesson"]["pragmatic_function"] = "Appealing to obvious rules or contradiction"
-
-    if not isinstance(brief.get("target_line"), dict):
-        brief["target_line"] = {}
-    if not brief["target_line"].get("german"):
-        brief["target_line"] = {
-            "speaker": main_char,
-            "german": "Das geht doch so nicht!",
-            "english": "That is simply not allowed!",
-            "why": "Pedagogical target line."
-        }
+    # No fabrication. A brief with invented fields is worse than no brief:
+    # it looks locked, feeds the screenplay, and silently teaches the wrong
+    # lesson. Missing essentials fail loudly instead (PIPELINE §3.3).
+    missing = [f for f in ("title_de", "cefr_level", "location", "premise", "button")
+               if not (brief.get(f) or "").strip()]
+    if not isinstance(brief.get("cast"), dict) or not (brief["cast"].get("main") or "").strip():
+        missing.append("cast.main")
+    lesson = brief.get("lesson") if isinstance(brief.get("lesson"), dict) else {}
+    if not ((lesson.get("particle") or "").strip() or (lesson.get("structure") or "").strip()):
+        missing.append("lesson.particle|structure")
+    tl = brief.get("target_line") if isinstance(brief.get("target_line"), dict) else {}
+    if not (tl.get("german") or "").strip():
+        missing.append("target_line.german")
+    if missing:
+        raise HTTPException(422, "The brief is incomplete — these came back empty: "
+                            + ", ".join(missing)
+                            + ". Nothing was invented to fill them; continue the chat "
+                              "until they are decided, then lock again.")
 
     # Determine run_id (reuse provided run_id or search existing stereotype run to prevent duplicates)
     run_id = req.run_id

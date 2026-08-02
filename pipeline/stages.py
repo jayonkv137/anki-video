@@ -7,7 +7,6 @@ wired together by cli.py.
 
 import json
 import os
-import random
 import re
 from pathlib import Path
 
@@ -21,7 +20,6 @@ MODEL = "claude-sonnet-5"
 HAIKU = "claude-haiku-4-5"  # quality-check / chore tier — cheap, fast
 SKILLS = REPO / "prompts" / "skills"
 RESOURCES = REPO / "resources"
-ARTICLES = ("der ", "die ", "das ")
 
 
 def _load_skill(name: str) -> str:
@@ -43,25 +41,9 @@ BOOL = {"type": "boolean"}
 
 # ── Schemas ──────────────────────────────────────────────────────
 
-STORY_SCHEMA = _schema(
-    title_de=STR, scenario=STR, environment=STR, mains=_arr(STR), cameos=_arr(STR),
-    belief_challenged=_schema(character=STR, belief=STR, how=STR),
-    hook_visual=STR, human_beat=STR,
-    beats=_arr(STR),
-    word_plan=_arr(_schema(position=INT, german=STR, beat_index=INT, how_used=STR, sense_note=STR)),
-)
 
 # Story options: three premises (lighter schema for Gate A)
-OPTION_SCHEMA = _schema(
-    title_de=STR, scenario=STR, scenario_en=STR,
-    environment=STR, environment_en=STR, mains=_arr(STR),
-    hook_visual=STR, hook_visual_en=STR,
-    human_beat=STR, human_beat_en=STR,
-    four_beat_sketch=_arr(STR), sketch_en=STR,
-    word_fit_notes=STR, self_score=INT,
-)
 
-OPTIONS_SCHEMA = _schema(options=_arr(OPTION_SCHEMA))
 
 # V3 screenplay (2026-07-22): stereotype-driven, 2–3 SEGMENTS = 2–3 Seedance clips
 # (~15s each, one multi-shot generation per segment), NOT 10 one-per-word scenes.
@@ -105,47 +87,12 @@ SCREENPLAY_SCHEMA = _schema(
 
 # ── Co-creation stage (V3) schemas — stereotype + human seed → Story Brief ──
 # (see docs/planning/DESIGN_cocreation_stage.md). The Brief is the handoff into skill-2.
-CAST_SCHEMA = _schema(main=STR, side=STR, guest=STR, background=STR)  # "" = unused role
-LESSON_SCHEMA = _schema(particle=STR, structure=STR, pragmatic_function=STR, pop_up_grammar=STR)
-TARGET_LINE_SCHEMA = _schema(speaker=STR, german=STR, english=STR, why=STR)
 
 # skill-1a-align → options for the human (Ask-Don't-Guess); lesson_options carry BOTH particle + structure
-LOCATION_OPTION = _schema(setting_type=STR, environment=STR, time_of_day=STR, why=STR)
-LESSON_OPTION = _schema(kind=STR, lesson=STR, pragmatic_function=STR, pop_up_grammar=STR, why=STR)  # kind: particle|structure
-ALIGN_SCHEMA = _schema(
-    stereotype_id=STR, stereotype_name=STR, cefr_level=STR, cast=CAST_SCHEMA,
-    location_options=_arr(LOCATION_OPTION),
-    lesson_options=_arr(LESSON_OPTION),
-    comedic_angle_suggestion=STR,
-)
 
 # skill-1b-diverge → 3–5 distinct comedic angles (Refine-via-Examples)
-ANGLE_SCHEMA = _schema(label=STR, operator=STR, premise=STR, game=STR,
-                       lesson_integration=STR, button=STR)
-DIVERGE_SCHEMA = _schema(options=_arr(ANGLE_SCHEMA))
 
 # skill-1c-commit → critique + the locked Story Brief (the handoff into skill-2)
-STORY_BRIEF_SCHEMA = _schema(
-    title_de=STR,
-    stereotype_id=STR, stereotype_name=STR, category=STR, cefr_level=STR,
-    seed=STR,                     # the human's braindump (anti-slop anchor)
-    cast=CAST_SCHEMA,
-    location=STR,
-    comedic_angle=STR,            # chosen typology / sub-genre
-    lesson=LESSON_SCHEMA,         # particle and/or structure (both offered, chosen)
-    premise=STR,
-    game_of_scene=STR,            # implicit stereotype "game" — never named in dialogue
-    escalation_beats=_arr(STR),   # base reality → first unusual → framing → escalation
-    button=STR,
-    target_line=TARGET_LINE_SCHEMA,
-    oblique_constraint=STR,       # the lateral curveball ("" if none)
-    banned_terms=_arr(STR),       # stereotype name+synonyms + pedagogical tokens kept OUT of dialogue
-    director_notes=_arr(STR),     # capture nuances/context from brainstorming phase
-)
-BRIEF_COMMIT_SCHEMA = _schema(
-    critique=_arr(_schema(check=STR, passed=BOOL, note=STR)),
-    brief=STORY_BRIEF_SCHEMA,
-)
 
 REF_SCHEMA = _schema(slot=STR, binds=STR, role=STR)
 
@@ -180,8 +127,6 @@ QC_SCHEMA = _schema(
     feedback=STR,
 )
 
-# Caption: Instagram post copy (skill-4)
-CAPTION_SCHEMA = _schema(caption=STR, hashtags=_arr(STR))
 
 
 # ── LLM call helper ─────────────────────────────────────────────
@@ -272,254 +217,10 @@ def _call(client: Anthropic, system: str, user: str, label: str,
     return result, t_in, t_out
 
 
-# ── Word fetching ────────────────────────────────────────────────
-
-def fetch_words(start: int | None, randomize: bool) -> list[dict]:
-    """Fetch 10 words from Supabase."""
-    url = os.environ["SUPABASE_URL"].rstrip("/") + "/rest/v1/words"
-    h = {"apikey": os.environ["SUPABASE_SECRET_KEY"],
-         "Authorization": f"Bearer {os.environ['SUPABASE_SECRET_KEY']}"}
-    sel = "position,german,english,sentence_de,sentence_en,word_type"
-    if randomize:
-        pos = sorted(random.sample(range(1, 606), 10))
-        params = {"position": f"in.({','.join(map(str, pos))})", "order": "position.asc", "select": sel}
-    else:
-        params = {"position": f"gte.{start or 1}", "order": "position.asc", "limit": "10", "select": sel}
-    r = requests.get(url, headers=h, params=params, timeout=15)
-    r.raise_for_status()
-    words = r.json()
-    assert len(words) == 10, f"expected 10 words, got {len(words)}"
-    return words
-
-
-def fetch_words_by_positions(positions: list[int]) -> list[dict]:
-    """Fetch EXACTLY these word positions (choose/resume: reload a run's own words —
-    a gte+limit fetch would silently return the wrong set for --random runs)."""
-    url = os.environ["SUPABASE_URL"].rstrip("/") + "/rest/v1/words"
-    h = {"apikey": os.environ["SUPABASE_SECRET_KEY"],
-         "Authorization": f"Bearer {os.environ['SUPABASE_SECRET_KEY']}"}
-    sel = "position,german,english,sentence_de,sentence_en,word_type"
-    params = {"position": f"in.({','.join(map(str, positions))})",
-              "order": "position.asc", "select": sel}
-    r = requests.get(url, headers=h, params=params, timeout=15)
-    r.raise_for_status()
-    words = r.json()
-    assert len(words) == len(positions), \
-        f"expected {len(positions)} words for {positions}, got {len(words)}"
-    return words
-
-
-# ── Stage 1: Words ───────────────────────────────────────────────
-
-def stage_words(run_id: str, start: int | None, randomize: bool,
-                positions: list[int] | None = None) -> list[dict]:
-    """Fetch words and record in ledger. `positions` pins an exact word set
-    (golden-batch / regression runs)."""
-    words = fetch_words_by_positions(positions) if positions else fetch_words(start, randomize)
-    positions = [w["position"] for w in words]
-    ledger.update_run(run_id, word_positions=positions, stage="words")
-    ledger.log_event(run_id, "words", "completed",
-                     detail={"positions": positions,
-                             "words": [w["german"] for w in words]})
-    print("words:", ", ".join(f"{w['position']}:{w['german']}" for w in words))
-    return words
-
-
-# ── Stage 2: Story options (3 premises for Gate A) ───────────────
-
-def stage_story_options(run_id: str, rcp: RunContextPack, words: list[dict],
-                        note: str, ep_dir: Path, client: Anthropic) -> dict:
-    """Generate 3 story premise options. Pipeline pauses after this for Gate A."""
-    skill = _load_skill("skill-1a-story-options.md")
-    skill = (
-        skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
-        .replace("{{WORDS_JSON}}", json.dumps(words, ensure_ascii=False))
-        .replace("{{EPISODE_LOG}}", json.dumps(rcp.episode_log_raw, ensure_ascii=False))
-        .replace("{{JAYON_DIRECTIVE}}", note or "(none)")
-    )
-    options_system = rcp.for_story_stage() + "\n\n" + skill
-
-    options, t_in, t_out = _call(
-        client, options_system,
-        "Produce exactly 3 story premise options as JSON now.",
-        "skill-1a options", OPTIONS_SCHEMA, run_id, "story_options",
-    )
-
-    # Save options
-    ep_dir.mkdir(parents=True, exist_ok=True)
-    options_path = ep_dir / "options.json"
-    options_path.write_text(json.dumps(options, ensure_ascii=False, indent=2), encoding="utf-8")
-
-    # Write human-readable options.md (German + English side by side)
-    md = ["# Story Options — choose one\n"]
-    for i, opt in enumerate(options.get("options", []), 1):
-        md.append(f"## Option {i}: {opt.get('title_de', '?')} (score: {opt.get('self_score', '?')}/10)\n")
-        md.append(f"**Scenario (DE):** {opt.get('scenario', '')}\n")
-        md.append(f"**Scenario (EN):** {opt.get('scenario_en', '')}\n")
-        md.append(f"**Environment:** {opt.get('environment', '')} — {opt.get('environment_en', '')}\n")
-        md.append(f"**Mains:** {', '.join(opt.get('mains', []))}\n")
-        md.append(f"**Hook (DE):** {opt.get('hook_visual', '')}\n")
-        md.append(f"**Hook (EN):** {opt.get('hook_visual_en', '')}\n")
-        md.append(f"**Human beat (DE):** {opt.get('human_beat', '')}\n")
-        md.append(f"**Human beat (EN):** {opt.get('human_beat_en', '')}\n")
-        md.append(f"**Sketch (DE):** {' → '.join(opt.get('four_beat_sketch', []))}\n")
-        md.append(f"**Sketch (EN):** {opt.get('sketch_en', '')}\n")
-        md.append(f"**Word fit:** {opt.get('word_fit_notes', '')}\n")
-    md.append("\n---\n")
-    md.append("Choose with: `python -m pipeline choose <1|2|3> [--note \"...\"]`\n")
-    (ep_dir / "options.md").write_text("\n".join(md), encoding="utf-8")
-
-    # Record in ledger
-    sha = ledger.sha256_file(options_path)
-    ledger.log_event(run_id, "story_options", "completed",
-                     artifact_path=str(options_path.relative_to(REPO)),
-                     artifact_sha256=sha, tokens_in=t_in, tokens_out=t_out)
-    ledger.update_run(run_id, status="awaiting_choice", stage="gate_a")
-
-    print(f"\n{'='*60}")
-    print(f"Gate A: 3 options written to {ep_dir.relative_to(REPO)}/options.md")
-    print(f"Read them, then: python -m pipeline choose <1|2|3> [--note \"...\"]")
-    print(f"{'='*60}")
-
-    return options
-
-
-# ── Stage 4: Story expand (chosen premise → full story) ──────────
-
-def stage_story_expand(run_id: str, rcp: RunContextPack, words: list[dict],
-                       chosen_option: dict, note: str, ep_dir: Path,
-                       client: Anthropic) -> dict:
-    """Expand chosen premise into a full 12-16 beat story."""
-    skill = _load_skill("skill-1b-story-expand.md")
-    skill = (
-        skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
-        .replace("{{WORDS_JSON}}", json.dumps(words, ensure_ascii=False))
-        .replace("{{EPISODE_LOG}}", json.dumps(rcp.episode_log_raw, ensure_ascii=False))
-        .replace("{{CHOSEN_PREMISE}}", json.dumps(chosen_option, ensure_ascii=False, indent=2))
-        .replace("{{JAYON_DIRECTIVE}}", note or "(none)")
-    )
-    expand_system = rcp.for_story_stage() + "\n\n" + skill
-
-    story, t_in, t_out = _call(
-        client, expand_system,
-        "Expand this chosen premise into the full story decision JSON now.",
-        "skill-1b expand", STORY_SCHEMA, run_id, "story_expand",
-    )
-
-    story_path = ep_dir / "story.json"
-    story_path.write_text(json.dumps(story, ensure_ascii=False, indent=2), encoding="utf-8")
-    sha = ledger.sha256_file(story_path)
-    ledger.log_event(run_id, "story_expand", "completed",
-                     artifact_path=str(story_path.relative_to(REPO)),
-                     artifact_sha256=sha, tokens_in=t_in, tokens_out=t_out)
-    ledger.update_run(run_id, stage="story_expand")
-
-    print(f"→ {story.get('title_de')} | {story.get('scenario')} | mains: {story.get('mains')}")
-    return story
-
-
 # ── Co-creation stage (V3): stereotype + human seed → Story Brief ──────────
 # Three human-gated steps (align → diverge → commit). See DESIGN_cocreation_stage.md.
 # For V3 runs these replace the word-based story stages above (kept for the legacy deck flow).
 
-OBLIQUE_STRATEGIES = [
-    "The supporting character controls the space through silence.",
-    "The conflict centers on an object smaller than a coin.",
-    "One character never once breaks their routine, whatever happens.",
-    "The escalation happens entirely through a single repeated gesture.",
-    "The main character treats a mundane chore as a high-stakes emergency.",
-    "The room's temperature or air is the real antagonist.",
-    "Nobody ever raises their voice; the tension is all in restraint.",
-]
-
-
-def stage_align(run_id: str, rcp: RunContextPack, stereotype: dict, seed: str,
-                cast: dict, cefr_level: str, ep_dir: Path, client: Anthropic) -> dict:
-    """Co-creation step 1 (skill-1a): stereotype + seed + cast → location & lesson options."""
-    skill = _load_skill("skill-1a-align.md")
-    skill = (skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
-             .replace("{{STEREOTYPE_JSON}}", json.dumps(stereotype, ensure_ascii=False))
-             .replace("{{SEED}}", seed or "(none — invent something grounded and relatable)")
-             .replace("{{CAST_JSON}}", json.dumps(cast, ensure_ascii=False))
-             .replace("{{CEFR_LEVEL}}", cefr_level))
-    system = rcp.for_story_stage() + "\n\n" + skill
-    aligned, t_in, t_out = _call(
-        client, system,
-        "Produce the alignment JSON (location options + BOTH-kind lesson options) now.",
-        "skill-1a align", ALIGN_SCHEMA, run_id, "align")
-    ep_dir.mkdir(parents=True, exist_ok=True)
-    p = ep_dir / "align.json"
-    p.write_text(json.dumps(aligned, ensure_ascii=False, indent=2), encoding="utf-8")
-    ledger.log_event(run_id, "align", "completed", artifact_path=str(p.relative_to(REPO)),
-                     artifact_sha256=ledger.sha256_file(p), tokens_in=t_in, tokens_out=t_out)
-    ledger.update_run(run_id, stage="align")
-    return aligned
-
-
-def stage_diverge(run_id: str, rcp: RunContextPack, aligned_chosen: dict,
-                  oblique: str | None, ep_dir: Path, client: Anthropic) -> dict:
-    """Co-creation step 2 (skill-1b, HOT temp): chosen params → 3–5 comedic angles."""
-    oblique = oblique or random.choice(OBLIQUE_STRATEGIES)
-    skill = _load_skill("skill-1b-diverge.md")
-    skill = (skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
-             .replace("{{ALIGNED_JSON}}", json.dumps(aligned_chosen, ensure_ascii=False))
-             .replace("{{OBLIQUE_CONSTRAINT}}", oblique))
-    system = rcp.for_story_stage() + "\n\n" + skill
-    diverge, t_in, t_out = _call(
-        client, system, "Produce 3–5 distinct comedic angle options as JSON now.",
-        "skill-1b diverge", DIVERGE_SCHEMA, run_id, "diverge", temperature=1.0)
-    p = ep_dir / "diverge.json"
-    p.write_text(json.dumps({"oblique_constraint": oblique, **diverge}, ensure_ascii=False, indent=2),
-                 encoding="utf-8")
-    ledger.log_event(run_id, "diverge", "completed", artifact_path=str(p.relative_to(REPO)),
-                     artifact_sha256=ledger.sha256_file(p), tokens_in=t_in, tokens_out=t_out)
-    ledger.update_run(run_id, stage="diverge")
-    return diverge
-
-
-def stage_commit(run_id: str, rcp: RunContextPack, aligned_chosen: dict, chosen_angle: dict,
-                 seed: str, ep_dir: Path, client: Anthropic) -> tuple[dict, list[str]]:
-    """Co-creation step 3 (skill-1c, COLD temp): chosen angle → critique → locked Story Brief."""
-    skill = _load_skill("skill-1c-commit.md")
-    skill = (skill.replace("{{CHARACTER_BIBLE}}", rcp.character_bible)
-             .replace("{{ALIGNED_JSON}}", json.dumps(aligned_chosen, ensure_ascii=False))
-             .replace("{{CHOSEN_ANGLE_JSON}}", json.dumps(chosen_angle, ensure_ascii=False))
-             .replace("{{SEED}}", seed or "(none)"))
-    system = rcp.for_story_stage() + "\n\n" + skill
-    out, t_in, t_out = _call(
-        client, system, "Run the critique and output the committed brief JSON now.",
-        "skill-1c commit", BRIEF_COMMIT_SCHEMA, run_id, "commit", temperature=0.2)
-    brief = out.get("brief", {})
-    problems = validate_brief(brief)
-    p = ep_dir / "brief.json"
-    p.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-    ledger.log_event(run_id, "commit", "completed", artifact_path=str(p.relative_to(REPO)),
-                     artifact_sha256=ledger.sha256_file(p), tokens_in=t_in, tokens_out=t_out,
-                     detail={"brief_problems": problems})
-    ledger.update_run(run_id, stage="commit")
-    # Mark the stereotype covered so it drops out of future daily picks.
-    sid = brief.get("stereotype_id")
-    if sid:
-        from . import stereotypes as stlib
-        try:
-            stlib.mark_covered(sid, ep_dir.name)
-        except Exception as e:
-            print(f"  (note: could not mark stereotype {sid} covered: {e})")
-    return brief, problems
-
-
-# ── Stage 5: Screenplay ─────────────────────────────────────────
-
-def word_stem(g: str) -> str:
-    w = g.lower()
-    for a in ARTICLES:
-        if w.startswith(a):
-            return w[len(a):]
-    if (w.endswith("eln") or w.endswith("ern")) and len(w) > 4:
-        return w[:-1]
-    if w.endswith("en") and len(w) > 4:
-        return w[:-2]
-    return w
 
 
 # CEFR caps — from RESEARCH_shortform_pedagogy_framework.md §3.2.
@@ -528,7 +229,6 @@ CEFR_CAPS = {"A1": (30, 8, 30), "A2": (40, 12, 55), "B1": (45, 15, 80)}
 
 
 # ── Co-creation safeguards (anti-slop / anti-didactic — DESIGN_cocreation_stage §4) ──
-DEFAULT_BANNED_TOKENS = ["lernen", "bedeutet", "grammatik", "vokabel", "lektion"]
 
 
 def _all_dialogue_lines(sp: dict) -> list[dict]:
@@ -550,26 +250,6 @@ def find_forbidden_in_dialogue(sp: dict, terms: list[str]) -> list[str]:
             if t and t in low:
                 hits.append(f"forbidden '{t}' in dialogue: \"{line[:50]}\"")
     return hits
-
-
-def validate_brief(brief: dict) -> list[str]:
-    """Structural + safeguard checks on a Story Brief (skill-1c commit output)."""
-    problems = []
-    if not (brief.get("cast", {}).get("main") or "").strip():
-        problems.append("cast.main is required (≥1 main character)")
-    lesson = brief.get("lesson", {})
-    if not ((lesson.get("particle") or "").strip() or (lesson.get("structure") or "").strip()):
-        problems.append("lesson needs a particle OR a structure (both-offered → one chosen)")
-    if len(brief.get("escalation_beats", [])) < 2:
-        problems.append("escalation_beats: need ≥2 (base reality → … → escalation)")
-    for f in ("stereotype_name", "cefr_level", "premise", "button"):
-        if not (brief.get(f) or "").strip():
-            problems.append(f"{f} missing")
-    name = (brief.get("stereotype_name") or "").strip().lower()
-    banned = [b.lower() for b in brief.get("banned_terms", [])]
-    if name and not any(name in b or b in name for b in banned):
-        problems.append("banned_terms should include the stereotype name (kept out of dialogue)")
-    return problems
 
 
 def validate_screenplay(sp: dict) -> list[str]:
@@ -950,37 +630,6 @@ def build_refs_manifest(prompts: dict, run_id: str, ep_dir: Path) -> dict:
     return {"run_id": run_id, "episode": ep_dir.name, "segments": segments}
 
 
-def substitute_canon(prompts: dict) -> dict:
-    """Mechanically substitute {{STYLE_BLOCK}} and {{CHAR_BLOCK:Name}} placeholders
-    in both engine packages (seedance.prompt, omni.base_prompt, omni.edit_turns)."""
-    canon = (REPO / "prompts" / "canon" / "canon_blocks.md").read_text(encoding="utf-8")
-
-    def block(header):
-        m = re.search(rf"## {re.escape(header)}\n(.+?)(?=\n## |\Z)", canon, re.S)
-        if not m:
-            first = header.split(":")[-1].strip().split()[0]
-            m = re.search(rf"## CHAR_BLOCK: {re.escape(first)}[^\n]*\n(.+?)(?=\n## |\Z)", canon, re.S)
-        return m.group(1).strip() if m else f"[MISSING CANON: {header}]"
-
-    style = block("STYLE_BLOCK")
-
-    def sub(text):
-        text = text.replace("{{STYLE_BLOCK}}", style)
-        return re.sub(r"\{\{CHAR_BLOCK:([^}]+)\}\}", lambda m: block(f"CHAR_BLOCK: {m.group(1).strip()}"), text)
-
-    for sc in prompts.get("scenes", []):
-        sd = sc.get("seedance", {})
-        if isinstance(sd, dict) and "prompt" in sd:
-            sd["prompt"] = sub(sd.get("prompt") or "")
-        om = sc.get("omni", {})
-        if isinstance(om, dict):
-            if "base_prompt" in om:
-                om["base_prompt"] = sub(om.get("base_prompt") or "")
-            if "edit_turns" in om:
-                om["edit_turns"] = [sub(t) for t in om.get("edit_turns", [])]
-    return prompts
-
-
 def stage_prompts(run_id: str, rcp: RunContextPack, sp: dict,
                   ep_dir: Path, client: Anthropic) -> dict:
     """V3: screenplay + storyboard panels → ONE thin multi-shot Seedance prompt per 15s segment
@@ -1030,134 +679,11 @@ def stage_prompts(run_id: str, rcp: RunContextPack, sp: dict,
     return prompts
 
 
-# ── Stage 8: Finalize ────────────────────────────────────────────
-
-def stage_finalize(run_id: str, story: dict, sp: dict, prompts: dict,
-                   words: list[dict], ep_dir: Path):
-    """Write episode.md, save to series memory, mark run complete."""
-    # Pretty episode.md
-    md = [
-        f"# {sp.get('title_de', story.get('title_de'))}\n",
-        f"Scenario: {story.get('scenario')} · Environment: {sp.get('environment')}",
-        f"Mains: {', '.join(story.get('mains', []))} · Cameos: {', '.join(story.get('cameos', []))}",
-        f"Hook: {story.get('hook_visual')}\nHuman beat: {story.get('human_beat')}\n",
-    ]
-    for sc in sp.get("scenes", []):
-        md.append(f"\n## Scene {sc['scene_number']} — {sc['german_word']} ({sc['duration_s']}s)")
-        md.append(f"*{sc['setting']}*\n\n{sc['action_en']}\n")
-        for d in sc.get("dialogue", []):
-            line = '- **' + d['speaker'] + ':** „' + d['german'] + '"  *(' + d.get('english', '') + ')*'
-            md.append(line)
-        md.append(f"\n> learns: {sc.get('learning_check', '')}")
-        pr = next((p for p in prompts.get("scenes", []) if p.get("scene_number") == sc["scene_number"]), {})
-        if pr:
-            sd_text = pr.get("seedance", {}).get("prompt", "")
-            om_text = pr.get("omni", {}).get("base_prompt", "")
-            md.append(f'\n<details><summary>Seedance prompt</summary>\n\n```\n{sd_text}\n```\n</details>')
-            md.append(f'\n<details><summary>Omni base prompt</summary>\n\n```\n{om_text}\n```\n</details>')
-    (ep_dir / "episode.md").write_text("\n".join(md), encoding="utf-8")
-
-    # Save to series memory
-    ledger.save_episode(
-        run_id=run_id,
-        title_de=story.get("title_de", ""),
-        scenario=story.get("scenario", ""),
-        environment=sp.get("environment", ""),
-        mains=story.get("mains", []),
-        cameos=story.get("cameos", []),
-        word_positions=[w["position"] for w in words],
-    )
-
-    # Mark complete
-    ledger.log_event(run_id, "finalize", "completed",
-                     artifact_path=str((ep_dir / "episode.md").relative_to(REPO)))
-    run = ledger.update_run(run_id, status="completed", stage="finalize",
-                            completed_at="now()")
-
-    print(f"\n{'='*60}")
-    print(f"✅ Run complete! Saved to {ep_dir.relative_to(REPO)}/")
-    print(f"   Total cost: ~{run.get('cost_cents', 0)} cents")
-    print(f"   Read episode.md and judge the quality.")
-    print(f"{'='*60}")
-
-
-# ── Stage 8.5: Video generation (per-scene clips) ────────────────
-
-def stage_generate(run_id: str, sp: dict, ep_dir: Path, provider_name: str = "mock") -> list[Path]:
-    """Generate one clip per scene via the chosen video provider (mock | fal | …).
-    Reads prompts/scene_NN.seedance.json + refs_manifest; writes clips/scene_NN.mp4."""
-    from .providers import get_video_provider
-    provider = get_video_provider(provider_name)
-    pdir, clips = ep_dir / "prompts", ep_dir / "clips"
-    clips.mkdir(parents=True, exist_ok=True)
-    manifest = {}
-    mp = pdir / "refs_manifest.json"
-    if mp.exists():
-        manifest = json.loads(mp.read_text(encoding="utf-8")).get("scenes", {})
-
-    print(f"→ generating {len(sp.get('scenes', []))} clips via provider '{provider.name}'…")
-    out = []
-    for sc in sp.get("scenes", []):
-        n = sc.get("scene_number")
-        seedance = {}
-        sf = pdir / f"scene_{n:02d}.seedance.json"
-        if sf.exists():
-            seedance = json.loads(sf.read_text(encoding="utf-8"))
-        refs = manifest.get(str(n), [])
-        dest = clips / f"scene_{n:02d}.mp4"
-        try:
-            provider.generate(sc, seedance, refs, dest)
-            out.append(dest)
-            print(f"  ✓ scene {n} → {dest.name}")
-            ledger.log_event(run_id, "generate", "completed",
-                             artifact_path=str(dest.relative_to(REPO)),
-                             detail={"scene": n, "provider": provider.name})
-        except Exception as e:
-            print(f"  ✗ scene {n}: {e}")
-            ledger.log_event(run_id, "generate", "failed",
-                             detail={"scene": n, "provider": provider.name, "error": str(e)})
-            raise
-    ledger.update_run(run_id, stage="generate")
-    print(f"✅ {len(out)} clips in {clips.relative_to(REPO)}/  (provider: {provider.name})")
-    return out
-
-
-# ── Stage 9: Caption (Instagram post copy) ───────────────────────
-
-def _norm_hashtags(tags: list[str]) -> list[str]:
-    out, seen = [], set()
-    for t in tags:
-        t = "#" + t.lstrip("#").strip().replace(" ", "")
-        if t != "#" and t.lower() not in seen:
-            seen.add(t.lower())
-            out.append(t)
-    return out
-
-
-def stage_caption(run_id: str, rcp: RunContextPack, story: dict,
-                  words: list[dict], ep_dir: Path, client: Anthropic) -> dict:
-    """Generate the Instagram caption + hashtags (skill-4). Writes caption.json +
-    caption.md; the post-ready copy for M6."""
-    skill = _load_skill("skill-4-caption.md")
-    skill = (skill.replace("{{STORY_JSON}}", json.dumps(story, ensure_ascii=False))
-             .replace("{{WORDS_JSON}}", json.dumps(words, ensure_ascii=False)))
-    system = f"# PROJECT MISSION\n{rcp.mission}\n\n" + skill
-
-    cap, t_in, t_out = _call(
-        client, system, "Write the Instagram caption JSON now.",
-        "skill-4 caption", CAPTION_SCHEMA, run_id, "caption", max_tokens=2000,
-    )
-    cap["hashtags"] = _norm_hashtags(cap.get("hashtags", []))
-
-    ep_dir.mkdir(parents=True, exist_ok=True)
-    (ep_dir / "caption.json").write_text(json.dumps(cap, ensure_ascii=False, indent=2), encoding="utf-8")
-    post = cap.get("caption", "").rstrip() + "\n\n" + " ".join(cap.get("hashtags", []))
-    (ep_dir / "caption.md").write_text(post, encoding="utf-8")
-
-    sha = ledger.sha256_file(ep_dir / "caption.json")
-    ledger.log_event(run_id, "caption", "completed",
-                     artifact_path=str((ep_dir / "caption.md").relative_to(REPO)),
-                     artifact_sha256=sha, tokens_in=t_in, tokens_out=t_out)
-
-    print(f"\n✅ caption → {ep_dir.relative_to(REPO)}/caption.md ({len(cap.get('hashtags', []))} hashtags)")
-    return cap
+# ── Removed 2026-08-02 (Phase 1 quarantine) ──────────────────────────
+# V2 word-deck: fetch_words/fetch_words_by_positions/stage_words/
+# stage_story_options/stage_story_expand/stage_caption + their schemas.
+# Superseded co-creation: stage_align/stage_diverge/stage_commit/validate_brief
+# (skill-1-story-strategist owns this now).
+# Broken since the V3 reshape (all read screenplay['scenes'], a shape that no
+# longer exists): substitute_canon · stage_finalize · stage_generate.
+# Recover with: git show v3-wizard-archive:pipeline/stages.py
