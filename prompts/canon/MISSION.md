@@ -1,6 +1,6 @@
 # MISSION — Stereotypical German
 
-> version: 2.0 · canon file · 2026-07-29 · **injected into every stage, on every call**
+> version: 2.1 · canon file · 2026-08-02 · **injected into every stage, on every call**
 > The shortest possible statement of what we are making, for whom, and at what bar. Everything else is detail and lives elsewhere (§7). **This document exists to align judgement when no rule covers the case.**
 
 ## 1 · What we are making
@@ -44,10 +44,11 @@ Someone learning German who is **scrolling**, not sitting in a classroom. They d
 | How do I turn a lesson into a scene? | `STORY_SYSTEM.md` |
 | Does this actually teach, and how do I check? | `PEDAGOGY.md` |
 | How does it look and sound? | `TREATMENT.md` |
-| What is taught, in what order? | the curriculum |
-| Model syntax and limits | `prompting_guidelines_seedance.md` |
+| What is taught, in what order? | `resources/curriculum.json` |
+| Model syntax and limits | `prompting_guidelines_seedance.md` (video) · `prompting_guidelines_nanobanana.md` (image) |
 
 ---
 ### Revision history
+- **v2.1 — 2026-08-02.** §7 pointers updated: the curriculum is now the locked `resources/curriculum.json`; the image-model canon (`prompting_guidelines_nanobanana.md`) added beside the video canon. No change to the mission itself.
 - **v2.0 — 2026-07-29.** Rewritten for the story-universe pipeline. The previous version described the retired V2 shape (ten deck-derived words → ten scenes → ten clips, a 605-word course) and used vocabulary now banned by `TREATMENT.md` §1. Reframed around the two things that must always be true, the bar, and the judgement calls; specifics delegated to the four knowledge documents.
 - **v1.0 — 2026-07-18.** Original (V2 pipeline).

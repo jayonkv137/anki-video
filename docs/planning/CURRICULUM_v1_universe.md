@@ -1,6 +1,6 @@
 # CURRICULUM v2 — The Universe's Language Spine (A1 → B1), full lesson list
 
-> **Status: DRAFT FOR LOCK (2026-07-29, v2.1).** v2.1 per Jayon: the per-module items are **teaching ATOMS (an inventory), not one-reel-each** — at ideation a module (the story-arc unit, one lead character) gets a **block plan** that packs atoms into universal **30-second blocks** (1–3 related atoms per block, or one atom stretched over 2–3 blocks). v2: narrative removed entirely (story lives in `NARRATIVE_BIBLE_seed.md`, matched in-platform) and every module decomposed into definite atoms so it is always exactly clear what is being taught. Basis: Jayon's four research docs + Goethe/BAMF milestones (A1 word list ≈650, verified) + Nicos Weg scale (~76 micro-lessons/level, verified) + the character bible's vocabulary domains.
+> **Status: LOCKED (2026-08-02, v2.2).** Machine artifact: **`resources/curriculum.json` v1.0 (REGISTRY-pinned — agents read that, never this file).** v2.2: word/pace budgets harmonized to `PEDAGOGY.md` §2–§3, the hash-pinned authority (v2.1's ~40–75 @ A1 assumed continuous native-pace speech — impossible at level; see BUILD_PLAN_v4_studio C1); stale subtitle open-item struck (decided in PEDAGOGY §5.2). v2.1 per Jayon: the per-module items are **teaching ATOMS (an inventory), not one-reel-each** — at ideation a module (the story-arc unit, one lead character) gets a **block plan** that packs atoms into universal **30-second blocks** (1–3 related atoms per block, or one atom stretched over 2–3 blocks). v2: narrative removed entirely (story lives in `NARRATIVE_BIBLE_seed.md`, matched in-platform) and every module decomposed into definite atoms so it is always exactly clear what is being taught. Basis: Jayon's four research docs + Goethe/BAMF milestones (A1 word list ≈650, verified) + Nicos Weg scale (~76 micro-lessons/level, verified) + the character bible's vocabulary domains.
 > v1 (superseded): module-level matrix with narrative-affinity column.
 
 ## 0 · Locked design decisions (Jayon)
@@ -8,7 +8,7 @@
 
 ## 1 · The 30-SECOND BLOCK (the universal production law — Jayon, v2.1)
 **Every reel is a ~30-second block. Always.** (= the existing production unit: one episode of 2×15s Seedance segments — the whole downstream pipeline already runs on exactly this.) Uniform format, fixed cost, no per-reel format decisions. (The pipeline technically supports 45s/3 segments; using it is a rare, explicit exception.)
-Block budget (from the research): at A1 pace (80–100 WPM) one block holds **~40–75 spoken words ≈ 8–12 short lines** (A2 ~60–95, B1 ~75–110), **≤4–5 new words** (A2 ≤6, B1 ≤8), each taught pattern heard **≥2×**, and the block must land for a drop-in viewer with zero context.
+Block budget (**= `PEDAGOGY.md` §2–§3, the canon authority — v2.2**): at A1 pace (~80 WPM, with PEDAGOGY's ⅓-silence pause architecture) one block holds **≤30 spoken words ≈ 8–12 very short lines** (A2 ≤55 · B1 ≤80), **≤5 new words** (A2 ≤6 · B1 ≤8), each taught pattern heard **≥2×**, and the block must land for a drop-in viewer with zero context.
 
 **The packing law (atoms → blocks, n:m).** The 164 items in §3 are **teaching ATOMS** — the definite inventory of what must be taught, NOT one-reel-each. At ideation, atoms are **packed into blocks** story-first:
 - One block teaches **ONE communicative function**, which may bundle **1–3 tightly-related atoms** (e.g. Moin! + `Ich bin…` + `Wie heißt du?` = one "introduce yourself" scene — one function, three atoms, legit);
@@ -324,12 +324,12 @@ Block budget (from the research): at A1 pace (80–100 WPM) one block holds **~4
 
 **Totals: A1 = 61 · A2 = 56 · B1 = 47 → 164 lessons (+ Season 0 intro reels ≈ 168–170 total).**
 
-## 4 · Guardrails (per level; skill-2q audits + flags)
+## 4 · Guardrails (per level; numbers = `PEDAGOGY.md` §2–§3, the single source; the QC audit flags/blocks)
 | | A1 | A2 | B1 |
 |---|---|---|---|
-| Spoken words / reel (at pace) | ~40–75 | ~60–95 | ~75–110 |
+| Spoken words / reel | ≤30 | ≤55 | ≤80 |
 | MLU (max words/sentence) | 8 | 12 | 15 |
-| Pace (WPM) | 80–100 | 100–130 | 130–150 |
+| Pace (WPM, target) | ~80 | ~100 | ~120–130 |
 | New active words / lesson | ≤5 | ≤6 | ≤8 |
 | Target pattern repetitions | ≥2 | ≥2 | ≥2 |
 | Prohibited until introduced | Perfekt*, Nebensätze, Genitiv, Passiv, KII* | Genitiv, Passiv, KII (beyond „hätte gern"), Plusquamperfekt | — |
@@ -343,4 +343,4 @@ Tags live on the STEREOTYPE side (never on modules): `cefr_band` · `module_affi
 `resources/curriculum.json` (this list, machine-readable, `status: planned|made` per lesson) + registry pin → `UNIVERSE_STATE` artifact → Showrunner agent (proposes next lesson + story options; Strategist chat consumes them) → Step 01 becomes "Next lesson" → skill-2q guardrail audit → stereotype batch-tagging.
 
 ## 7 · Open (deliberately)
-All narrative (see `NARRATIVE_BIBLE_seed.md`) · Kati's intro · subtitle policy per level (static-clause vs karaoke conflict — decide at subtitle-engine revisit) · posting cadence · exemplar lines are *seeds*, freely rewritable at creation time.
+All narrative (see `NARRATIVE_BIBLE_seed.md`) · Kati's intro · posting cadence · exemplar lines are *seeds*, freely rewritable at creation time. *(The subtitle-policy item was resolved 2026-07-29 in `PEDAGOGY.md` §5.2: static colour-coded clauses — struck here at v2.2.)*

@@ -2,6 +2,20 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-08-02 — PHASE 0: reconcile & lock (the V4 build starts)
+
+**The governing doc:** `docs/planning/BUILD_PLAN_v4_studio.md` — full-system review after reading every document/skill/module + the four research reports: 10-point contradiction audit (C1–C10), keep/rewrite/delete, the new architecture, UI design (no Figma — clickable HTML wireframe → real shell), phased execution. **All seven decisions D1–D7 approved by Jayon as recommended.**
+
+- **Curriculum LOCKED.** C1 caught before the lock: v2.1's word budgets (~40–75 @ A1) contradicted hash-pinned `PEDAGOGY.md` (≤30) *and* the math (75 words/30s = native newsreader pace). Harmonized → **CURRICULUM v2.2** → **`resources/curriculum.json` v1.0**: 30 modules · 164 atoms (A1 61 · A2 56 · B1 47), built by `scripts/build_curriculum.py` (idempotent, validated, source-hashed), **REGISTRY-pinned**. Status (`taught`/`taught_in`) lives in UNIVERSE_STATE, never in the artifact.
+- **`prompting_guidelines_nanobanana.md` v1.0** — the image-model canon (from the NBP deep-research manual): the **token law** (`Character-X` — the full names' German common nouns dilute identity), 5/6/3 slot budget + characters-first/style-last ordering, 2K sheet geometry with exact 20px-gutter slice offsets, **Lock–Change–Constraint** editing + the `M ≥ 0.66` edit-vs-regenerate rule, constraints-block instead of negative prompts (naming artifacts *causes* them), temperature locked at 1.0, ≤3-deep chaining cap.
+- **TREATMENT v1.2** — §9 corrected to NBP's real mechanics (v1.1's style-first order and 6-human-ref budget were contradicted by the model) · token exception (§9.4/§19) · §14 stage-scoped (negative list = video only) · Rolf asset note withdrawn (per `PLAN_production_canon` §7).
+- **PIPELINE v1.2** — §3.9 "THE DIRECTOR (overseer)" → **THE CHANGE PROTOCOL**: propose→confirm→apply is a capability of the continuous chat, not an agent; the three-way "Director" name collision (phase agent · overseer station · old floating window) resolved. Idempotency guarantee + modify-before-confirm added.
+- **SHOW_BIBLE v1.2** (§13 token exception) · **MISSION v2.1** (§7 → curriculum.json + both engine canons).
+- **REGISTRY v1.14** — pins nanobanana + curriculum.json; **retires `Characters-Main-Sheet.md`** (superseded by SHOW_BIBLE §6 yet still registry-blessed and RCP-injected into every story call — the MISSION-rot pattern, caught live) **and `canon_blocks.md`** (folded into TREATMENT §10; the retired file still said **"felt"** — a banned word — and was being substituted into every legacy storyboard prompt). Both files stay on disk for the legacy wizard only, dying with it in Phase 1. `prompting_guidelines_omni.md` **deleted** (retired 07-29, zero live references). `verify_canon()` **GREEN — 9 files, now the right nine.**
+- **🎉 NBP NATIVE-API TEST PASSED** (the plan's riskiest unknown, front-loaded): `gemini-3-pro-image` is live on the existing `GOOGLE_API_KEY` — test sheet generated (3 panels, white gutters respected, 1376×768) **and `thoughtSignature` returned** (stateful board editing works). **No FAL_KEY needed for the image side** — real storyboards, the style plate, and the C1 identity validation are unblocked TODAY. FAL_KEY remains only for Seedance video.
+
+**Next:** Phase 1 (the spine): `pipeline/llm.py` (schema-enforced, loud failures) · `pipeline/context.py` (per-phase canon contracts) · `pipeline/universe_state.py` (strata 2–5) · v4 brief/screenplay schemas · quarantine the V3 build.
+
 ## 2026-07-29 — THE V4 PIVOT + the production canon (six hash-pinned documents)
 
 **The pivot.** From "daily standalone stereotype reels" → a **curriculum-driven serialized story universe**: four characters pulled from their own worlds into Germany, taught across **A1→B1** in ~170 × 30-second episodes. Basis: four research docs Jayon supplied (narrative SLA design, DaF syllabus taxonomy, micro-learning cognition, story-ideation architecture) + twelve invideo production guides.

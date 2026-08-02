@@ -1,0 +1,2142 @@
+{
+  "meta": {
+    "version": "1.0",
+    "locked": "2026-08-02",
+    "source": "docs/planning/CURRICULUM_v1_universe.md",
+    "source_version": "2.2",
+    "source_sha256": "933e224e574095b806f46896f30e77f7fb9045acf0bd399a760370c8e8eb65f1",
+    "totals": {
+      "modules": 30,
+      "atoms": 164,
+      "A1": 61,
+      "A2": 56,
+      "B1": 47
+    },
+    "note": "Immutable plan (UNIVERSE_STATE stratum 1/5). Teaching status (planned|taught, taught_in[]) lives in UNIVERSE_STATE, never here. Guardrail numbers are PEDAGOGY.md §2–§3, the single source."
+  },
+  "block_law": {
+    "duration_s": 30,
+    "segments": "2 x 15s Seedance clips (45s / 3 segments = rare, explicit exception)",
+    "packing": "1 block = ONE communicative function = 1-3 tightly-related atoms; an atom may stretch across 2-3 blocks; never stack unrelated patterns; Synthese atoms = zero-new blocks (story-heavy slots)",
+    "formats": [
+      "single",
+      "mini_arc",
+      "campaign"
+    ],
+    "default_format": "single"
+  },
+  "guardrails": {
+    "A1": {
+      "max_words": 30,
+      "max_sentence_words": 8,
+      "wpm_target": 80,
+      "max_new_words": 5,
+      "min_pattern_reps": 2,
+      "prohibited_until_introduced": [
+        "Perfekt (except sanctioned chunks)",
+        "Nebensaetze",
+        "Genitiv",
+        "Passiv",
+        "Konjunktiv II (except sanctioned chunks)"
+      ]
+    },
+    "A2": {
+      "max_words": 55,
+      "max_sentence_words": 12,
+      "wpm_target": 100,
+      "max_new_words": 6,
+      "min_pattern_reps": 2,
+      "prohibited_until_introduced": [
+        "Genitiv",
+        "Passiv",
+        "Konjunktiv II beyond 'haette gern'",
+        "Plusquamperfekt"
+      ]
+    },
+    "B1": {
+      "max_words": 80,
+      "max_sentence_words": 15,
+      "wpm_target": 125,
+      "max_new_words": 8,
+      "min_pattern_reps": 2,
+      "prohibited_until_introduced": []
+    }
+  },
+  "proper_noun_rule": "fixed cast; max 1 new proper noun per module",
+  "modules": [
+    {
+      "id": "A1.1",
+      "level": "A1",
+      "title": "Ankunft",
+      "grammar_cluster": "sein (sg) · V2 · W-Fragen",
+      "functions": "greet, introduce, ask who/where",
+      "atoms": [
+        {
+          "id": "A1.1.1",
+          "module": "A1.1",
+          "title": "Moin!",
+          "pattern": "greetings + `Ich bin [Name]`",
+          "exemplar_de": "„Moin! Ich bin Rolf.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.1.2",
+          "module": "A1.1",
+          "title": "Wie heißt du?",
+          "pattern": "`heißen`: question + answer (du)",
+          "exemplar_de": "„Wie heißt du?\" — „Ich heiße Kati.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.1.3",
+          "module": "A1.1",
+          "title": "Wer bist du?",
+          "pattern": "`du bist` / `Wer …?`",
+          "exemplar_de": "„Wer bist du?\" — „Ich bin neu hier.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.1.4",
+          "module": "A1.1",
+          "title": "Was ist das?",
+          "pattern": "deixis `Das ist …`",
+          "exemplar_de": "„Was ist das?\" — „Das ist Bier.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.1.5",
+          "module": "A1.1",
+          "title": "Wo bin ich?",
+          "pattern": "`Wo …?` + `in` + place",
+          "exemplar_de": "„Wo bin ich? Ich bin in Deutschland?!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.1.6",
+          "module": "A1.1",
+          "title": "Woher kommst du?",
+          "pattern": "`kommen aus`",
+          "exemplar_de": "„Woher kommst du?\" — „Ähm … von weit weg.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A1.2",
+      "level": "A1",
+      "title": "Wer bin ich?",
+      "grammar_cluster": "haben · Artikel · Negation · Zahlen",
+      "functions": "identify, deny, count",
+      "atoms": [
+        {
+          "id": "A1.2.1",
+          "module": "A1.2",
+          "title": "der, die, das",
+          "pattern": "gender articles (the color-code debut)",
+          "exemplar_de": "„Der Zug. Die Straße. Das Brot.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.2.2",
+          "module": "A1.2",
+          "title": "ein / eine",
+          "pattern": "indefinite article + sein",
+          "exemplar_de": "„Das ist eine Wurst. Ich bin eine Wurst!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.2.3",
+          "module": "A1.2",
+          "title": "Ich habe …",
+          "pattern": "`haben` + object",
+          "exemplar_de": "„Ich habe ein Problem.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.2.4",
+          "module": "A1.2",
+          "title": "kein / keine",
+          "pattern": "negation with kein",
+          "exemplar_de": "„Ich habe kein Geld. Ich habe keine Idee.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.2.5",
+          "module": "A1.2",
+          "title": "nicht",
+          "pattern": "negation with nicht",
+          "exemplar_de": "„Ich bin nicht wie sie.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.2.6",
+          "module": "A1.2",
+          "title": "Zahlen & Alter",
+          "pattern": "numbers 1–100 + `Wie alt …?`",
+          "exemplar_de": "„Wie alt bist du?\" — „Zweiundvierzig.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.2.7",
+          "module": "A1.2",
+          "title": "Synthese: Wer bin ich?",
+          "pattern": "zero new — recycles the module",
+          "exemplar_de": "„Ich bin Bert. Ich bin ein Bier. Na und?\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A1.3",
+      "level": "A1",
+      "title": "Essen & Trinken",
+      "grammar_cluster": "Akkusativ · möchten · bestellen",
+      "functions": "order, ask price, like",
+      "atoms": [
+        {
+          "id": "A1.3.1",
+          "module": "A1.3",
+          "title": "Hunger!",
+          "pattern": "chunk `Hunger/Durst haben`",
+          "exemplar_de": "„Ich habe Hunger. Ich habe SO einen Hunger.\"",
+          "synthese": false,
+          "chunk": true,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.3.2",
+          "module": "A1.3",
+          "title": "Ich möchte …",
+          "pattern": "`möchten` + Akk (einen!)",
+          "exemplar_de": "„Ich möchte einen Kaffee.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.3.3",
+          "module": "A1.3",
+          "title": "Bitte & Danke",
+          "pattern": "ordering ritual frame",
+          "exemplar_de": "„Einen Kaffee, bitte.\" — „Danke schön!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.3.4",
+          "module": "A1.3",
+          "title": "Was möchtest du?",
+          "pattern": "möchten question↔answer",
+          "exemplar_de": "„Was möchtest du?\" — „Nichts. Egal.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.3.5",
+          "module": "A1.3",
+          "title": "Was kostet das?",
+          "pattern": "`kosten` + prices (recycles Zahlen)",
+          "exemplar_de": "„Was kostet das?\" — „Drei Euro fünfzig.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.3.6",
+          "module": "A1.3",
+          "title": "essen & trinken",
+          "pattern": "present conjugation ich/du",
+          "exemplar_de": "„Ich esse das nicht. Ich trinke nur Bier.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.3.7",
+          "module": "A1.3",
+          "title": "Synthese: Im Café",
+          "pattern": "zero new — full ordering scene",
+          "exemplar_de": "„Zwei Kaffee und ein Wasser, bitte.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A1.4",
+      "level": "A1",
+      "title": "Orientierung",
+      "grammar_cluster": "feste Dativ-Präp. (zu/mit) · es gibt · Richtungen",
+      "functions": "ask/give the way",
+      "atoms": [
+        {
+          "id": "A1.4.1",
+          "module": "A1.4",
+          "title": "Wo ist …?",
+          "pattern": "`Wo ist …?` + hier/da",
+          "exemplar_de": "„Wo ist der Bahnhof?\" — „Da.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.4.2",
+          "module": "A1.4",
+          "title": "Ich gehe zu …",
+          "pattern": "`gehen zu` + Dat (chunk)",
+          "exemplar_de": "„Ich gehe zum Bahnhof.\"",
+          "synthese": false,
+          "chunk": true,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.4.3",
+          "module": "A1.4",
+          "title": "Mit dem Bus",
+          "pattern": "`fahren mit` + Dat (chunk)",
+          "exemplar_de": "„Ich fahre mit dem Bus.\"",
+          "synthese": false,
+          "chunk": true,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.4.4",
+          "module": "A1.4",
+          "title": "Es gibt …",
+          "pattern": "existence frame",
+          "exemplar_de": "„Hier gibt es einen Club?!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.4.5",
+          "module": "A1.4",
+          "title": "links, rechts, geradeaus",
+          "pattern": "direction words (TPR-friendly)",
+          "exemplar_de": "„Immer geradeaus, dann links.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.4.6",
+          "module": "A1.4",
+          "title": "Synthese: Der Weg",
+          "pattern": "zero new — asking the way scene",
+          "exemplar_de": "„Entschuldigung, wie komme ich zur Stadt?\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A1.5",
+      "level": "A1",
+      "title": "Einkaufen",
+      "grammar_cluster": "Akk-Konsolidierung · Mengen · Sie-Frage",
+      "functions": "shop, pay, need",
+      "atoms": [
+        {
+          "id": "A1.5.1",
+          "module": "A1.5",
+          "title": "Ich brauche …",
+          "pattern": "`brauchen` + Akk",
+          "exemplar_de": "„Ich brauche einen Plan. Und Brot.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.5.2",
+          "module": "A1.5",
+          "title": "Wie viel?",
+          "pattern": "quantity + teuer/billig",
+          "exemplar_de": "„Wie viel kostet das? Das ist teuer!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.5.3",
+          "module": "A1.5",
+          "title": "Ich nehme …",
+          "pattern": "decision verb + Akk",
+          "exemplar_de": "„Okay. Ich nehme das.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.5.4",
+          "module": "A1.5",
+          "title": "Das Pfand",
+          "pattern": "Pfand system vocab (Flasche, zurück)",
+          "exemplar_de": "„Die Flasche? Das ist Geld!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.5.5",
+          "module": "A1.5",
+          "title": "Haben Sie …?",
+          "pattern": "formal Sie-question in shops",
+          "exemplar_de": "„Haben Sie das auch in Schwarz?\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.5.6",
+          "module": "A1.5",
+          "title": "Synthese: Im Supermarkt",
+          "pattern": "zero new — shopping run",
+          "exemplar_de": "„Ich brauche nur eine Sache …\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A1.6",
+      "level": "A1",
+      "title": "Wohnen",
+      "grammar_cluster": "Possessive · Zimmer · erste Adjektive",
+      "functions": "describe home",
+      "atoms": [
+        {
+          "id": "A1.6.1",
+          "module": "A1.6",
+          "title": "mein & dein",
+          "pattern": "possessives + sein",
+          "exemplar_de": "„Das ist mein Zimmer. Das ist dein Problem.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.6.2",
+          "module": "A1.6",
+          "title": "Ich wohne …",
+          "pattern": "`wohnen in` + rooms",
+          "exemplar_de": "„Ich wohne jetzt hier. In einer Bäckerei.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.6.3",
+          "module": "A1.6",
+          "title": "Möbel",
+          "pattern": "furniture nouns + es gibt (recycled)",
+          "exemplar_de": "„Es gibt ein Bett, einen Tisch — fertig.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.6.4",
+          "module": "A1.6",
+          "title": "steht & liegt",
+          "pattern": "static position (light chunks)",
+          "exemplar_de": "„Der Schlüssel liegt auf dem Tisch.\"",
+          "synthese": false,
+          "chunk": true,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.6.5",
+          "module": "A1.6",
+          "title": "groß, klein, schön",
+          "pattern": "predicative adjectives",
+          "exemplar_de": "„Das Zimmer ist klein. Aber es ist schön.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.6.6",
+          "module": "A1.6",
+          "title": "Synthese: Meine Wohnung",
+          "pattern": "zero new — home tour",
+          "exemplar_de": "„Willkommen! Das ist … alles.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A1.7",
+      "level": "A1",
+      "title": "Mein Tag",
+      "grammar_cluster": "Uhrzeit · trennbare Verben · Wochentage",
+      "functions": "tell time, routines",
+      "atoms": [
+        {
+          "id": "A1.7.1",
+          "module": "A1.7",
+          "title": "Wie spät ist es?",
+          "pattern": "clock time (full hours)",
+          "exemplar_de": "„Es ist sieben Uhr.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.7.2",
+          "module": "A1.7",
+          "title": "Um sieben Uhr",
+          "pattern": "`um … Uhr` time adverbial",
+          "exemplar_de": "„Ich komme um sieben. Pünktlich!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.7.3",
+          "module": "A1.7",
+          "title": "Ich stehe auf",
+          "pattern": "FIRST separable verb (the bracket!)",
+          "exemplar_de": "„Ich stehe um sechs Uhr auf.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.7.4",
+          "module": "A1.7",
+          "title": "einkaufen & anrufen",
+          "pattern": "separables consolidated",
+          "exemplar_de": "„Ich rufe dich an. Später.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.7.5",
+          "module": "A1.7",
+          "title": "Die Woche",
+          "pattern": "weekdays + `am`",
+          "exemplar_de": "„Am Montag? Nein. Am Dienstag? Nein.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.7.6",
+          "module": "A1.7",
+          "title": "Synthese: Ein Tag",
+          "pattern": "zero new — routine montage",
+          "exemplar_de": "„Aufstehen. Kaffee. Arbeiten. Schlafen.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A1.8",
+      "level": "A1",
+      "title": "Regeln",
+      "grammar_cluster": "Modalverben (können/müssen/dürfen) · Imperativ Sie",
+      "functions": "rules & permission",
+      "atoms": [
+        {
+          "id": "A1.8.1",
+          "module": "A1.8",
+          "title": "Ich kann …",
+          "pattern": "`können` + Inf (bracket)",
+          "exemplar_de": "„Ich kann das. Glaube ich.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.8.2",
+          "module": "A1.8",
+          "title": "Kannst du …?",
+          "pattern": "können question + negative",
+          "exemplar_de": "„Kannst du helfen?\" — „Ich kann nicht.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.8.3",
+          "module": "A1.8",
+          "title": "Ich muss …",
+          "pattern": "`müssen` + Inf",
+          "exemplar_de": "„Ich muss nach Hause. Wirklich.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.8.4",
+          "module": "A1.8",
+          "title": "Man darf das nicht!",
+          "pattern": "`dürfen` + `man` (the rules engine)",
+          "exemplar_de": "„Man darf hier nicht parken. NIE.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.8.5",
+          "module": "A1.8",
+          "title": "Warten Sie!",
+          "pattern": "Imperativ Sie",
+          "exemplar_de": "„Warten Sie! Kommen Sie mit!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.8.6",
+          "module": "A1.8",
+          "title": "Synthese: Die Regeln",
+          "pattern": "zero new — rule-encounter gauntlet",
+          "exemplar_de": "„Regeln sind Regeln.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A1.9",
+      "level": "A1",
+      "title": "Wetter & Small Talk",
+      "grammar_cluster": "es-Sätze · gern · Partikel-Chunks",
+      "functions": "comment, chat",
+      "atoms": [
+        {
+          "id": "A1.9.1",
+          "module": "A1.9",
+          "title": "Das Wetter",
+          "pattern": "`Es regnet / Die Sonne scheint`",
+          "exemplar_de": "„Es regnet. Natürlich regnet es.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.9.2",
+          "module": "A1.9",
+          "title": "Kalt.",
+          "pattern": "weather adjectives + `Es ist …`",
+          "exemplar_de": "„Es ist kalt.\" — „Jo. Kalt.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.9.3",
+          "module": "A1.9",
+          "title": "Ach so! Doch!",
+          "pattern": "discourse particles as chunks",
+          "exemplar_de": "„Doch!\" — „Ne.\" — „Doch.\"",
+          "synthese": false,
+          "chunk": true,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.9.4",
+          "module": "A1.9",
+          "title": "Ich trinke gern …",
+          "pattern": "`gern` (liking an activity)",
+          "exemplar_de": "„Ich trinke gern Kaffee. Allein.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.9.5",
+          "module": "A1.9",
+          "title": "Schönes Wetter, oder?",
+          "pattern": "small-talk frame + tag `oder?`",
+          "exemplar_de": "„Schönes Wetter, oder?\" — „…Jo.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.9.6",
+          "module": "A1.9",
+          "title": "Synthese: Die Bushaltestelle",
+          "pattern": "zero new — small-talk scene",
+          "exemplar_de": "„Der Bus kommt nicht.\" — „Ich weiß.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A1.10",
+      "level": "A1",
+      "title": "Zusammen",
+      "grammar_cluster": "wir · Einladung · Perfekt-Chunk",
+      "functions": "invite, accept, meet",
+      "atoms": [
+        {
+          "id": "A1.10.1",
+          "module": "A1.10",
+          "title": "Kommst du mit?",
+          "pattern": "`mitkommen` invitation",
+          "exemplar_de": "„Kommst du mit?\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.10.2",
+          "module": "A1.10",
+          "title": "Ja, gern! / Leider nicht",
+          "pattern": "accept & decline frames",
+          "exemplar_de": "„Ja, gern!\" — „Nein, leider nicht.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.10.3",
+          "module": "A1.10",
+          "title": "Wir sind …",
+          "pattern": "FIRST plural `wir`",
+          "exemplar_de": "„Wir sind … gleich?!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.10.4",
+          "module": "A1.10",
+          "title": "Was ist passiert?",
+          "pattern": "Perfekt as unanalyzed CHUNK",
+          "exemplar_de": "„Was ist passiert?!\"",
+          "synthese": false,
+          "chunk": true,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A1.10.5",
+          "module": "A1.10",
+          "title": "Synthese A1: Wir vier",
+          "pattern": "zero new — level finale",
+          "exemplar_de": "„Wir sind nicht allein.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A2.1",
+      "level": "A2",
+      "title": "Was ist passiert?",
+      "grammar_cluster": "Perfekt",
+      "functions": "recount & recap",
+      "atoms": [
+        {
+          "id": "A2.1.1",
+          "module": "A2.1",
+          "title": "Ich habe … gemacht",
+          "pattern": "Perfekt regular (haben + ge-t)",
+          "exemplar_de": "„Ich habe das nicht gemacht!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.1.2",
+          "module": "A2.1",
+          "title": "gegessen, getrunken, gesehen",
+          "pattern": "Perfekt irregular (common)",
+          "exemplar_de": "„Ich habe alles gesehen.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.1.3",
+          "module": "A2.1",
+          "title": "Ich bin gegangen",
+          "pattern": "Perfekt with sein (movement)",
+          "exemplar_de": "„Ich bin einfach gegangen.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.1.4",
+          "module": "A2.1",
+          "title": "eingekauft & aufgestanden",
+          "pattern": "separable participles",
+          "exemplar_de": "„Ich bin um sechs aufgestanden!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.1.5",
+          "module": "A2.1",
+          "title": "Was hast du gemacht?",
+          "pattern": "Perfekt questions",
+          "exemplar_de": "„Was hast du gestern gemacht?\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.1.6",
+          "module": "A2.1",
+          "title": "Synthese: Der Rückblick",
+          "pattern": "zero new — the recap engine debut",
+          "exemplar_de": "„Also: Wir sind hier gelandet, und dann …\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A2.2",
+      "level": "A2",
+      "title": "Unterwegs",
+      "grammar_cluster": "Wechselpräpositionen (wohin/wo) · Transit",
+      "functions": "navigate, complain",
+      "atoms": [
+        {
+          "id": "A2.2.1",
+          "module": "A2.2",
+          "title": "Einmal nach …, bitte",
+          "pattern": "ticket frame + `nach`",
+          "exemplar_de": "„Einmal nach Hamburg, bitte.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.2.2",
+          "module": "A2.2",
+          "title": "Wohin? In die Stadt",
+          "pattern": "direction = Akk",
+          "exemplar_de": "„Ich fahre in die Stadt.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.2.3",
+          "module": "A2.2",
+          "title": "Wo? In der Stadt",
+          "pattern": "location = Dat (the minimal pair!)",
+          "exemplar_de": "„Ich bin in der Stadt. Schon wieder.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.2.4",
+          "module": "A2.2",
+          "title": "Umsteigen",
+          "pattern": "transit verbs + Wo muss ich …?",
+          "exemplar_de": "„Wo muss ich umsteigen?\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.2.5",
+          "module": "A2.2",
+          "title": "Verspätung!",
+          "pattern": "delay frames (recycles haben)",
+          "exemplar_de": "„Der Zug hat zehn Minuten Verspätung.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.2.6",
+          "module": "A2.2",
+          "title": "Synthese: Die Reise",
+          "pattern": "zero new — journey scene",
+          "exemplar_de": "„Falscher Zug. Wieder.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A2.3",
+      "level": "A2",
+      "title": "Die WG",
+      "grammar_cluster": "stellen/legen/hängen vs stehen/liegen/hängen · Dativpronomen",
+      "functions": "arrange, own",
+      "atoms": [
+        {
+          "id": "A2.3.1",
+          "module": "A2.3",
+          "title": "Ich stelle das hierhin",
+          "pattern": "placement + Akk (stellen/legen)",
+          "exemplar_de": "„Ich stelle die Lampe in die Ecke.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.3.2",
+          "module": "A2.3",
+          "title": "Es steht da",
+          "pattern": "position + Dat (stehen/liegen)",
+          "exemplar_de": "„Die Lampe steht in der Ecke. Perfekt.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.3.3",
+          "module": "A2.3",
+          "title": "hängen",
+          "pattern": "both directions with hängen",
+          "exemplar_de": "„Ich hänge das Bild an die Wand.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.3.4",
+          "module": "A2.3",
+          "title": "Wer muss …?",
+          "pattern": "chores + müssen recycled",
+          "exemplar_de": "„Wer muss die Küche putzen?\" — Schweigen.",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.3.5",
+          "module": "A2.3",
+          "title": "Das gehört mir!",
+          "pattern": "Dativ pronouns mir/dir + gehören",
+          "exemplar_de": "„Das gehört mir!\" — „Nein, das gehört uns.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.3.6",
+          "module": "A2.3",
+          "title": "Synthese: Einzugstag",
+          "pattern": "zero new — moving-in scene",
+          "exemplar_de": "„Links mein Bereich. Rechts dein Bereich.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A2.4",
+      "level": "A2",
+      "title": "Gesundheit",
+      "grammar_cluster": "Reflexive · weh tun · Imperativ du",
+      "functions": "describe symptoms, advise",
+      "atoms": [
+        {
+          "id": "A2.4.1",
+          "module": "A2.4",
+          "title": "Mein Kopf tut weh",
+          "pattern": "`weh tun` + body parts",
+          "exemplar_de": "„Mein Kopf tut weh. Alles tut weh.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.4.2",
+          "module": "A2.4",
+          "title": "Ich fühle mich …",
+          "pattern": "first reflexive (sich fühlen)",
+          "exemplar_de": "„Ich fühle mich nicht gut.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.4.3",
+          "module": "A2.4",
+          "title": "Was fehlt Ihnen?",
+          "pattern": "doctor frame (Dat chunk)",
+          "exemplar_de": "„Was fehlt Ihnen denn?\"",
+          "synthese": false,
+          "chunk": true,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.4.4",
+          "module": "A2.4",
+          "title": "Du sollst …",
+          "pattern": "`sollen` (advice)",
+          "exemplar_de": "„Du sollst im Bett bleiben.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.4.5",
+          "module": "A2.4",
+          "title": "Trink Tee!",
+          "pattern": "Imperativ du",
+          "exemplar_de": "„Trink Tee! Schlaf! Jetzt!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.4.6",
+          "module": "A2.4",
+          "title": "Synthese: Krank",
+          "pattern": "zero new — sick-day scene",
+          "exemplar_de": "„Ich bin NICHT krank.\" — hustet.",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A2.5",
+      "level": "A2",
+      "title": "Arbeit",
+      "grammar_cluster": "wollen · weil (Verb-Ende!)",
+      "functions": "apply, give reasons",
+      "atoms": [
+        {
+          "id": "A2.5.1",
+          "module": "A2.5",
+          "title": "Ich arbeite als …",
+          "pattern": "job frame + als",
+          "exemplar_de": "„Ich arbeite jetzt als Bäcker. Ironisch.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.5.2",
+          "module": "A2.5",
+          "title": "Ich will …",
+          "pattern": "`wollen` (vs möchten)",
+          "exemplar_de": "„Ich will nach Hause. Ich will das wirklich.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.5.3",
+          "module": "A2.5",
+          "title": "…, weil ich Geld brauche",
+          "pattern": "`weil` + VERB-FINAL (the big one)",
+          "exemplar_de": "„Ich arbeite, weil ich Geld brauche.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.5.4",
+          "module": "A2.5",
+          "title": "Warum? Weil …",
+          "pattern": "weil-answers practice",
+          "exemplar_de": "„Warum bist du müde?\" — „Weil ich arbeite!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.5.5",
+          "module": "A2.5",
+          "title": "Ich suche einen Job",
+          "pattern": "application small frames (recycles)",
+          "exemplar_de": "„Ich suche einen Job. Irgendeinen Job.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.5.6",
+          "module": "A2.5",
+          "title": "Synthese: Der erste Arbeitstag",
+          "pattern": "zero new",
+          "exemplar_de": "„Der Chef sagt, ich bin zu langsam. Ich? Zu langsam?\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A2.6",
+      "level": "A2",
+      "title": "Feste",
+      "grammar_cluster": "dass · Einladungen · Datum",
+      "functions": "invite, hope, celebrate",
+      "atoms": [
+        {
+          "id": "A2.6.1",
+          "module": "A2.6",
+          "title": "Ich lade dich ein",
+          "pattern": "`einladen` (separable) + Akk",
+          "exemplar_de": "„Ich lade euch alle ein!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.6.2",
+          "module": "A2.6",
+          "title": "Ich hoffe, dass …",
+          "pattern": "`dass` + verb-final",
+          "exemplar_de": "„Ich hoffe, dass du kommst.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.6.3",
+          "module": "A2.6",
+          "title": "Am ersten Mai",
+          "pattern": "dates + ordinals",
+          "exemplar_de": "„Das Fest ist am ersten Mai.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.6.4",
+          "module": "A2.6",
+          "title": "Prost!",
+          "pattern": "toasting culture frames",
+          "exemplar_de": "„Prost! Auf uns! Auf Dienstag!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.6.5",
+          "module": "A2.6",
+          "title": "Ich schenke dir …",
+          "pattern": "Dat + Akk double object",
+          "exemplar_de": "„Ich schenke dir eine Flasche. Mit Pfand.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.6.6",
+          "module": "A2.6",
+          "title": "Synthese: Das Fest",
+          "pattern": "zero new — the party",
+          "exemplar_de": "„Das ist … eigentlich schön hier.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A2.7",
+      "level": "A2",
+      "title": "Früher & Heute",
+      "grammar_cluster": "Präteritum (war/hatte/Modalverben)",
+      "functions": "narrate the past",
+      "atoms": [
+        {
+          "id": "A2.7.1",
+          "module": "A2.7",
+          "title": "Ich war …",
+          "pattern": "`war`",
+          "exemplar_de": "„Früher war ich glücklich. Glaube ich.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.7.2",
+          "module": "A2.7",
+          "title": "Ich hatte …",
+          "pattern": "`hatte`",
+          "exemplar_de": "„Ich hatte alles. Ich hatte Freunde.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.7.3",
+          "module": "A2.7",
+          "title": "konnte, musste, wollte",
+          "pattern": "modal Präteritum batch",
+          "exemplar_de": "„Ich konnte tanzen. Die ganze Nacht.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.7.4",
+          "module": "A2.7",
+          "title": "Früher …, jetzt …",
+          "pattern": "contrast frame",
+          "exemplar_de": "„Früher Techno. Jetzt … Fahrpläne.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.7.5",
+          "module": "A2.7",
+          "title": "Synthese: Unsere Welten",
+          "pattern": "zero new — flashback scene",
+          "exemplar_de": "„Erzähl. Wie war deine Welt?\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A2.8",
+      "level": "A2",
+      "title": "Ämter & Papiere",
+      "grammar_cluster": "Formulare · „Ich hätte gern\" (Chunk) · Prozesse",
+      "functions": "register, request politely",
+      "atoms": [
+        {
+          "id": "A2.8.1",
+          "module": "A2.8",
+          "title": "Das Formular",
+          "pattern": "bureaucracy nouns + ausfüllen",
+          "exemplar_de": "„Füllen Sie das Formular aus. In Blockschrift.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.8.2",
+          "module": "A2.8",
+          "title": "Ich hätte gern …",
+          "pattern": "Konjunktiv II as POLITENESS CHUNK",
+          "exemplar_de": "„Ich hätte gern einen Termin.\"",
+          "synthese": false,
+          "chunk": true,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.8.3",
+          "module": "A2.8",
+          "title": "Der Termin",
+          "pattern": "appointment frames + warten",
+          "exemplar_de": "„Sie brauchen einen Termin für den Termin.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.8.4",
+          "module": "A2.8",
+          "title": "Sie müssen zuerst …",
+          "pattern": "process sequencing (zuerst/dann)",
+          "exemplar_de": "„Sie müssen zuerst zu Schalter B.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.8.5",
+          "module": "A2.8",
+          "title": "Synthese: Der Antrag, Teil 1",
+          "pattern": "zero new — bureaucracy odyssey",
+          "exemplar_de": "„Nummer 87?\" — „JA! Endlich!\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A2.9",
+      "level": "A2",
+      "title": "Stil & Vergleich",
+      "grammar_cluster": "Komparativ/Superlativ · gefallen",
+      "functions": "compare, prefer, judge",
+      "atoms": [
+        {
+          "id": "A2.9.1",
+          "module": "A2.9",
+          "title": "Ich trage …",
+          "pattern": "clothing + tragen",
+          "exemplar_de": "„Ich trage nur Schwarz.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.9.2",
+          "module": "A2.9",
+          "title": "schöner als …",
+          "pattern": "comparative",
+          "exemplar_de": "„Das ist schöner als das. Objektiv.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.9.3",
+          "module": "A2.9",
+          "title": "am schönsten",
+          "pattern": "superlative",
+          "exemplar_de": "„Und das ist am schönsten. Natürlich meins.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.9.4",
+          "module": "A2.9",
+          "title": "gern, lieber, am liebsten",
+          "pattern": "preference scale",
+          "exemplar_de": "„Ich mag Tee gern, Kaffee lieber.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.9.5",
+          "module": "A2.9",
+          "title": "Das gefällt mir",
+          "pattern": "`gefallen` + Dat",
+          "exemplar_de": "„Das gefällt mir. Nein. Doch. Nein.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.9.6",
+          "module": "A2.9",
+          "title": "Synthese: Das Umstyling",
+          "pattern": "zero new — makeover scene",
+          "exemplar_de": "„Nein. Aber nett.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "A2.10",
+      "level": "A2",
+      "title": "Der Hinweis",
+      "grammar_cluster": "werden (Futur) · Spekulation",
+      "functions": "promise, speculate",
+      "atoms": [
+        {
+          "id": "A2.10.1",
+          "module": "A2.10",
+          "title": "Ich werde …",
+          "pattern": "`werden` + Inf (future)",
+          "exemplar_de": "„Ich werde einen Weg finden.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.10.2",
+          "module": "A2.10",
+          "title": "Ich verspreche, dass …",
+          "pattern": "promising (recycles dass)",
+          "exemplar_de": "„Ich verspreche, dass wir nach Hause kommen.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.10.3",
+          "module": "A2.10",
+          "title": "Vielleicht …",
+          "pattern": "speculation adverbs (vielleicht/bestimmt)",
+          "exemplar_de": "„Vielleicht ist das ein Zeichen. Bestimmt!\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "A2.10.4",
+          "module": "A2.10",
+          "title": "Synthese A2: Der Hinweis",
+          "pattern": "zero new — level finale",
+          "exemplar_de": "„Da. Schaut. Was IST das?\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "B1.1",
+      "level": "B1",
+      "title": "Der Plan",
+      "grammar_cluster": "Infinitiv + zu · um…zu",
+      "functions": "propose, commit",
+      "atoms": [
+        {
+          "id": "B1.1.1",
+          "module": "B1.1",
+          "title": "Es ist wichtig, … zu …",
+          "pattern": "Infinitiv+zu",
+          "exemplar_de": "„Es ist wichtig, ruhig zu bleiben.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.1.2",
+          "module": "B1.1",
+          "title": "Wir versuchen, … zu …",
+          "pattern": "verbs + zu (versuchen/anfangen)",
+          "exemplar_de": "„Wir versuchen, das zu verstehen.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.1.3",
+          "module": "B1.1",
+          "title": "um … zu …",
+          "pattern": "purpose clause",
+          "exemplar_de": "„Wir sparen, um nach Hause zu kommen.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.1.4",
+          "module": "B1.1",
+          "title": "Zuerst, dann, danach",
+          "pattern": "process ordering (recycled, denser)",
+          "exemplar_de": "„Zuerst der Plan. Dann das Geld. Danach: Heimat.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.1.5",
+          "module": "B1.1",
+          "title": "Synthese: Der Plan steht",
+          "pattern": "zero new",
+          "exemplar_de": "„Das klappt nie.\" — „Doch.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "B1.2",
+      "level": "B1",
+      "title": "Die Bewerbung",
+      "grammar_cluster": "Relativsätze (Nom/Akk) · formelles Register",
+      "functions": "apply, self-present",
+      "atoms": [
+        {
+          "id": "B1.2.1",
+          "module": "B1.2",
+          "title": "Sehr geehrte …",
+          "pattern": "formal register frames",
+          "exemplar_de": "„Sehr geehrte Damen und Herren …\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.2.2",
+          "module": "B1.2",
+          "title": "Der Mann, der …",
+          "pattern": "relative clause Nominativ",
+          "exemplar_de": "„Ich bin jemand, der nie aufgibt.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.2.3",
+          "module": "B1.2",
+          "title": "Der Job, den ich …",
+          "pattern": "relative clause Akkusativ",
+          "exemplar_de": "„Das ist der Job, den ich will.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.2.4",
+          "module": "B1.2",
+          "title": "Meine Stärke ist …",
+          "pattern": "self-presentation frames",
+          "exemplar_de": "„Meine Stärke? Ich sage die Wahrheit.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.2.5",
+          "module": "B1.2",
+          "title": "Synthese: Das Vorstellungsgespräch",
+          "pattern": "zero new",
+          "exemplar_de": "„Wo sehen Sie sich in fünf Jahren?\" — „Zu Hause.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "B1.3",
+      "level": "B1",
+      "title": "Meinungen",
+      "grammar_cluster": "obwohl/trotzdem · zustimmen/widersprechen",
+      "functions": "argue politely",
+      "atoms": [
+        {
+          "id": "B1.3.1",
+          "module": "B1.3",
+          "title": "Ich finde, dass …",
+          "pattern": "opinion frames (recycles dass)",
+          "exemplar_de": "„Meiner Meinung nach ist das falsch.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.3.2",
+          "module": "B1.3",
+          "title": "…, obwohl …",
+          "pattern": "`obwohl` (concessive, verb-final)",
+          "exemplar_de": "„Ich bleibe ruhig, obwohl das Unsinn ist.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.3.3",
+          "module": "B1.3",
+          "title": "Trotzdem",
+          "pattern": "contrast adverb pair",
+          "exemplar_de": "„Es ist schwer. Trotzdem machen wir weiter.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.3.4",
+          "module": "B1.3",
+          "title": "Ich stimme dir zu",
+          "pattern": "agree/disagree + Dat",
+          "exemplar_de": "„Da bin ich anderer Meinung.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.3.5",
+          "module": "B1.3",
+          "title": "Synthese: Die Debatte",
+          "pattern": "zero new — bleiben oder gehen?",
+          "exemplar_de": "„Abstimmung. Wer will bleiben?\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "B1.4",
+      "level": "B1",
+      "title": "Wie es funktioniert",
+      "grammar_cluster": "Passiv",
+      "functions": "explain processes",
+      "atoms": [
+        {
+          "id": "B1.4.1",
+          "module": "B1.4",
+          "title": "So macht man das",
+          "pattern": "`man`-process (bridge, recycled)",
+          "exemplar_de": "„So macht man das hier. Immer so.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.4.2",
+          "module": "B1.4",
+          "title": "Es wird gemacht",
+          "pattern": "Passiv Präsens",
+          "exemplar_de": "„Brot wird hier um vier Uhr gebacken.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.4.3",
+          "module": "B1.4",
+          "title": "Es muss gemacht werden",
+          "pattern": "Passiv + Modal",
+          "exemplar_de": "„Das muss zuerst geprüft werden.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.4.4",
+          "module": "B1.4",
+          "title": "Es wurde gemacht",
+          "pattern": "Passiv Präteritum",
+          "exemplar_de": "„Die Tür wurde geschlossen. Von wem?\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.4.5",
+          "module": "B1.4",
+          "title": "Synthese: Die Maschine",
+          "pattern": "zero new — process explained",
+          "exemplar_de": "„Und DANN wird der Strom eingeschaltet.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "B1.5",
+      "level": "B1",
+      "title": "Der Antrag",
+      "grammar_cluster": "Genitiv · wegen/während",
+      "functions": "handle authorities",
+      "atoms": [
+        {
+          "id": "B1.5.1",
+          "module": "B1.5",
+          "title": "des & der",
+          "pattern": "Genitiv possession",
+          "exemplar_de": "„Das ist der Anfang der Geschichte.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.5.2",
+          "module": "B1.5",
+          "title": "wegen",
+          "pattern": "`wegen` + Gen",
+          "exemplar_de": "„Wegen des Wetters? Wirklich?\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.5.3",
+          "module": "B1.5",
+          "title": "während",
+          "pattern": "`während` + Gen",
+          "exemplar_de": "„Während der Woche? Unmöglich.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.5.4",
+          "module": "B1.5",
+          "title": "Antrag stellen",
+          "pattern": "official verbs (stellen/ablehnen/genehmigen)",
+          "exemplar_de": "„Ihr Antrag wurde abgelehnt.\" (recycles Passiv!)",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.5.5",
+          "module": "B1.5",
+          "title": "Synthese: Der Antrag, Teil 2",
+          "pattern": "zero new — the document quest",
+          "exemplar_de": "„Formular 12b. Natürlich.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "B1.6",
+      "level": "B1",
+      "title": "Was wäre wenn",
+      "grammar_cluster": "Konjunktiv II (voll)",
+      "functions": "dream, hypothesize, regret",
+      "atoms": [
+        {
+          "id": "B1.6.1",
+          "module": "B1.6",
+          "title": "Ich wäre / ich hätte",
+          "pattern": "KII sein/haben",
+          "exemplar_de": "„Ich wäre jetzt im Club. Ich hätte Ruhe.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.6.2",
+          "module": "B1.6",
+          "title": "Ich würde …",
+          "pattern": "würde + Inf",
+          "exemplar_de": "„Ich würde alles anders machen.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.6.3",
+          "module": "B1.6",
+          "title": "Wenn …, dann …",
+          "pattern": "full conditional",
+          "exemplar_de": "„Wenn ich zu Hause wäre, würde ich tanzen.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.6.4",
+          "module": "B1.6",
+          "title": "Ich wünschte …",
+          "pattern": "wish frame",
+          "exemplar_de": "„Ich wünschte, ihr wärt alle da gewesen.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.6.5",
+          "module": "B1.6",
+          "title": "Synthese: Heimweh",
+          "pattern": "zero new — the KII heart",
+          "exemplar_de": "„Und wenn es keinen Weg zurück gibt?\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "B1.7",
+      "level": "B1",
+      "title": "Medien",
+      "grammar_cluster": "Relativsatz Dativ · indirekte Fragen",
+      "functions": "report, react",
+      "atoms": [
+        {
+          "id": "B1.7.1",
+          "module": "B1.7",
+          "title": "…, dem ich …",
+          "pattern": "relative clause Dativ",
+          "exemplar_de": "„Der Typ, dem ich geholfen habe, hat gefilmt.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.7.2",
+          "module": "B1.7",
+          "title": "Ich weiß nicht, ob …",
+          "pattern": "indirect questions (ob/wann/wo)",
+          "exemplar_de": "„Ich weiß nicht, ob das gut ist.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.7.3",
+          "module": "B1.7",
+          "title": "Es wird berichtet, dass …",
+          "pattern": "media frames (recycles Passiv+dass)",
+          "exemplar_de": "„Im Internet wird berichtet, dass wir … seltsam sind.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.7.4",
+          "module": "B1.7",
+          "title": "Synthese: Berühmt?",
+          "pattern": "zero new",
+          "exemplar_de": "„Eine Million Views.\" — „Von was?!\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "B1.8",
+      "level": "B1",
+      "title": "Herkunft",
+      "grammar_cluster": "Plusquamperfekt · nachdem/seitdem",
+      "functions": "layered past, reveal",
+      "atoms": [
+        {
+          "id": "B1.8.1",
+          "module": "B1.8",
+          "title": "Ich hatte … gemacht",
+          "pattern": "Plusquamperfekt",
+          "exemplar_de": "„Ich hatte so etwas noch nie gesehen.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.8.2",
+          "module": "B1.8",
+          "title": "Nachdem …",
+          "pattern": "`nachdem` + Plusq.",
+          "exemplar_de": "„Nachdem wir gelandet waren, war alles anders.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.8.3",
+          "module": "B1.8",
+          "title": "Seitdem",
+          "pattern": "`seit/seitdem`",
+          "exemplar_de": "„Seitdem wir hier sind, träume ich laut.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.8.4",
+          "module": "B1.8",
+          "title": "Synthese: Was vorher geschah",
+          "pattern": "zero new — the origin reveal",
+          "exemplar_de": "„Es hat nicht bei euch angefangen.\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "B1.9",
+      "level": "B1",
+      "title": "Der Streit",
+      "grammar_cluster": "Konfliktsprache · damit · Reparatur",
+      "functions": "de-escalate, repair",
+      "atoms": [
+        {
+          "id": "B1.9.1",
+          "module": "B1.9",
+          "title": "Du hast immer …",
+          "pattern": "accusation frames + Entschuldigung",
+          "exemplar_de": "„Es tut mir leid, dass ich laut war.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.9.2",
+          "module": "B1.9",
+          "title": "Was meinst du damit?",
+          "pattern": "misunderstanding repair",
+          "exemplar_de": "„Was meinst du damit?\" — „Ich meinte nur …\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.9.3",
+          "module": "B1.9",
+          "title": "…, damit …",
+          "pattern": "`damit` (purpose, verb-final)",
+          "exemplar_de": "„Ich sage das, damit wir zusammenbleiben.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.9.4",
+          "module": "B1.9",
+          "title": "Lass uns …",
+          "pattern": "reconciliation frame",
+          "exemplar_de": "„Lass uns nochmal von vorn anfangen.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.9.5",
+          "module": "B1.9",
+          "title": "Synthese: Der Streit",
+          "pattern": "zero new — the dark night",
+          "exemplar_de": "Schweigen. Dann: „Bleibst du?\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    },
+    {
+      "id": "B1.10",
+      "level": "B1",
+      "title": "Die Entscheidung",
+      "grammar_cluster": "Abwägen · Synthese der Stufe",
+      "functions": "decide, justify, close",
+      "atoms": [
+        {
+          "id": "B1.10.1",
+          "module": "B1.10",
+          "title": "Einerseits … andererseits",
+          "pattern": "weighing frame",
+          "exemplar_de": "„Einerseits Heimat. Andererseits … ihr.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.10.2",
+          "module": "B1.10",
+          "title": "Ich habe mich entschieden",
+          "pattern": "`sich entscheiden` + zu (recycles)",
+          "exemplar_de": "„Ich habe mich entschieden, zu bleiben.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.10.3",
+          "module": "B1.10",
+          "title": "Abschied & Bleiben",
+          "pattern": "farewell/staying frames",
+          "exemplar_de": "„Das hier ist jetzt auch ein Zuhause.\"",
+          "synthese": false,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        },
+        {
+          "id": "B1.10.4",
+          "module": "B1.10",
+          "title": "GRANDE SYNTHESE: Die Entscheidung",
+          "pattern": "zero new — series question answered in full spiral (KII + Passiv + Relativ)",
+          "exemplar_de": "„Wenn wir gehen würden — was wäre dann mit allem, was hier gebaut wurde?\"",
+          "synthese": true,
+          "chunk": false,
+          "recycles": [],
+          "format": "single"
+        }
+      ]
+    }
+  ]
+}

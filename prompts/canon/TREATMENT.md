@@ -1,6 +1,7 @@
 # TREATMENT — "Stereotypical German" · the directorial rule system
 
-> version: 1.1 · canon file · 2026-07-29
+> version: 1.2 · canon file · 2026-08-02
+> v1.2 (2026-08-02): **§9 corrected to the image model's real reference mechanics** (typed slots 5 human / 6 object / 3 style; characters FIRST, style LAST — the v1.1 order was contradicted by the model) · **image-prompt identity TOKENS** (`Character-X`) added as the naming law's one fenced exception (§9.4, §19) · §14 stage-scoped (the negative list is video language; the image model uses a constraints block) · §9.5 asset-gap note withdrawn (Jayon: Rolf's set is correct as-is, `PLAN_production_canon` §7) · `canon_blocks.md` formally retired from the registry — §10 is the sole source (the retired file still said "felt"). Basis: `prompting_guidelines_nanobanana.md` v1.0.
 > **This is the controlling document of the production.** The screenplay is the narrative source of truth; THIS is the execution source of truth. Every visual stage (storyboard sheets, video prompts) reads it and every generated frame is gated against it. **Rules, not descriptions** — every line below must be checkable against a frame. If a line cannot be checked, it does not belong here.
 > v1.1 (Jayon's review): camera and angle sections reframed from prohibitions to **defaults + a standard vocabulary** (the story may demand anything; only technical limits are hard) · V3-era tonal locks removed · **§9 REFERENCE ASSETS added** — the missing rule for which character images attach where, in what order, at each stage.
 > **Consolidates:** `canon_blocks.md` v1.0 · `prompting_guidelines_seedance.md` v2.2 · `Characters-Main-Sheet.md` v1.3 · `AUDIT_visual_identity.md` · `WORKFLOW_visual_identity_lock.md`. Sections marked **⧖ OPEN** are deliberately unfilled until the first real episodes exist — see §16.
@@ -93,26 +94,25 @@ Identity comes from **images, not from words**. This section is the binding cont
 | **Voice clip (.mp3)** | phoneme-level lip-sync | video stage only, as `@AudioN` |
 
 ### 9.2 The attachment-order law
-**The numbering written in a prompt must match the order the files are attached, exactly.** A prompt that says "Image 2 is the multi-angle sheet" while the sheet is attached third is a broken prompt. Fixed order, skipping anything that does not exist yet:
-1. **Style plate** (global look) ⧖
-2. **Location plate** (environment) ⧖
-3. **Character A** — sheet → portrait → close-up
-4. **Character B** — sheet → portrait → close-up
-5. **Continuity reference** — the previous segment's storyboard sheet (storyboard stage only)
-6. **Storyboard panels** — one per shot, in shot order (video stage only)
+**The numbering written in a prompt must match the order the files are attached, exactly.** A prompt that says "Image 2 is the multi-angle sheet" while the sheet is attached third is a broken prompt. Fixed order per stage, skipping anything that does not exist yet — **characters first, style last** (the image model routes references through typed slots — 5 human · 6 object · 3 style — and weights the earliest indices heaviest; `prompting_guidelines_nanobanana.md` §3):
+**Storyboard sheet (Nano Banana Pro):**
+1. **Character A** — sheet → portrait
+2. **Character B** — sheet → portrait *(a rare third cameo: portrait only)*
+3. **Close-up** — only when a single character carries the scene and the human budget (≤5) allows
+4. **Location plate** ⧖ (object slot)
+5. **Continuity reference** — the previous segment's sheet (style slot, low weight)
+6. **Style plate** ⧖ — always last (style slot)
+**Video (Seedance):** Character A (sheet → portrait) → Character B (sheet → portrait) → style plate ⧖ → **storyboard panels**, one per shot, in shot order.
 Audio, in cast order: Character A voice → Character B voice.
 
 ### 9.3 Per-stage budget
-- **Storyboard sheet (Nano Banana Pro, ≤14 images):** style plate + location plate + two characters × 3 images + previous-segment sheet ≈ **9 of 14**. Comfortable — attach the close-ups here; this is where identity is set.
-- **Video (Seedance, ≤9 images, ≤3 audio):** the panels already carry environment and composition, so **drop the location plate and the close-ups**: style plate + two characters × (sheet + portrait) + one panel per shot ≈ **8–9 of 9**. Tight by design.
+- **Storyboard sheet (Nano Banana Pro, ≤14 refs = 5 human · 6 object · 3 style):** two characters × (sheet + portrait) = **4 of 5 human slots** · location plate (object) · previous-segment sheet + style plate (style) ≈ **7 of 14**. **The human-slot ceiling, not the total, is the binding limit** — close-ups fit only when one character carries the scene.
+- **Video (Seedance, ≤9 images, ≤3 audio):** the panels already carry environment and composition, so **drop the location plate and the close-ups**: two characters × (sheet + portrait) + style plate + one panel per shot ≈ **8–9 of 9**. Tight by design.
 - **≤3 speaking characters per segment** (audio cap); the show's own limit is 2 mains.
 
 ### 9.4 Binding language
 Bind each character to their images explicitly and instruct the model to take identity **from the references only** — never restate a character's appearance in prose alongside the reference (competing descriptions cause drift). The material laws (§10) are the exception: they are the canonical wording when text description is required at all.
-
-### 9.5 Asset gaps ⚠
-- **Rolf die Wurst has no profiles sheet and no close-up** — the only character missing both. Generate and lock them before he leads an episode.
-- **The resolver currently attaches only sheet + portrait**, silently ignoring the existing profiles and close-up images for Bert, Kati and Müller. Wire §9.2–9.3 so the available assets are actually used.
+**In image-model prompts, identity binds to TOKENS** — `Character-Rolf · Character-Bert · Character-Kati · Character-Mueller` — never the full canonical names, whose German common nouns (*die Wurst, das Bier…*) pull generic imagery into the render (the fenced exception, §19 / `SHOW_BIBLE` §13). Video prompts keep the full canonical names.
 
 ## 10 · CHARACTER MATERIAL LAWS (identity, written as physics)
 These are the reason identity survives. They are **PBR/VFX material specifications, not adjectives**, and are used verbatim — never paraphrased.
@@ -143,6 +143,7 @@ These are the reason identity survives. They are **PBR/VFX material specificatio
 
 ## 14 · NEGATIVE PROMPT & NEVER-DO LIST (carried into every generation)
 **Permanent negative list:** cartoon rendering · 2D illustration · 3D animated movie style · Pixar style · Dreamworks style · plastic skin · glossy CG · hyper-smooth interpolation · floating objects · miniature scale · stop-motion · felt · clay · puppetry · visible seams · text · watermarks · dynamic camera sweeps · impossible physics.
+**Stage scoping (v1.2):** the list above is **video-stage (Seedance) language**. The image model has no negative-prompt channel — naming artifacts there *causes* them; the image stage expresses the same intents as a positive **constraints block** (`prompting_guidelines_nanobanana.md` §7). The intents bind both stages.
 **Never-do (production rules):**
 - Never render **any text inside the frame** — no signs, chalkboards, subtitles, captions, or letters. The German is spoken; subtitles are a separate post layer.
 - Never **paraphrase** the material laws (§10) or the medium statement (§1) — verbatim or not at all.
@@ -163,8 +164,7 @@ Not oversights — decisions that require real footage rather than theory (Jayon
 2. **Reference palettes** — 15–25 real film/photography frames → `resources/style_references/`, from which the value/saturation/tint discipline is extracted.
 3. **The style plate** — one locked canonical frame generated in Nano Banana Pro, attached to every later generation. Until it exists, the style slot resolves as `pending`.
 4. **Location plates** — accumulated one per recurring location.
-5. **Rolf's missing profiles + close-up** (§9.5).
-6. **Identity validation** — the C1 win condition: the same character generated twice, independently, in different environments, must read as unmistakably the same character in the same show.
+5. **Identity validation** — the C1 win condition: the same character generated twice, independently, in different environments, must read as unmistakably the same character in the same show.
 
 ## 17 · FORMAT & DELIVERY (fixed)
 9:16 vertical · 1080 × 1920 · 30 fps · one episode ≈ **30 s** = 2 × 15 s generated segments (45 s = 3 segments is an explicit exception) · burned subtitles are a **separate post layer**, never generated in-frame, positioned in the §7 safe zone, colour-coded **der = blue · die = red · das = green · target grammar = yellow**.
@@ -183,3 +183,4 @@ Not oversights — decisions that require real footage rather than theory (Jayon
 
 ## 19 · NAMING LAW
 Full canonical names, always: **Rolf die Wurst · Bert das Bier · Kati die Kartoffel · Müller das Brot**. Never abbreviations, titles, or variants.
+**One fenced exception:** image-model prompts bind identity via the `Character-X` tokens (§9.4) — everywhere else, the full names, always.

@@ -1,6 +1,6 @@
 # PIPELINE — the stations, their contracts, and the handoffs
 
-> version: 1.1 · canon file · 2026-07-29
+> version: 1.2 · canon file · 2026-08-02
 > **What each station is, what it receives, what it produces, and — most importantly — what it must NOT decide because a later station owns that.** This is the map that keeps a pipeline of specialists from turning into four agents all writing the same episode badly.
 > **Agents read their own row and their immediate neighbours — never the whole document.** Knowing too much is a failure mode here (§7).
 > Contracts are stable and live here. **Current build status is not canon** and lives in `docs/architecture.md`.
@@ -47,7 +47,7 @@ The stations above are the **internal** contracts. The creator never sees nine o
 | **Post** | **Editor** | §3.8 | *Finish it.* |
 
 - **Quality check (§3.5) is never a speaker.** It runs automatically and surfaces as notes attached to the artifact — a linter, not a participant.
-- **There is no separate overseer window.** The always-present conversation *is* the Director of §3.9: any instruction, at any phase, is proposed → shown with its recompile set → confirmed → applied.
+- **There is no separate overseer window.** The always-present conversation *is* the change protocol of §3.9: any instruction, at any phase, is proposed → shown with its recompile set → confirmed → applied. ("Director" names only the Vision/Shoot phase agent.)
 - **Agent boundaries collapse; the seams do not.** Every artifact in §3 remains separate and separately gated — `brief.json` is still its own artifact even though the Writer produces both it and the screenplay. **The lock is a property of the artifact, not of who wrote it**, and each phase still loads only the canon its stations need (§7).
 
 ## 3 · THE STATIONS
@@ -120,8 +120,10 @@ The stations above are the **internal** contracts. The creator never sees nine o
 - **MUST NOT decide.** The German — it renders what the screenplay locked · the colour scheme, which `PEDAGOGY` owns.
 - **Failure.** Clip durations disagree with the screenplay → use the real clip durations and flag the drift.
 
-### 3.9 THE DIRECTOR (overseer)
-- **Role.** Present at every station; takes an instruction at any point and lands it in the right place.
+### 3.9 THE CHANGE PROTOCOL (the conversation's edit mechanism)
+- **What it is.** Not an agent and not a window — a **capability of the always-present conversation** (§2.1). "Director" names only the Vision/Shoot phase agent; this section had that name until v1.2, and the collision caused real confusion.
+- **Role.** Takes an instruction at any point and lands it in the right place.
+- **Guarantees.** A confirmed plan applies **exactly once** (idempotency guard — a network retry never double-executes), and the human may **modify a proposal before confirming**.
 - **Reads.** All canon · every artifact of the run · `UNIVERSE_STATE`.
 - **Produces.** A proposed, typed edit plan + the recompile set → on confirmation, the applied edits.
 - **Decides.** *Where* an edit belongs (which layer owns it) and *what* it affects.
@@ -140,7 +142,7 @@ The stations above are the **internal** contracts. The creator never sees nine o
 | **Sheet approval** | the visual interpretation | before video credits are spent |
 | **Clip acceptance** | the generated footage | the only place output quality can be judged |
 | **Export** | the finished episode | last look before it exists |
-| **Any Director edit** | the diff + its recompile set | nothing changes without being seen |
+| **Any change-protocol edit** | the diff + its recompile set | nothing changes without being seen |
 **Gates are features.** A station that waits is doing its job.
 
 ## 6 · THE DEPENDENCY GRAPH — what recompiles when something changes
@@ -170,5 +172,6 @@ A station is given its own contract, its inputs, and the canon it needs. It is *
 Tier 1 canon: changed only by deliberate human decision via the `/tune` ritual (`SHOW_BIBLE.md` §15.2). **A new station, or a change to any station's "MUST NOT decide" list, is a Tier-1 edit** — those lists are the seams that hold the pipeline apart.
 
 ### Revision history
+- **v1.2 — 2026-08-02.** §3.9 renamed **THE CHANGE PROTOCOL** — propose→confirm→apply is a capability of the continuous conversation, not an agent; "Director" now names only the Vision/Shoot phase agent (resolves the three-way name collision with the old floating window). Added the idempotency guarantee and the modify-before-confirm hook (basis: the agent-implementation research). Station contracts unchanged.
 - **v1.1 — 2026-07-29.** Added §2.1 (the studio layer: five phases — Idea · Script · Vision · Shoot · Post — mapped onto the nine stations, four agents, one continuous chat; QC never speaks; no separate overseer window). Added the **board-iteration routing rule** to §3.6. Station contracts unchanged.
 - **v1.0 — 2026-07-29.** Created. The lock-and-compiler principle, the flow, nine station contracts (each with an explicit *must not decide*), the handoff law, the human gates, the dependency graph (previously implicit in code), and the context-scoping rule.

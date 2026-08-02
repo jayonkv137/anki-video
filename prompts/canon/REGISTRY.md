@@ -1,6 +1,6 @@
 # Canon Registry
 
-> version: 1.13 · Updated: 2026-07-29 (PIPELINE → v1.1: studio layer — 5 phases / 4 agents; board-iteration routing)
+> version: 1.14 · Updated: 2026-08-02 (PHASE 0 LOCK — curriculum.json v1.0 + nanobanana v1.0 PINNED; TREATMENT → 1.2, PIPELINE → 1.2, SHOW_BIBLE → 1.2, MISSION → 2.1; **RETIRED from canon: `Characters-Main-Sheet.md`** (superseded by SHOW_BIBLE §6 — it was still registry-blessed and RCP-injected, the MISSION-rot pattern caught live) **and `canon_blocks.md`** (folded into TREATMENT §10; the retired file still contained the banned word "felt"). Both files remain on disk only for the legacy V3 wizard and die with it in Phase 1. `prompting_guidelines_omni.md` deleted.)
 >
 > Every canon file used by the pipeline is listed here with its version and SHA-256 hash.
 > The RCP builder verifies these at run start — if a hash doesn't match, the run aborts.
@@ -8,12 +8,12 @@
 
 | File | Version | SHA-256 |
 |---|---|---|
-| `prompts/canon/PIPELINE.md` | 1.1 | `25ad16b4f29792a00920bb71644b8f6ea1ad4c35db585cb4459a20a4f3a08f21` |
+| `prompts/canon/PIPELINE.md` | 1.2 | `b3fdab9c74cd3034bc9a2ba5a20246bd6c5217370321f0366f30d77d17175f2f` |
 | `prompts/canon/PEDAGOGY.md` | 1.0 | `e8652b038aab31fb5497759f1aee5221e5eeee93219169a33d6305fc262f815d` |
 | `prompts/canon/STORY_SYSTEM.md` | 1.0 | `e319ccad7c130b5de856ce820763fd14621000bd173d6357591e822542c0a987` |
-| `prompts/canon/SHOW_BIBLE.md` | 1.1 | `4aaa98250a19cedaa7695a7c371119084010d348efd1e7ee3687dbf2ac212a46` |
-| `prompts/canon/TREATMENT.md` | 1.1 | `d9fa6e1a37c64474ae3faabd68c05ec830553b96fe62764c02e5bfa8e8897690` |
-| `prompts/canon/MISSION.md` | 2.0 | `2b62593fba6ca9b485967340114831c031e9a0444f137d54c037ac73c6702c20` |
-| `prompts/canon/canon_blocks.md` | 1.0 | `4efd9f6b9e7373e3de372d5b8230e96317cef0a881d4f86c007e729c96c1e898` |
+| `prompts/canon/SHOW_BIBLE.md` | 1.2 | `63e40def803262fdc686d9bd52fe284ced760ff3eb5772055d21d39942b41229` |
+| `prompts/canon/TREATMENT.md` | 1.2 | `8c31c1474558556fb4d8773845aa309d107d99d65ac396e451c0e351fe30c93e` |
+| `prompts/canon/MISSION.md` | 2.1 | `5ca0c0a4c6cb4a9a6a34a8a95b3a0d06c4a11f2a737f5e00c94e59355d511dd8` |
 | `prompts/canon/prompting_guidelines_seedance.md` | 2.2 | `71a5c50153220a22516daee909d54361c41517366d314e11cf45e821f0c84c2b` |
-| `resources/Characters-Main-Sheet.md` | 1.3 | `d9b2f0ef6ad47dd34b13532dca1b4e2d1ef482a6d09ffdd11d39fdb157381b88` |
+| `prompts/canon/prompting_guidelines_nanobanana.md` | 1.0 | `06b27391003d4604b76664ec18b2c09abeb80edc440146c957011d6dd61fce9a` |
+| `resources/curriculum.json` | 1.0 | `f46b7d6f1d39fb7791944787743564393cb57d32d0301a68af64ac49730b9a74` |

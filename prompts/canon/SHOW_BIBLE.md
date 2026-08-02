@@ -1,6 +1,6 @@
 # SHOW BIBLE — "Stereotypical German"
 
-> version: 1.1 · canon file · 2026-07-29
+> version: 1.2 · canon file · 2026-08-02
 > **The universe and its people.** Who these characters are, what world they are in, and where the story might go. Read by the Showrunner at ideation, by the screenplay agent whenever a character speaks, and by the storyboard agent to know who is present.
 > **This document describes people, not permissions.** It contains no speech budgets, no grammar assignments and no "this character teaches X" rules — deliberately. See §5.
 > Supersedes `resources/Characters-Main-Sheet.md` v1.3 and the four per-character bibles, which it merges. Companions: `TREATMENT.md` (how it looks and sounds) · `STORY_SYSTEM.md` (how a scene is built) · `PEDAGOGY.md` (the teaching floor) · `CURRICULUM` (what is taught).
@@ -175,6 +175,7 @@ Established, binding facts about the world, accumulated from episodes that have 
 
 ## 13 · NAMING LAW
 Full canonical names, always: **Rolf die Wurst · Bert das Bier · Kati die Kartoffel · Müller das Brot**. Never abbreviations, titles, or variants.
+**One fenced exception (2026-08-02):** inside **image-model prompts only**, identity is bound with the tokens **Character-Rolf · Character-Bert · Character-Kati · Character-Mueller** (`TREATMENT` §9.4, `prompting_guidelines_nanobanana.md` §2) — the full names contain German common nouns (*die Wurst, das Bier…*) that pull generic imagery into the render. Everywhere else — screenplay, dialogue, subtitles, UI, video prompts — the full canonical names, always.
 
 ## 14 · ⧖ OPEN
 - **Kati's arrival sequence** (§9).
@@ -212,5 +213,6 @@ Directions and Canon Facts move into **`UNIVERSE_STATE`**, the persistent projec
 If a generated episode contradicts this document, exactly one of two things is true, and **Jayon decides which**: either the *episode* is wrong (fix the episode) or the *bible* is stale (propose a Tier-1 change). The QC gate reports the conflict; it never resolves it on its own, and it never quietly bends the character to match what was generated. **Drift is a decision, never an accident.**
 
 ### 15.5 Revision history
+- **v1.2 — 2026-08-02.** §13: added the image-prompt token exception (`Character-X` binding) — required by the image model's identity mechanics (common nouns in the full names dilute identity); decided with the Nano Banana Pro canon (BUILD_PLAN_v4 D2).
 - **v1.0 — 2026-07-29.** Created. Merges `Characters-Main-Sheet.md` v1.3 and the four per-character bibles. Per Jayon: all speech constraints removed (grammar habits, "teaches:" assignments, word budgets); Müller's core belief reframed from *"Words are expensive"* to *"Feelings are private. What you do is public."*; vocabulary domains reframed as interests. Adds the fluent-but-foreign conceit, world rules, the Directions section and Canon Facts.
 - **v1.1 — 2026-07-29.** Added §15 Maintenance (three tiers, permissions, the `/tune` ritual, the state split, and the drift-resolution rule).
