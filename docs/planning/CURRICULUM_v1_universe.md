@@ -1,5 +1,11 @@
 # CURRICULUM v2 — The Universe's Language Spine (A1 → B1), full lesson list
 
+> **⚠ NAMING (Jayon, 2026-08-02): a LESSON is a MODULE, not an atom.** This document calls the atoms "lessons" (e.g. "10 modules · 61 lessons") and that word leaked into the interface, where `A1.8.4` was presented to the user as "the lesson". Correct usage everywhere from here:
+> · **Lesson = module** (`A1.1 Ankunft`) — **30 of them**, the unit a person thinks and briefs in
+> · **Topic = atom** (`A1.1.1…A1.1.6`) — 164, what a lesson covers
+> · **Episode** = one ~30s video — **N per lesson (2–4), decided at the brief**, never one-to-one
+> The data is unaffected (`curriculum.json` is already modules→atoms); the headings below are left as-written for provenance, but "lessons" in them means **topics**.
+>
 > **Status: LOCKED (2026-08-02, v2.2).** Machine artifact: **`resources/curriculum.json` v1.0 (REGISTRY-pinned — agents read that, never this file).** v2.2: word/pace budgets harmonized to `PEDAGOGY.md` §2–§3, the hash-pinned authority (v2.1's ~40–75 @ A1 assumed continuous native-pace speech — impossible at level; see BUILD_PLAN_v4_studio C1); stale subtitle open-item struck (decided in PEDAGOGY §5.2). v2.1 per Jayon: the per-module items are **teaching ATOMS (an inventory), not one-reel-each** — at ideation a module (the story-arc unit, one lead character) gets a **block plan** that packs atoms into universal **30-second blocks** (1–3 related atoms per block, or one atom stretched over 2–3 blocks). v2: narrative removed entirely (story lives in `NARRATIVE_BIBLE_seed.md`, matched in-platform) and every module decomposed into definite atoms so it is always exactly clear what is being taught. Basis: Jayon's four research docs + Goethe/BAMF milestones (A1 word list ≈650, verified) + Nicos Weg scale (~76 micro-lessons/level, verified) + the character bible's vocabulary domains.
 > v1 (superseded): module-level matrix with narrative-affinity column.
 
