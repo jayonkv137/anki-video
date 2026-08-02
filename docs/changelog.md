@@ -2,6 +2,24 @@
 
 > Newest first. One entry per meaningful change/feature.
 
+## 2026-08-02 — PHASE 1.6: the screenplay document (a gap Jayon caught)
+
+Jayon asked whether the AI screenplay — its format, what a finished one contains, and how it is *shown* after the script is confirmed — was covered anywhere. It was not. Worse: **the source material had been supplied and never fully read.** `resources/Invideo Docs/` holds 12 invideo production guides; only three were absorbed (into TREATMENT v1.0). Two of the unread ones were exactly this subject, and `DESIGN_agent_crew_and_treatment.md` §2 had already logged the consequence on 2026-07-29 — *"12 parameters per shot: our director layer covers ~7; missing lens, colour script, atmosphere, negative + revision prompt"* — and it was never actioned.
+
+**Absorbed:** *AI Script Breakdown* · *AI Shot Planning* · *Diegetic Sound Cues* · *AI Micro-Drama*.
+
+**`TREATMENT.md` → v1.3** (registry re-pinned, `verify_canon` GREEN):
+- **§3.1 depth of field is per-shot and stated** — `deep|medium|shallow`; unstated DOF is how a series drifts into uniform blur. A shot that must read muted is never shallow.
+- **§6.5 the tonal mode is declared per SEGMENT** — a colour+light condition cannot change between two shots of one continuous moment. This is why the mode lives on the segment.
+- **§8.1 atmosphere layers** — `none|haze|dust|steam|smoke|rain|snow|fog` + density, stated every shot and **identical inside a segment** (mixed atmosphere makes a cut read as a location change). Light needs a medium to be visible.
+- **§8.2 the two pre-generation reference duties** — contact shots need a **fused sheet of the two bodies in their arrangement** (a sheet per character is not enough); POV/complex-camera shots need a **phone-mock blocking reference**. Both are flagged *by the screenplay*, at the last moment they are cheap.
+- **§8.3 the density stress-test** — cut density is checked at the lock against the clip's real limit, and the Writer **proposes the split rather than complying**. "An agent that stays agreeable to avoid friction has failed its station."
+- **§9.5 turnaround hygiene** (empty hands, close-up panels, generate-several-lock-one) · **§13 sound anchored to the visual beat** · **§15 rewritten as the complete per-shot/per-segment brief** — *"a shot missing any of these is not a finished shot."*
+
+**`SCREENPLAY_V4`** gains `depth_of_field`, `atmosphere`, `atmosphere_density`, `contact_shot`, `needs_blocking_reference` (shot) and `tonal_mode` (segment) — so the completeness contract is machine-enforced, not aspirational. Validators now catch mixed atmosphere in a segment, DOF/atmosphere outside their closed sets, a missing tonal mode, banned medium vocabulary inside a screenplay (TREATMENT §1 names the screenplay explicitly), and flag over-dense segments and unflagged POV shots. Self-test: 11 blocks caught on a deliberately broken screenplay.
+
+**New: `DESIGN_screenplay_document.md`** — the screenplay as a *readable artifact*, which nothing covered. Two presentations (the DRAFT while writing · **the SHEET after the lock**, the full formal document Jayon asked for), the shot-block layout, why the action is the largest text and dialogue keeps screenplay convention, the contact/blocking flags drawn on the block, the subtitle preview as the "does this teach?" view, the completeness contract (BLOCK vs FLAG), what is inline-editable vs what must go through the change protocol (*"an edit that changes the recompile set must show the recompile set first"*), and the shot-by-shot working procedure. It **derives from** TREATMENT §15 + `SCREENPLAY_V4` and restates neither — a second source of field law is what retired `canon_blocks.md`.
+
 ## 2026-08-02 — PHASE 0: reconcile & lock (the V4 build starts)
 
 **The governing doc:** `docs/planning/BUILD_PLAN_v4_studio.md` — full-system review after reading every document/skill/module + the four research reports: 10-point contradiction audit (C1–C10), keep/rewrite/delete, the new architecture, UI design (no Figma — clickable HTML wireframe → real shell), phased execution. **All seven decisions D1–D7 approved by Jayon as recommended.**

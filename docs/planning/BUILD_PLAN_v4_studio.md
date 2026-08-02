@@ -149,9 +149,16 @@ The math sides with PEDAGOGY: at A1 pace (~80 WPM) with PEDAGOGY §3's ⅓-silen
 1.4 v4 schemas (brief/screenplay per §5) + validators updated to PEDAGOGY numbers.
 1.5 Quarantine: retire old skills to `_retired/`, delete dead V2 code + app.py fallbacks, archive branch for the old wizard.
 
+**Phase 1.6 — THE SCREENPLAY DOCUMENT** ✅ *(done 2026-08-02; inserted after Jayon caught that the AI-screenplay format was uncovered — and that the source material had been supplied and never fully read)*
+1.6.1 Absorbed the four unread invideo guides (*Script Breakdown · Shot Planning · Diegetic Sound · Micro-Drama*).
+1.6.2 **TREATMENT v1.3** — §3.1 DOF per shot · §6.5 tonal mode per segment · §8.1 atmosphere layers · §8.2 fused-sheet + mock-blocking reference duties · §8.3 density stress-test ("argue with the page") · §9.5 turnaround hygiene · §13 sound anchored to the beat · §15 as the complete brief. Closes the "12 parameters, we cover ~7" gap logged 2026-07-29.
+1.6.3 `SCREENPLAY_V4` + validators extended to enforce it (11 blocks caught in self-test).
+1.6.4 **`DESIGN_screenplay_document.md`** — the DRAFT view vs **the SHEET** (the full locked document), shot-block layout, completeness contract, inline-vs-change-protocol editing, the shot-by-shot procedure. Derives from TREATMENT §15 + the schema; restates neither.
+*Correction folded in the same day: the Writer had been given a section-sliced TREATMENT on a token-budget rationale — reverted, since a metric must never scope canon (`context.py` DOC_SECTIONS is now empty and documents why).*
+
 **Phase 2 — THE SHELL** *(2 sessions)*
 2.1 `pipeline/studio.py` — thread store, phase router, view compiler, compaction-on-lock, change-protocol engine (rehomed overseer + idempotency + modify hook).
-2.2 Clickable greyscale wireframe → **Jayon reviews** → corrections.
+2.2 Clickable greyscale wireframe → **Jayon reviews** → corrections. The screenplay stage pane follows `DESIGN_screenplay_document.md` (draft view + the locked sheet).
 2.3 The real shell: Home + Workspace (rail/stage/chat/chips), proposal cards, salvaged panes. Old wizard still runnable until 3.5.
 
 **Phase 3 — THE AGENTS, one vertical slice each, live-tested before the next** *(4–6 sessions)*

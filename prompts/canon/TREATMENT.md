@@ -1,6 +1,7 @@
 # TREATMENT — "Stereotypical German" · the directorial rule system
 
-> version: 1.2 · canon file · 2026-08-02
+> version: 1.3 · canon file · 2026-08-02
+> v1.3 (2026-08-02): absorbs the four invideo production guides that were supplied but never read in full (`AI Script Breakdown`, `AI Shot Planning`, `Diegetic Sound Cues`, `AI Micro-Drama`) — closing the "12 parameters per shot: we cover ~7" gap logged in `DESIGN_agent_crew_and_treatment.md` §2 on 2026-07-29. New: **§3.1 depth of field per shot** · **§6.5 the tonal mode is declared per segment** · **§8.1 atmosphere layers** · **§8.2 the two pre-generation reference duties** (fused sheet for contact, mock blocking reference for POV/complex camera) · **§8.3 the density stress-test** (the screenplay agent argues with the page *before* credits are spent) · **§13 sound is anchored to the visual beat** · **§9.6 turnaround-sheet hygiene**.
 > v1.2 (2026-08-02): **§9 corrected to the image model's real reference mechanics** (typed slots 5 human / 6 object / 3 style; characters FIRST, style LAST — the v1.1 order was contradicted by the model) · **image-prompt identity TOKENS** (`Character-X`) added as the naming law's one fenced exception (§9.4, §19) · §14 stage-scoped (the negative list is video language; the image model uses a constraints block) · §9.5 asset-gap note withdrawn (Jayon: Rolf's set is correct as-is, `PLAN_production_canon` §7) · `canon_blocks.md` formally retired from the registry — §10 is the sole source (the retired file still said "felt"). Basis: `prompting_guidelines_nanobanana.md` v1.0.
 > **This is the controlling document of the production.** The screenplay is the narrative source of truth; THIS is the execution source of truth. Every visual stage (storyboard sheets, video prompts) reads it and every generated frame is gated against it. **Rules, not descriptions** — every line below must be checkable against a frame. If a line cannot be checked, it does not belong here.
 > v1.1 (Jayon's review): camera and angle sections reframed from prohibitions to **defaults + a standard vocabulary** (the story may demand anything; only technical limits are hard) · V3-era tonal locks removed · **§9 REFERENCE ASSETS added** — the missing rule for which character images attach where, in what order, at each stage.
@@ -27,6 +28,9 @@ High-end **cinematic live-action cinematography integrated with photorealistic C
 - **35mm anamorphic**, consistently, everywhere.
 - **Subtle lens halation** and **slight edge fringing** are present; both are subtle — visible on inspection, never the subject.
 - Depth of field is **not fixed globally**. DOF is chosen per shot to serve the subject, and never so shallow that the environment becomes unreadable.
+
+### 3.1 Depth of field is a per-shot decision, stated
+Every shot **states its DOF** — `deep` (environment legible, the default for teaching shots, since the situation carries the meaning) · `medium` · `shallow` (isolates the subject; reserve it for a beat that earns it). Unstated DOF is how a series drifts into uniform blur. **A shot whose meaning must be readable with the sound off should not be shallow** — `PEDAGOGY` §1 outranks the aesthetic here.
 
 ## 4 · ANGLES & SHOT SIZES
 - **Standard vocabulary** — used so the pipeline, the agents and the shot schema parse consistently. It is a shared language, not a ceiling:
@@ -66,6 +70,9 @@ All four are **warm earth tones** — a material fact of what they are, never ad
 - **Created the first time a condition appears; reused identically every time it recurs.** The constraint is *"once named, always rendered the same"* — never *"only these modes exist."* No ceiling.
 - Library **starts empty**, fills from real episodes, lives in `UNIVERSE_STATE` beside locations.
 
+### 6.5 The mode is declared per SEGMENT, never per shot
+A tonal mode is a **colour + light condition**, and a condition does not change between two shots of the same continuous moment. **Each segment declares exactly one tonal mode**, by name; every shot inside it inherits that mode and varies only its own named source and ratio (§5). Two segments may differ (time passes, the scene moves) — two shots inside one segment may not. This is what makes a mode reusable rather than decorative, and it is why the mode lives on the segment in the screenplay.
+
 ### 6.4 The grade (constant)
 Environment saturation always yields to character material colour · shadow and highlight tint are deliberate per mode, never incidental · character material colours are exempt from any scene-wide desaturation.
 
@@ -79,7 +86,19 @@ Environment saturation always yields to character material colour · shadow and 
 ## 8 · MOVEMENT & ACTION
 - **One atomic action per shot.** A shot containing "walks over, picks it up, turns, waves" must be split. Multi-action in a single generation causes temporal morphing.
 - **Actions are written as active physical verbs**, observable with the sound off.
-- **Known model failure cases — plan around them:** crowds · complex hand manipulation · very fast movement · **physical contact between characters** (touching, carrying, shared props). Contact shots break video models faster than almost anything else and must be identified at planning time and given their own reference treatment.
+- **Known model failure cases — plan around them:** crowds · complex hand manipulation · very fast movement · **physical contact between characters** (touching, carrying, shared props). Contact shots break video models faster than almost anything else and must be identified at planning time and given their own reference treatment (§8.2).
+
+### 8.1 Atmosphere layers
+**Every shot states its atmosphere**, because the model renders air: `none · haze · dust · steam · smoke · rain · snow · fog`, with a density (`light · medium · heavy`). Atmosphere is what makes light *visible* — a named source with no medium to travel through reads flat. It is also a continuity trap: two shots in one segment must carry the **same** atmosphere, or the cut looks like a location change. `none` is a legitimate, and the most common, answer — state it rather than omitting it.
+
+### 8.2 The two pre-generation reference duties
+Two shot types cannot be fixed by better wording and must be **flagged in the screenplay**, so the reference exists before generation is attempted:
+1. **Contact shots** (characters touching, carrying, a shared prop between them). A sheet per character is **not enough** — the model must see the two bodies *in their arrangement*. The shot is flagged, and a **fused reference sheet of the contact configuration** is generated and locked before the shot is. Where a prompt cannot produce the fused sheet, a hand sketch is a valid input to it.
+2. **POV and complex-camera shots**, a documented weak point of current video models. These are flagged for a **mock blocking reference** — the move acted out and filmed on a phone, supplied as a spatial anchor. Prompting harder does not substitute; the reference is the fix.
+**Both flags are the screenplay's job**, not the compiler's: they are identified while the shot is being written, which is the last moment they are cheap.
+
+### 8.3 The density stress-test — argue with the page before credits
+Cut density is checked **at the lock, against the model's real limit**, never discovered mid-generation. A segment is ~15 s: count its shots and ask whether each can read and (if it speaks) deliver its line. **If the beat needs more cuts than the clip can hold, the screenplay agent says so and proposes the split** — a segment divided at the lock cuts better than one crammed and salvaged. This duty runs *backwards* into the writing: flagging an ungeneratable shot is the cheapest correction in the pipeline, and the agent that stays silent to be agreeable has failed its station.
 
 ## 9 · REFERENCE ASSETS — what attaches, where, in what order
 Identity comes from **images, not from words**. This section is the binding contract between the asset library and every generation.
@@ -114,6 +133,12 @@ Audio, in cast order: Character A voice → Character B voice.
 Bind each character to their images explicitly and instruct the model to take identity **from the references only** — never restate a character's appearance in prose alongside the reference (competing descriptions cause drift). The material laws (§10) are the exception: they are the canonical wording when text description is required at all.
 **In image-model prompts, identity binds to TOKENS** — `Character-Rolf · Character-Bert · Character-Kati · Character-Mueller` — never the full canonical names, whose German common nouns (*die Wurst, das Bier…*) pull generic imagery into the render (the fenced exception, §19 / `SHOW_BIBLE` §13). Video prompts keep the full canonical names.
 
+### 9.5 Turnaround-sheet hygiene (when a sheet is generated or replaced)
+- **Empty the hands.** Held props drift across angles and contaminate the identity reference — generate turnarounds prop-free and reintroduce props at shot level.
+- **Include close-up panels.** Small details (Rolf's ear rings, Müller's "1. FC BROT" patch, Kati's green lacing) only survive across models if the sheet shows them at close range.
+- **Generate several options, pick one, lock it.** A locked identity is the cheapest insurance in the pipeline; re-rolling finished shots because identity was never locked is the expensive failure.
+- **The fused contact sheet** (§8.2) is generated the same way and locked the same way — it is an identity asset, not a per-shot fix.
+
 ## 10 · CHARACTER MATERIAL LAWS (identity, written as physics)
 These are the reason identity survives. They are **PBR/VFX material specifications, not adjectives**, and are used verbatim — never paraphrased.
 - **Müller das Brot** — golden flaky crust with **matte light absorption**; a metallic silver zipper bisects him vertically, revealing interior crumb with **extreme high displacement mapping and maximum ambient occlusion** (deep shadow trapped in porous, cavernous dough); limbs of the same porous crumb; ribbed white knit beanie; navy nylon bomber with ribbed cuffs and a "1. FC BROT" patch requiring **anisotropic fabric reflection**; red semi-translucent plastic grocery bag requiring **specular gloss and crinkle displacement**.
@@ -138,6 +163,7 @@ These are the reason identity survives. They are **PBR/VFX material specificatio
 - **Diegetic sound is written in four slots, in this order, adjacent to the action that causes it:** `[visual subject + action] → [the sound that action makes, with material and texture] → [ambient bed] → [register]`. Encode physical sound logic beside the visual it belongs to — mass, surface, distance.
 - **Props are specified by their physical sound behaviour**, not only their look — material determines the sound and therefore how the prop generates.
 - **Offscreen sound is tagged as offscreen**, so the model places it spatially instead of rendering its source in frame.
+- **Sound is anchored to the visual beat**, not floated across the clip: *"the door slams shut at the moment she turns"*. A cue with no stated timing lands wherever the model likes, and a mistimed impact reads as a rendering fault even when the image is perfect.
 - **Room tone is always specified.** Silence is a choice, never an omission.
 - **Absent by rule:** background music · score stings · sound effects with no visible or implied source.
 
@@ -156,7 +182,10 @@ These are the reason identity survives. They are **PBR/VFX material specificatio
 **Video (Seedance):** `[Reference assignments] → [Shot structure with timecodes] → [Camera] → [Environment & light: named source + ratio] → [Style] → [Audio] → [Constraints]`
 - **First-30-words law:** the primary subject and core action occupy the opening of the prompt, before any style, camera or environment text.
 **Storyboard sheet (Nano Banana Pro):** `[Reference binding] → [Sheet format + style clause] → [Environment + per-panel coordinate blocking] → [Constraints]`
-**Per-shot specification** — every shot carries: `shot_size · camera_angle · camera_move · one action · blocking (spatial coordinates) · gaze · expression · duration · dialogue · named light source + ratio · negative prompt · revision prompt (the pre-planned correction, so iteration stays inside this treatment's language)`.
+**Per-shot specification (v1.3 — the complete brief)** — every shot carries:
+`shot_size · camera_angle · camera_move · depth_of_field (§3.1) · one action · blocking (spatial coordinates) · gaze · expression · duration · dialogue · named light source + ratio (§5) · atmosphere + density (§8.1) · props with sound behaviour (§13) · contact-shot flag (§8.2) · blocking-reference flag (§8.2) · negative prompt · revision prompt (the pre-planned correction, so iteration stays inside this treatment's language)`.
+**Per-segment specification** — every segment carries: `duration · time and weather · tonal mode (§6.5)`.
+**A shot missing any of these is not a finished shot.** The list is the definition of "complete", and it is what the quality gate checks before a sheet is generated.
 
 ## 16 · ⧖ OPEN — deliberately unfilled until first production
 Not oversights — decisions that require real footage rather than theory (Jayon, 2026-07-29). Method: `WORKFLOW_visual_identity_lock.md`.
@@ -175,7 +204,7 @@ Not oversights — decisions that require real footage rather than theory (Jayon
 3. Light = **named source + ratio**. No mood words. Motivated only.
 4. **The cast wins the frame** — separated by value, saturation or hue. The environment yields; characters are never desaturated.
 5. Material laws verbatim. Silhouettes distinct. **Identity from reference images in the fixed order (§9), never from prose.**
-6. One atomic action per shot. Blocking in spatial coordinates. Watch crowds, hands, speed, contact.
+6. One atomic action per shot. Blocking in spatial coordinates. DOF and atmosphere stated. Contact and POV shots flagged for their reference (§8.2). Density checked against the clip (§8.3).
 7. Nothing in the subtitle band. **No text in frame, ever.**
 8. No background music. Diegetic sound written beside the action that causes it.
 9. Hook readable muted in one second. Deadpan register.

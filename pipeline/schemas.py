@@ -86,13 +86,18 @@ SHOT_V4 = _schema(
     shot_size=STR,         # ECU|CU|MCU|MS|MWS|WS|OTS (TREATMENT §4 vocabulary)
     camera_angle=STR,      # eye-level|low|high|dutch|POV
     camera_move=STR,       # explicit always (TREATMENT §2)
+    depth_of_field=STR,    # deep|medium|shallow (TREATMENT §3.1)
     action=STR,            # ONE atomic visible action (TREATMENT §8)
     blocking=STR,          # spatial coordinates in the 9:16 frame (TREATMENT §7)
     gaze=STR,
     expression=STR,
     light_source=STR,      # NAMED source (TREATMENT §5) — never a mood word
     light_ratio=STR,       # "70:30" light-to-shadow
+    atmosphere=STR,        # none|haze|dust|steam|smoke|rain|snow|fog (TREATMENT §8.1)
+    atmosphere_density=STR,  # ""(none)|light|medium|heavy
     props=_arr(PROP),      # [] when none; material determines sound (TREATMENT §13)
+    contact_shot=BOOL,     # characters touching/carrying/sharing a prop → fused sheet (§8.2)
+    needs_blocking_reference=BOOL,  # POV or complex camera → mock reference (§8.2)
     negative_prompt=STR,   # per-shot additions beyond the permanent list ("" = none)
     revision_prompt=STR,   # the pre-planned correction (TREATMENT §15)
     dialogue=_arr(DIALOGUE_LINE),
@@ -102,8 +107,14 @@ SEGMENT_V4 = _schema(
     segment_number=INT,
     duration_s=INT,        # ~15 — one Seedance clip
     time_and_weather=STR,
+    tonal_mode=STR,        # ONE named colour+light condition per segment (TREATMENT §6.5)
     shots=_arr(SHOT_V4),
 )
+
+# TREATMENT §3.1 / §8.1 vocabularies (HARD — closed sets)
+DOF_VALUES = ("deep", "medium", "shallow")
+ATMOSPHERE_VALUES = ("none", "haze", "dust", "steam", "smoke", "rain", "snow", "fog")
+ATMOSPHERE_DENSITIES = ("", "light", "medium", "heavy")
 
 SCREENPLAY_V4 = _schema(
     title_de=STR,
@@ -234,6 +245,20 @@ def validate_screenplay_v4(sp: dict, curriculum: dict,
         shot_sum = sum(int(sh.get("duration_s", 0) or 0) for sh in shots)
         if shots and abs(shot_sum - d) > 2:
             blocks.append(f"segment {n}: shot durations sum {shot_sum}s ≠ segment {d}s")
+        if not (s.get("tonal_mode") or "").strip():
+            blocks.append(f"segment {n}: tonal_mode empty (TREATMENT §6.5: one named "
+                          f"colour+light condition per segment)")
+        # §8.1 — atmosphere is a continuity property of the segment, not of a shot
+        atmos = {(sh.get("atmosphere") or "").strip().lower() for sh in shots}
+        if len(atmos) > 1:
+            blocks.append(f"segment {n}: mixed atmosphere {sorted(atmos)} inside one segment "
+                          f"— the cut will read as a location change (TREATMENT §8.1)")
+        # §8.3 — the density stress-test, at the lock
+        speaking = sum(1 for sh in shots if sh.get("dialogue"))
+        if d and shots and (d / len(shots)) < 2 and speaking:
+            flags.append(f"segment {n}: {len(shots)} shots in {d}s averages "
+                         f"{d / len(shots):.1f}s — too dense to read AND deliver lines; "
+                         f"propose a split (TREATMENT §8.3)")
         for sh in shots:
             dur = int(sh.get("duration_s", 0) or 0)
             has_line = bool(sh.get("dialogue"))
@@ -248,6 +273,40 @@ def validate_screenplay_v4(sp: dict, curriculum: dict,
             if not LIGHT_RATIO_RE.match((sh.get("light_ratio") or "").strip()):
                 blocks.append(f"segment {n} shot {sh.get('shot_number')}: light_ratio "
                               f"'{sh.get('light_ratio')}' not 'NN:NN'")
+            sid = f"segment {n} shot {sh.get('shot_number')}"
+            if (sh.get("depth_of_field") or "").strip().lower() not in DOF_VALUES:
+                blocks.append(f"{sid}: depth_of_field '{sh.get('depth_of_field')}' not "
+                              f"{'/'.join(DOF_VALUES)} (TREATMENT §3.1)")
+            atm = (sh.get("atmosphere") or "").strip().lower()
+            if atm not in ATMOSPHERE_VALUES:
+                blocks.append(f"{sid}: atmosphere '{sh.get('atmosphere')}' not in "
+                              f"{'/'.join(ATMOSPHERE_VALUES)} (TREATMENT §8.1)")
+            dens = (sh.get("atmosphere_density") or "").strip().lower()
+            if dens not in ATMOSPHERE_DENSITIES:
+                blocks.append(f"{sid}: atmosphere_density '{dens}' not "
+                              f"light/medium/heavy (or empty when atmosphere is none)")
+            elif atm != "none" and not dens:
+                blocks.append(f"{sid}: atmosphere '{atm}' needs a density")
+            # §1 — the Live-Action Integration Rule names the screenplay explicitly
+            banned_medium = ("puppet", "claymation", "needle-felt", "stop-motion",
+                             "miniature", "toy", "handcrafted")
+            blob = " ".join(str(sh.get(f) or "") for f in
+                            ("action", "blocking", "expression", "camera_move",
+                             "negative_prompt", "revision_prompt")).lower()
+            for w in banned_medium:
+                if w in blob:
+                    blocks.append(f"{sid}: '{w}' appears in the shot — banned in any "
+                                  f"screenplay by TREATMENT §1 (latent-space poison)")
+            # §8.2 — the two pre-generation reference duties, flagged at the lock
+            if (sh.get("camera_angle") or "").strip().upper() == "POV" \
+                    and not sh.get("needs_blocking_reference"):
+                flags.append(f"{sid}: POV shot without needs_blocking_reference — POV is a "
+                             f"documented model weak point; flag it for a mock reference "
+                             f"(TREATMENT §8.2)")
+            if sh.get("contact_shot") and len({d.get("speaker") for d in sh.get("dialogue", [])
+                                               if d.get("speaker")}) == 0 and not sh.get("props"):
+                flags.append(f"{sid}: contact_shot set — confirm the fused reference sheet "
+                             f"exists before this shot is generated (TREATMENT §8.2)")
             for p in sh.get("props", []):
                 if not (p.get("sound_behaviour") or "").strip():
                     flags.append(f"segment {n} shot {sh.get('shot_number')}: prop "
@@ -305,11 +364,14 @@ def _selftest():
 
     shot = dict(shot_number=1, duration_s=8, shot_size="MS", camera_angle="eye-level",
                 camera_move="static, locked-off, subtle handheld breathing",
+                depth_of_field="deep",
                 action="Rolf die Wurst stops at the empty crossing",
                 blocking="Rolf die Wurst centre midground", gaze="at the red light",
                 expression="flat disbelief",
                 light_source="sodium street lamp camera-left", light_ratio="70:30",
-                props=[], negative_prompt="", revision_prompt="hold the frame, re-render",
+                atmosphere="haze", atmosphere_density="light",
+                props=[], contact_shot=False, needs_blocking_reference=False,
+                negative_prompt="", revision_prompt="hold the frame, re-render",
                 dialogue=[{"speaker": "Rolf die Wurst", "german": "Warum?", "english": "Why?"}])
     shot2 = {**shot, "shot_number": 2, "duration_s": 7,
              "dialogue": [{"speaker": "Rolf die Wurst", "german": "Man darf hier nicht gehen.",
@@ -321,21 +383,40 @@ def _selftest():
               target_vocab=[{"german": "die Ampel", "english": "traffic light", "gender": "die"}],
               segments=[
                   dict(segment_number=1, duration_s=15, time_and_weather="night, dry",
-                       shots=[shot, shot2]),
+                       tonal_mode="Sodium Street Night", shots=[shot, shot2]),
                   dict(segment_number=2, duration_s=15, time_and_weather="night, dry",
+                       tonal_mode="Sodium Street Night",
                        shots=[{**shot, "shot_number": 1, "duration_s": 15, "dialogue": []}]),
               ])
     ok = validate_screenplay_v4(sp, cur)
     assert ok["blocks"] == [], f"valid screenplay blocked: {ok['blocks']}"
+    assert ok["flags"] == [], f"valid screenplay flagged: {ok['flags']}"
 
     bad = _json.loads(_json.dumps(sp))
-    bad["segments"][0]["shots"][0]["light_source"] = ""            # TREATMENT §5
-    bad["segments"][0]["shots"][0]["light_ratio"] = "moody"        # ratio law
-    bad["atom_ids"] = ["B1.6.3"]                                   # above level
+    bad["segments"][0]["shots"][0]["light_source"] = ""            # §5 named source
+    bad["segments"][0]["shots"][0]["light_ratio"] = "moody"        # §5 ratio law
+    bad["segments"][0]["shots"][0]["depth_of_field"] = "cinematic"  # §3.1 closed set
+    bad["segments"][0]["shots"][0]["atmosphere"] = "moody"          # §8.1 closed set
+    bad["segments"][0]["shots"][1]["atmosphere"] = "fog"            # §8.1 mixed in segment
+    bad["segments"][0]["shots"][1]["action"] = "the puppet stands still"  # §1 banned medium
+    bad["segments"][1]["tonal_mode"] = ""                           # §6.5 required
+    bad["atom_ids"] = ["B1.6.3"]                                    # above declared level
     bad["segments"][0]["shots"][1]["dialogue"][0]["german"] = \
         "Man darf hier nicht gehen, das ist die Grammatik-Lektion für heute alle zusammen"  # cap + banned
     bad_r = validate_screenplay_v4(bad, cur)
-    assert len(bad_r["blocks"]) >= 5, f"expected ≥5 blocks, got {bad_r['blocks']}"
+    assert len(bad_r["blocks"]) >= 9, f"expected ≥9 blocks, got {bad_r['blocks']}"
+    joined = " ".join(bad_r["blocks"])
+    for expect in ("depth_of_field", "atmosphere", "mixed atmosphere", "tonal_mode",
+                   "puppet", "light_ratio"):
+        assert expect in joined, f"{expect} not caught: {bad_r['blocks']}"
+
+    # §8.3 density stress-test fires as a FLAG, never a block
+    dense = _json.loads(_json.dumps(sp))
+    dense["segments"][0]["shots"] = [
+        {**shot, "shot_number": i + 1, "duration_s": 2} for i in range(8)]
+    dense["segments"][0]["duration_s"] = 15
+    dr = validate_screenplay_v4(dense, cur)
+    assert any("too dense" in f for f in dr["flags"]), f"density test silent: {dr}"
 
     brief = dict(title_de="Bei Rot", format="lesson", module_id="A1.8", block_no=1,
                  atom_ids=["A1.8.4"], recycled_atom_ids=[], cefr_level="A1",
